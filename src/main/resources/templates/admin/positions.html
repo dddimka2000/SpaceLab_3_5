@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en" dir="ltr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="shortcut icon" th:href="@{/assets/images/favicon.ico}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/core/libs.min.css}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/vendor/aos/dist/aos.css}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/hope-ui.min.css?v=2.0}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/custom.min.css?v=2.0}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/dark.min.css}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/customizer.min.css}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/rtl.min.css}"/>
+    <link rel="shortcut icon" th:href="@{/assets/images/favicon.ico}"/>
+</head>
+<body>
+<aside class="sidebar sidebar-default sidebar-white sidebar-base navs-rounded-all ">
+    <div th:insert="admin/blocks/sidebar::sidebarMenu"></div>
+</aside>
+<main class="main-content">
+    <div th:insert="admin/blocks/topPanel::topPanel"></div>
+    <div class="conatiner-fluid content-inner mt-n5 py-0">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between flex-wrap">
+                        <div class="header-title">
+                            <h4 class="card-title mb-0">Роли пользователей</h4>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <form method="POST" th:action="@{/admin/positions/update}">
+                                <table class="table table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th class="text-center">Login</th>
+                                        <th class="text-center">ADMIN
+                                        </th>
+                                        <th class="text-center">MODERATOR
+                                        </th>
+                                        <th class="text-center">USER
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr class="text-center" th:each="user:${users}">
+                                        <td class="text-center" th:text="${user.login}" name="loginHidden[]">
+                                        </td>
+                                        <td class="text-center">
+                                            <input class="form-check-input" type="radio" name="choice" th:value="10"
+                                                   th:checked="${user.roles.iterator()}">
+                                        </td>
+                                        <td class="text-center">
+                                            <input class="form-check-input" type="radio" name="choice" th:value="9">
+                                        </td>
+                                        <td class="text-center">
+                                            <input class="form-check-input" type="radio" name="choice" th:value="1">
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <div class="text-center">
+                                    <button class="btn btn-lg btn-primary" type="submit">Сохранить</button>
+                                </div>
+                            </form>
+                            <form method="POST">
+                                <nav aria-label="Page navigation example">
+                                    <ul class="pagination">
+                                        <li class="page-item">
+                                            <a class="page-link" href="#" aria-label="Previous" disabled="0"
+                                               th:href="@{/admin/positions(page=0)}" >
+                                                <span aria-hidden="true">&laquo;</span>
+                                            </a>
+                                        </li>
+                                        <li class="page-item"
+                                            th:each="pageNumber : ${#numbers.sequence(0, totalPages - 1)}">
+                                            <a class="page-link" href="#"
+                                               th:href="@{/admin/positions(page=${pageNumber})}"
+                                               th:text="${pageNumber + 1}"></a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link" href="#" aria-label="Next"
+                                               th:disabled="${totalPages - 1}"
+                                               th:href="@{/admin/positions(page=${totalPages - 1})}">
+                                                <span aria-hidden="true">&raquo;</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer Section Start -->
+    <div th:insert="admin/blocks/footerPanel::footerPanel"></div>
+    <!-- Footer Section End -->    </main>
+</body>
+</html>

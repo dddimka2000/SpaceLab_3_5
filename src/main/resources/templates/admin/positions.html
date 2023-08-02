@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="shortcut icon" th:href="@{/assets/images/favicon.ico}"/>
+    <link rel="icon" type="image/x-icon" th:href="@{/static/assets/images/favicon.ico}">
     <link rel="stylesheet" th:href="@{/static/assets/css/core/libs.min.css}"/>
     <link rel="stylesheet" th:href="@{/static/assets/vendor/aos/dist/aos.css}"/>
     <link rel="stylesheet" th:href="@{/static/assets/css/hope-ui.min.css?v=2.0}"/>
@@ -12,20 +12,29 @@
     <link rel="stylesheet" th:href="@{/static/assets/css/customizer.min.css}"/>
     <link rel="stylesheet" th:href="@{/static/assets/css/rtl.min.css}"/>
     <link rel="shortcut icon" th:href="@{/assets/images/favicon.ico}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/myCss/modal.css}"/>
 </head>
 <body>
+<div id="loading">
+    <div class="loader simple-loader">
+        <div class="loader-body"></div>
+    </div>
+</div>
 <aside class="sidebar sidebar-default sidebar-white sidebar-base navs-rounded-all ">
     <div th:insert="admin/blocks/sidebar::sidebarMenu"></div>
 </aside>
 <main class="main-content">
     <div th:insert="admin/blocks/topPanel::topPanel"></div>
-    <div class="conatiner-fluid content-inner mt-n5 py-0">
+    <div class="container-fluid content-inner mt-n5 py-0">
         <div class="row">
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between flex-wrap">
                         <div class="header-title">
                             <h4 class="card-title mb-0">Роли пользователей</h4>
+                            <div th:if="${userError!=null}">
+                                <p style="color: red">Вы не можете изменить свою роль</p>
+                            </div>
                         </div>
                     </div>
                     <div class="card-body">
@@ -44,18 +53,24 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr class="text-center" th:each="user:${users}">
-                                        <td class="text-center" th:text="${user.login}" name="loginHidden[]">
+                                    <tr class="text-center" th:each="user,i:${users}">
+                                        <td class="text-center">
+                                            <div th:text="${user.login}"></div>
+                                        </td>
+                                        <!-- ... Other columns ... -->
+                                        <td class="text-center">
+                                            <input type="radio" th:name="${user.login}"
+                                                   th:value="ADMIN"
+                                                   th:checked="${roles.get(i.index).contains('ADMIN')}"/>
                                         </td>
                                         <td class="text-center">
-                                            <input class="form-check-input" type="radio" name="choice" th:value="10"
-                                                   th:checked="${user.roles.iterator()}">
+                                            <input type="radio" th:name="${user.login}"
+                                                   th:value="MODERATOR"
+                                                   th:checked="${roles.get(i.index).contains('MODERATOR')}"/>
                                         </td>
                                         <td class="text-center">
-                                            <input class="form-check-input" type="radio" name="choice" th:value="9">
-                                        </td>
-                                        <td class="text-center">
-                                            <input class="form-check-input" type="radio" name="choice" th:value="1">
+                                            <input type="radio" th:name="${user.login}" th:value="USER"
+                                                   th:checked="${roles.get(i.index).contains('USER')}"/>
                                         </td>
                                     </tr>
                                     </tbody>
@@ -69,7 +84,7 @@
                                     <ul class="pagination">
                                         <li class="page-item">
                                             <a class="page-link" href="#" aria-label="Previous" disabled="0"
-                                               th:href="@{/admin/positions(page=0)}" >
+                                               th:href="@{/admin/positions(page=0)}">
                                                 <span aria-hidden="true">&laquo;</span>
                                             </a>
                                         </li>
@@ -96,8 +111,19 @@
             </div>
         </div>
     </div>
-    <!-- Footer Section Start -->
-    <div th:insert="admin/blocks/footerPanel::footerPanel"></div>
-    <!-- Footer Section End -->    </main>
+</main>
+<script th:src="@{/static/assets/js/myJs/script.js}"></script>
+<script th:src="@{/static/assets/js/core/libs.min.js}"></script>
+<script th:src="@{/static/assets/js/core/external.min.js}"></script>
+<script th:src="@{/static/assets/js/charts/widgetcharts.js}"></script>
+<script th:src="@{/static/assets/js/charts/vectore-chart.js}"></script>
+<script th:src="@{/static/assets/js/charts/dashboard.js}"></script>
+<script th:src="@{/static/assets/js/plugins/fslightbox.js}"></script>
+<script th:src="@{/static/assets/js/plugins/setting.js}"></script>
+<script th:src="@{/static/assets/js/plugins/slider-tabs.js}"></script>
+<script th:src="@{/static/assets/js/plugins/form-wizard.js}"></script>
+<script th:src="@{/static/assets/vendor/aos/dist/aos.js}"></script>
+<script th:src="@{/static/assets/js/hope-ui.js}" defer></script>
+
 </body>
 </html>

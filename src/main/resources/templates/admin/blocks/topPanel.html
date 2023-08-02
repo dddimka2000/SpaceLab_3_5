@@ -36,7 +36,7 @@
                         <li class="nav-item dropdown">
                             <a href="#" class="search-toggle nav-link" id="dropdownMenuButton2"
                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <img src="../assets/images/Flag/flag001.png" class="img-fluid rounded-circle" alt="user"
+                                <img th:src="@{/static/assets/images/Flag/flag001.png}" class="img-fluid rounded-circle" alt="user"
                                      style="height: 30px; min-width: 30px; width: 30px;">
                                 <span class="bg-primary"></span>
                             </a>
@@ -46,23 +46,23 @@
                                     <div class="p-0 ">
                                         <ul class="p-0 list-group list-group-flush">
                                             <li class="iq-sub-card list-group-item"><a class="p-0" href="#"><img
-                                                    src="../assets/images/Flag/flag-03.png" alt="img-flaf"
+                                                    th:src="@{/static/assets/images/Flag/flag-03.png}" alt="img-flaf"
                                                     class="img-fluid me-2"
                                                     style="width: 15px;height: 15px;min-width: 15px;"/>Spanish</a></li>
                                             <li class="iq-sub-card list-group-item"><a class="p-0" href="#"><img
-                                                    src="../assets/images/Flag/flag-04.png" alt="img-flaf"
+                                                    th:src="@{/static/assets/images/Flag/flag-04.png}" alt="img-flaf"
                                                     class="img-fluid me-2"
                                                     style="width: 15px;height: 15px;min-width: 15px;"/>Italian</a></li>
                                             <li class="iq-sub-card list-group-item"><a class="p-0" href="#"><img
-                                                    src="../assets/images/Flag/flag-02.png" alt="img-flaf"
+                                                    th:src="@{/static/assets/images/Flag/flag-02.png}" alt="img-flaf"
                                                     class="img-fluid me-2"
                                                     style="width: 15px;height: 15px;min-width: 15px;"/>French</a></li>
                                             <li class="iq-sub-card list-group-item"><a class="p-0" href="#"><img
-                                                    src="../assets/images/Flag/flag-05.png" alt="img-flaf"
+                                                    th:src="@{/static/assets/images/Flag/flag-05.png}" alt="img-flaf"
                                                     class="img-fluid me-2"
                                                     style="width: 15px;height: 15px;min-width: 15px;"/>German</a></li>
                                             <li class="iq-sub-card list-group-item"><a class="p-0" href="#"><img
-                                                    src="../assets/images/Flag/flag-06.png" alt="img-flaf"
+                                                    th:src="@{/static/assets/images/Flag/flag-06.png}" alt="img-flaf"
                                                     class="img-fluid me-2"
                                                     style="width: 15px;height: 15px;min-width: 15px;"/>Japanese</a></li>
                                         </ul>
@@ -82,7 +82,7 @@
                                     <div th:if="${loggedInUser.isPresent()==true}">
                                         <h6 class="mb-0 caption-title"
                                             th:text="${loggedInUser.get().getUserEntity().getLogin()}"></h6>
-                                        <p class="mb-0 caption-sub-title">Marketing Administrator</p>
+                                        <p class="mb-0 caption-sub-title" th:text="${loggedInUser.get().getUserEntity().getRoles().iterator().next()}">Marketing Administrator</p>
                                     </div>
                                 </div>
                             </a>
@@ -125,17 +125,17 @@
                 </div>
             </div>
             <div class="iq-header-img">
-                <img src="../assets/images/dashboard/top-header.png" alt="header"
+                <img th:src="@{/static/assets/images/dashboard/top-header.png}" alt="header"
                      class="theme-color-default-img img-fluid w-100 h-100 animated-scaleX">
-                <img src="../assets/images/dashboard/top-header1.png" alt="header"
+                <img th:src="@{/static/assets/images/dashboard/top-header1.png}" alt="header"
                      class="theme-color-purple-img img-fluid w-100 h-100 animated-scaleX">
-                <img src="../assets/images/dashboard/top-header2.png" alt="header"
+                <img th:src="@{/static/assets/images/dashboard/top-header2.png}" alt="header"
                      class="theme-color-blue-img img-fluid w-100 h-100 animated-scaleX">
-                <img src="../assets/images/dashboard/top-header3.png" alt="header"
+                <img th:src="@{/static/assets/images/dashboard/top-header3.png}" alt="header"
                      class="theme-color-green-img img-fluid w-100 h-100 animated-scaleX">
-                <img src="../assets/images/dashboard/top-header4.png" alt="header"
+                <img th:src="@{/static/assets/images/dashboard/top-header4.png}" alt="header"
                      class="theme-color-yellow-img img-fluid w-100 h-100 animated-scaleX">
-                <img src="../assets/images/dashboard/top-header5.png" alt="header"
+                <img th:src="@{/static/assets/images/dashboard/top-header5.png}" alt="header"
                      class="theme-color-pink-img img-fluid w-100 h-100 animated-scaleX">
             </div>
         </div>

@@ -1,4 +1,4 @@
-package org.example.util;
+package org.example.util.UserValidatorAndConvert;
 
 import lombok.extern.log4j.Log4j2;
 import org.example.dto.UserDTO;

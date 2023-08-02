@@ -3,8 +3,8 @@ package org.example.controller;
 import lombok.extern.log4j.Log4j2;
 import org.example.dto.UserDTO;
 import org.example.service.RegistrationService;
-import org.example.util.DtoToEntity;
-import org.example.util.UserValidator;
+import org.example.util.UserValidatorAndConvert.UserDtoToEntity;
+import org.example.util.UserValidatorAndConvert.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -46,7 +46,7 @@ public class RegistrationController {
         log.info(userEntity);
         log.info(bindingResult.getAllErrors());
         userEntity.setPath("/photos/01.png");
-        registrationService.registration(new DtoToEntity().convert(userEntity));
+        registrationService.registration(new UserDtoToEntity().convert(userEntity));
         return "redirect:/auth/login";
     }
 

@@ -22,7 +22,7 @@ public class UserEntityService {
     }
 
     public Optional<UserEntity> findByEmail(String email) {
-        log.info("UserEntity-findByEmail start");
+        log.info("UserEntity-findByEmail start: "+email);
         Optional<UserEntity> user;
         user = userRepository.findByEmail(email);
         log.info("UserEntity-findByEmail successful");
@@ -31,7 +31,7 @@ public class UserEntityService {
     }
 
     public Optional<UserEntity> findByTelephone(String telephone) {
-        log.info("UserEntity-findByTelephone start");
+        log.info("UserEntity-findByTelephone start: "+ telephone);
         Optional<UserEntity> user;
         user = userRepository.findByTelephone(telephone);
         log.info("UserEntity-findByTelephone successful");
@@ -40,7 +40,7 @@ public class UserEntityService {
     }
 
     public Optional<UserEntity> findByLogin(String login) {
-        log.info("UserEntity-findByLogin start");
+        log.info("UserEntity-findByLogin start: "+ login);
         Optional<UserEntity> user = userRepository.findByLogin(login);
         log.info("UserEntity-findByLogin successful");
 
@@ -48,7 +48,7 @@ public class UserEntityService {
     }
 
     public void save(UserEntity userEntity) {
-        log.info("UserEntity-saveByLogin start");
+        log.info("UserEntity-saveByLogin start: "+ userEntity);
         userRepository.save(userEntity);
         log.info("UserEntity-findByLogin successful");
 

@@ -7,63 +7,61 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.context.AbstractSecurityWebApplicationInitializer;
 
 @EnableWebSecurity
 @Log4j2
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-//public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-
-    //TODO Заменить WebSecurityConfigurerAdapter на новый
+public class WebSecurityConfig extends AbstractSecurityWebApplicationInitializer {
     private final UserDetailsServiceImpl userDetailsServiceImpl;
 
     @Autowired
     public WebSecurityConfig(UserDetailsServiceImpl userDetailsServiceImpl) {
         this.userDetailsServiceImpl = userDetailsServiceImpl;
     }
-
     @Bean
     public PasswordEncoder getPasswordEncoder() {
         return NoOpPasswordEncoder.getInstance();
     }
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http
-                .authorizeRequests()
-                .antMatchers("/auth/login", "/auth/registration", "/auth/process_login").permitAll()
-                .antMatchers("/admin/wewrr").hasAnyRole("ADMIN").anyRequest().authenticated()
-                .and()
-                .formLogin()
-                .loginPage("/auth/login")
-                .loginProcessingUrl("/auth/process_login")
-                .defaultSuccessUrl("/admin", true)
-                .failureUrl("/auth/login?error");
-//                .and()
-//                .sessionManagement()
-//                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED);
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.authorizeRequests(authorize ->
+                        authorize
+                                .antMatchers("/auth/login", "/auth/registration", "/auth/process_login").permitAll()
+                                .antMatchers("/admin/**").hasAnyAuthority("ADMIN", "MODERATOR")
+                                .antMatchers("/personal_account").authenticated()
+                                .anyRequest().permitAll())
+                .formLogin(form ->  form.loginPage("/auth/login")
+                        .loginProcessingUrl("/auth/process_login")
+                        .successHandler(new CustomAuthenticationSuccessHandler())
+                        .failureUrl("/auth/login?error"))
+                .httpBasic();
+        return http.build();
     }
-//
-//    @Bean
-//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//        http.authorizeRequests(authorize ->
-//                        authorize
-//                                .anyRequest()
-//                                .authenticated())
-//                .csrf().disable()
-//                .formLogin(form -> form
-//                        .loginPage("/auth/login")
-//                        .loginProcessingUrl("/auth/process_login")
-//                        .failureUrl("/auth/login?error").permitAll())
-//                .httpBasic();
-//        return http.build();
+
+
+}
+//public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+//    @Override
+//    protected void configure(HttpSecurity http) throws Exception {
+//        http
+//                .authorizeRequests()
+//                .antMatchers("/auth/login", "/auth/registration", "/auth/process_login").permitAll()
+//                .antMatchers("/admin/wewrr").hasAnyRole("ADMIN").anyRequest().authenticated()
+//                .and()
+//                .formLogin()
+//                .loginPage("/auth/login")
+//                .loginProcessingUrl("/auth/process_login")
+//                .defaultSuccessUrl("/admin", true)
+//                .failureUrl("/auth/login?error");
+////                .and()
+////                .sessionManagement()
+////                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED);
 //    }
-
-
 //    @Bean
 //    SecurityFilterChain configureSecurity(HttpSecurity http)
 //            throws Exception {
@@ -90,4 +88,3 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //                .httpBasic();
 //        return http.build();
 //    }
-}

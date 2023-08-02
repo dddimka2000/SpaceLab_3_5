@@ -4,10 +4,9 @@ import lombok.extern.log4j.Log4j2;
 import org.example.dto.UploadImg;
 import org.example.dto.UserDTO;
 import org.example.entity.UserEntity;
-import org.example.entity.UserRole;
 import org.example.security.UserDetailsImpl;
 import org.example.service.UserEntityService;
-import org.example.util.*;
+import org.example.util.UserValidatorAndConvert.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -16,7 +15,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.File;
@@ -43,15 +41,15 @@ public class PersonalAccountController {
     private final
     UserEntityService userEntityService;
     private final
-    DtoToEntity dtoToEntity;
+    UserDtoToEntity userDtoToEntity;
     private final
     PhotoValidator photoValidator;
 
     @Autowired
-    public PersonalAccountController(UserValidator userValidator, UserEntityService userEntityService, DtoToEntity dtoToEntity, EmailUserValidator emailUserValidator, LoginUserValidator loginUserValidator, TelephoneUserValidator telephoneUserValidator, PasswordValidator passwordValidator, PhotoValidator photoValidator) {
+    public PersonalAccountController(UserValidator userValidator, UserEntityService userEntityService, UserDtoToEntity userDtoToEntity, EmailUserValidator emailUserValidator, LoginUserValidator loginUserValidator, TelephoneUserValidator telephoneUserValidator, PasswordValidator passwordValidator, PhotoValidator photoValidator) {
         this.userValidator = userValidator;
         this.userEntityService = userEntityService;
-        this.dtoToEntity = dtoToEntity;
+        this.userDtoToEntity = userDtoToEntity;
         this.emailUserValidator = emailUserValidator;
         this.loginUserValidator = loginUserValidator;
         this.telephoneUserValidator = telephoneUserValidator;
@@ -142,7 +140,7 @@ public class PersonalAccountController {
 //            model.addAttribute("userEntity",dtoToEntity.convertToDto(userDetails.getUserEntity()));
             return "/info/personalAccount";
         }
-        UserEntity userEntity = dtoToEntity.convert(userDTO, userDetails.getUserEntity());
+        UserEntity userEntity = userDtoToEntity.convert(userDTO, userDetails.getUserEntity());
         userEntityService.save(userEntity);
         if (!password.get().isBlank()) {
             model.addAttribute("changePass", true);

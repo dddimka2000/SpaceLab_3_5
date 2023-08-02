@@ -1,11 +1,11 @@
-package org.example.util;
+package org.example.util.UserValidatorAndConvert;
 
 import org.example.dto.UserDTO;
 import org.example.entity.UserEntity;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DtoToEntity {
+public class UserDtoToEntity {
 
     public UserEntity convert(UserDTO dto) {
         UserEntity userEntity = new UserEntity();

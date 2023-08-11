@@ -74,7 +74,7 @@
                             <a class="py-0 nav-link d-flex align-items-center" href="#" id="navbarDropdown"
                                role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <div th:if="${loggedInUser.isPresent()==true}">
-                                    <img th:src="${loggedInUser.get().getUserEntity().getPath()}"
+                                    <img th:src="@{${loggedInUser.get().getUserEntity().getPath()}}"
                                          alt="User-Profile"
                                          class="theme-color-default-img img-fluid avatar avatar-50 avatar-rounded">
                                 </div>

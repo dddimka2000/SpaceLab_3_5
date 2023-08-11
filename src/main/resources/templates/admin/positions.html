@@ -43,6 +43,8 @@
                                 <table class="table table-bordered">
                                     <thead>
                                     <tr>
+                                        <th class="text-center">#
+                                        </th>
                                         <th class="text-center">Login</th>
                                         <th class="text-center">ADMIN
                                         </th>
@@ -54,6 +56,9 @@
                                     </thead>
                                     <tbody>
                                     <tr class="text-center" th:each="user,i:${users}">
+                                        <td class="short-col">
+                                            <div th:text="${(i.index+1)+(users.size()*currentPage)}"></div>
+                                        </td>
                                         <td class="text-center">
                                             <div th:text="${user.login}"></div>
                                         </td>
@@ -75,37 +80,72 @@
                                     </tr>
                                     </tbody>
                                 </table>
-                                <div class="text-center">
-                                    <button class="btn btn-lg btn-primary" type="submit">Сохранить</button>
+                                <div style="text-align: center">
+                                <button class="btn btn-lg btn-primary" type="submit">Сохранить</button>
                                 </div>
                             </form>
-                            <form method="POST">
-                                <nav aria-label="Page navigation example">
-                                    <ul class="pagination">
-                                        <li class="page-item">
-                                            <a class="page-link" href="#" aria-label="Previous" disabled="0"
-                                               th:href="@{/admin/positions(page=0)}">
-                                                <span aria-hidden="true">&laquo;</span>
-                                            </a>
-                                        </li>
-                                        <li class="page-item"
-                                            th:each="pageNumber : ${#numbers.sequence(0, totalPages - 1)}">
-                                            <a class="page-link" href="#"
-                                               th:href="@{/admin/positions(page=${pageNumber})}"
-                                               th:text="${pageNumber + 1}"></a>
-                                        </li>
-                                        <li class="page-item">
-                                            <a class="page-link" href="#" aria-label="Next"
-                                               th:disabled="${totalPages - 1}"
-                                               th:href="@{/admin/positions(page=${totalPages - 1})}">
-                                                <span aria-hidden="true">&raquo;</span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </nav>
-                            </form>
-
                         </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <p th:text="${panelCount}"></p>
+                            </div>
+                            <div class="col-sm-6">
+                                <form method="POST">
+                                    <nav aria-label="Page navigation example">
+                                        <ul class="pagination justify-content-end">
+                                            <li class="page-item">
+                                                <a class="page-link" href="#" aria-label="Previous"
+                                                   th:hidden="${currentPage == 0}"
+                                                   th:href="@{/admin/positions(page=${currentPage - 1 })}">
+                                                    <span aria-hidden="true">&#10094;</span>
+                                                </a>
+                                            </li>
+
+                                            <li class="page-item" th:if="${currentPage >= 2}">
+                                                <a class="page-link" href="#"
+                                                   th:href="@{/admin/positions(page=0)}"
+                                                   th:text="1"></a>
+                                            </li>
+                                            <li class="page-item" th:if="${currentPage >= 3}">
+                                                <span class="page-link">...</span>
+                                            </li>
+                                            <li class="page-item"
+                                                th:each="pageNumber : ${#numbers.sequence(currentPage - 1, currentPage + 1)}"
+                                                th:classappend="${pageNumber == currentPage} ? 'active' : ''"
+                                                th:if="${pageNumber >= 0 && pageNumber <= (totalPages - 1)}">
+                                                <a class="page-link" href="#"
+                                                   th:href="@{/admin/positions(page=${pageNumber})}"
+                                                   th:text="${pageNumber + 1}">
+                                                </a>
+                                            </li>
+                                            <li class="page-item" th:if="${currentPage==0 && totalPages>5}">
+                                                <a class="page-link" href="#"
+                                                   th:href="@{/admin/positions(page=${2})}"
+                                                   th:text="${2 + 1}">
+                                                </a>
+                                            </li>
+                                            <li class="page-item" th:if="${currentPage <= totalPages - 4}">
+                                                <span class="page-link">...</span>
+                                            </li>
+                                            <li class="page-item" th:if="${currentPage <= totalPages - 3}">
+                                                <a class="page-link" href="#"
+                                                   th:href="@{/admin/positions(page=${totalPages - 1})}"
+                                                   th:text="${totalPages}"></a>
+                                            </li>
+                                            <li class="page-item">
+                                                <a class="page-link" href="#" aria-label="Next"
+                                                   th:hidden="${currentPage >= totalPages - 1}"
+                                                   th:href="@{/admin/positions(page=${currentPage + 1})}">
+                                                    <span aria-hidden="true">&#10095;</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </form>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>

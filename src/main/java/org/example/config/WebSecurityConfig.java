@@ -28,7 +28,9 @@ public class WebSecurityConfig extends AbstractSecurityWebApplicationInitializer
     }
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.authorizeRequests(authorize ->
+        http.
+                csrf().disable().
+                cors().disable().authorizeRequests(authorize ->
                         authorize
                                 .antMatchers("/auth/login", "/auth/registration", "/auth/process_login").permitAll()
                                 .antMatchers("/admin/**").hasAnyAuthority("ADMIN", "MODERATOR")

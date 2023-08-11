@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -20,4 +21,16 @@ public interface UserRepository extends JpaRepository<UserEntity,Integer> {
 
     @Override
     Page<UserEntity> findAll(Pageable pageable);
+    Page<UserEntity> findByLoginContainingIgnoreCase(String login, Pageable pageable);
+
+    Page<UserEntity> findAllByOrderByIdAsc(Pageable pageable);
+
+    Page<UserEntity> findAllByOrderByNameAsc(Pageable pageable);
+
+    Page<UserEntity> findAllByOrderByEmailAsc(Pageable pageable);
+
+    Page<UserEntity> findAllByOrderByLoginAsc(Pageable pageable);
+    Long countBy();
+    Long countByLoginContainingIgnoreCase(String login);
+
 }

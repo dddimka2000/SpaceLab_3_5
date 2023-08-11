@@ -28,10 +28,10 @@ public class PositionAdminController {
         this.userEntityService = userEntityService;
     }
 
-
+int size=3;
     @GetMapping("/admin/positions")
     public String adminPositionShow(Model model, @RequestParam(defaultValue = "0") int page) {
-        Page<UserEntity> userPage = userEntityService.findAllUsersPage(page, 3);
+        Page<UserEntity> userPage = userEntityService.findAllUsersPage(page, size);
         List<UserEntity> users = userPage.getContent();
         List<String> roles = new ArrayList<>();
         getPage = page;
@@ -44,6 +44,10 @@ public class PositionAdminController {
         model.addAttribute("users", users);
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", userPage.getTotalPages());
+        long count = userEntityService.countBy();
+        String panelCount = "Показано " + (size * page + 1) + "-" + (size + (size * page)) + " из " + count;
+        log.info(panelCount);
+        model.addAttribute("panelCount", panelCount);
         return "/admin/positions";
     }
 

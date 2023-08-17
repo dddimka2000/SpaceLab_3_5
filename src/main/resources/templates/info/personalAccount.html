@@ -16,157 +16,217 @@
     <link rel="stylesheet" th:href="@{/static/assets/css/customizer.min.css}"/>
     <link rel="stylesheet" th:href="@{/static/assets/css/rtl.min.css}"/>
     <link rel="stylesheet" th:href="@{/static/assets/css/myCss/modal.css}"/>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
-<body>
-<div class="wrapper">
-    <div class="content-wrapper">
-        <div class="content-header" style="text-align: center">
-            <img src="https://cdn-icons-png.flaticon.com/512/926/926122.png" style="width: 10%;height: auto;"
-                 title="main">
-            <h4 class="card-title">Редактировать Пользователя</h4>
-            <div th:if="${changePass==true}" style="text-align: center;position: center">
-                <div class="alert alert-success mx-auto" style="width: 33%">Пароль успешно изменен
-                </div>
-            </div>
+<body style="background-image:url('https://hips.hearstapps.com/hmg-prod/images/assortment-of-colorful-ripe-tropical-fruits-top-royalty-free-image-995518546-1564092355.jpg'); height: 100%;
+background-repeat: repeat; height: 100%">
+<div id="loading">
+    <div class="loader simple-loader">
+        <div class="loader-body"></div>
+    </div>
+</div>
+<aside class="sidebar sidebar-default sidebar-white sidebar-base navs-rounded-all ">
+    <div th:insert="~{public/blocks/sidebar::sidebarMenu}"></div>
+</aside>
+</div>
+<main class="main-content">
 
-        </div>
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-xl-3 col-lg-4">
-                    <div class="card">
-                        <div class="card-header d-flex justify-content-between">
-                            <div class="header-title">
-                                <h4 class="card-title">Обновить фотографию</h4>
+    <div class="wrapper">
+        <div class="content-wrapper">
+            <div class="content-header" style="text-align: center">
+                <img src="https://cdn-icons-png.flaticon.com/512/926/926122.png" style="width: 10%;height: auto;"
+                     title="main">
+                <h4 class="card-title" style="color: black">Личный кабинет</h4>
+                <div th:if="${changePass==true}" style="text-align: center;position: center">
+                    <div class="alert alert-success mx-auto" style="width: 33%">Пароль успешно изменен
+                    </div>
+                </div>
+
+            </div>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-xl-3 col-lg-4">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between">
+                                <div class="header-title">
+                                    <h4 class="card-title">Обновить фотографию</h4>
+                                </div>
                             </div>
-                        </div>
-                        <div class="card-body">
-                            <form id="edit-user-img" method="POST" th:action="@{/personal_account/uploader/path}"
-                                  th:object="${uploadFile}" enctype="multipart/form-data">
-                                <div class="form-group">
-                                    <div class="profile-img-edit position-relative">
+                            <div class="card-body">
+                                <form id="edit-user-img" method="POST" th:action="@{/personal_account/uploader/path}"
+                                      th:object="${uploadFile}" enctype="multipart/form-data">
+                                    <div class="profile-img-edit position-relative" id="fileButtonUserImg">
                                         <img th:src="@{${userEntity.getPath()}}" alt="profile-pic"
                                              class="theme-color-default-img profile-pic rounded avatar-100">
-                                        <input type="file" name="file">
+                                        <div class="upload-icone bg-primary">
+                                            <svg class="upload-button icon-14" width="14" viewBox="0 0 24 24">
+                                                <path fill="#ffffff"
+                                                      d="M14.06,9L15,9.94L5.92,19H5V18.08L14.06,9M17.66,3C17.41,3 17.15,3.1 16.96,3.29L15.13,5.12L18.88,8.87L20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18.17,3.09 17.92,3 17.66,3M14.06,6.19L3,17.25V21H6.75L17.81,9.94L14.06,6.19Z"></path>
+                                            </svg>
+                                            <button class="file-upload"></button>
+                                            <input id="fileUserImg" name="file" type="file" hidden="true">
+                                        </div>
                                     </div>
                                     <div th:if="${#fields.hasErrors('file')}">
                                         <div class="alert alert-danger" th:errors="*{file}">
                                         </div>
                                     </div>
-                                </div>
-                                <button class="btn btn-primary mx-auto" type="submit">Обновить фотографию профиля
-                                </button>
-                            </form>
+                                    <button class="btn btn-primary mx-auto" type="submit">Обновить фотографию профиля
+                                    </button>
+                                </form>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-xl-9 col-lg-8">
-                    <form id="edit-user-info" method="POST" th:object="${userEntity}"
-                          enctype="application/x-www-form-urlencoded"
-                          th:action="@{/personal_account}">
-                        <div class="card">
-                            <div class="card-header d-flex justify-content-between">
-                                <div class="header-title">
-                                    <h4 class="card-title">Изменить личные данные</h4>
+                    <div class="col-xl-9 col-lg-8">
+                        <form id="edit-user-info" method="POST" th:object="${userEntity}"
+                              enctype="application/x-www-form-urlencoded"
+                              th:action="@{/personal_account}">
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between">
+                                    <div class="header-title">
+                                        <h4 class="card-title">Изменить личные данные</h4>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="card-body">
-                                <div class="new-user-info">
-                                    <div class="row">
-                                        <input type="hidden" th:field="*{path}">
-                                        <div class="form-group col-md-6">
-                                            <label for="floatingLogin">Логин</label>
-                                            <input type="text" class="form-control" id="floatingLogin"
-                                                   placeholder="Логин"
-                                                   th:field="*{login}">
-                                            <div th:if="${#fields.hasErrors('login')}">
-                                                <div class="alert alert-danger" th:errors="*{login}">
+                                <div class="card-body">
+                                    <div class="new-user-info">
+                                        <div class="row">
+                                            <input type="hidden" th:field="*{path}">
+                                            <div class="form-group col-md-6">
+                                                <label for="floatingLogin">Логин</label>
+                                                <input type="text" class="form-control" id="floatingLogin"
+                                                       placeholder="Логин"
+                                                       th:field="*{login}">
+                                                <div th:if="${#fields.hasErrors('login')}">
+                                                    <div class="alert alert-danger" th:errors="*{login}">
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group col-md-6">
-                                            <label for="floatingTelephone">Номер телефона</label>
-                                            <input type="text" class="form-control" id="floatingTelephone"
-                                                   placeholder="Номер телефона"
-                                                   th:field="*{telephone}">
-                                            <div th:if="${#fields.hasErrors('telephone')}"
-                                                 class="alert alert-danger"
-                                                 th:errors="*{telephone}">
+                                            <div class="form-group col-md-6">
+                                                <label for="floatingTelephone">Номер телефона</label>
+                                                <input type="text" class="form-control" id="floatingTelephone"
+                                                       placeholder="Номер телефона"
+                                                       th:field="*{telephone}">
+                                                <div th:if="${#fields.hasErrors('telephone')}"
+                                                     class="alert alert-danger"
+                                                     th:errors="*{telephone}">
+                                                </div>
+                                                <br>
                                             </div>
-                                            <br>
-                                        </div>
-                                        <div class="form-group col-md-6">
-                                            <label for="floatingPassword">Пароль</label>
-                                            <input type="password" class="form-control" id="floatingPassword"
-                                                   placeholder="Пароль" name="password">
-                                            <div th:if="${#fields.hasErrors('pass')}"
-                                                 class="alert alert-danger"
-                                                 th:errors="*{pass}">
+                                            <div class="form-group col-md-6">
+                                                <label for="floatingPassword">Пароль</label>
+                                                <input type="password" class="form-control" id="floatingPassword"
+                                                       placeholder="Пароль" name="password">
+                                                <div th:if="${#fields.hasErrors('pass')}"
+                                                     class="alert alert-danger"
+                                                     th:errors="*{pass}">
+                                                </div>
+                                                <br>
                                             </div>
-                                            <br>
-                                        </div>
-                                        <div class="form-group col-md-6">
-                                            <label for="floatingPasswordRepeat">Повторите пароль</label>
-                                            <input type="password" class="form-control" id="floatingPasswordRepeat"
-                                                   placeholder="Повторите пароль" name="passwordRepeat">
-                                            <div th:if="${#fields.hasErrors('pass')}"
-                                                 class="alert alert-danger"
-                                                 th:errors="*{pass}">
+                                            <div class="form-group col-md-6">
+                                                <label for="floatingPasswordRepeat">Повторите пароль</label>
+                                                <input type="password" class="form-control" id="floatingPasswordRepeat"
+                                                       placeholder="Повторите пароль" name="passwordRepeat">
+                                                <div th:if="${#fields.hasErrors('pass')}"
+                                                     class="alert alert-danger"
+                                                     th:errors="*{pass}">
+                                                </div>
+                                                <br>
                                             </div>
-                                            <br>
-                                        </div>
-                                        <div class="form-group col-md-12">
-                                            <label for="floatingName">name</label>
-                                            <input type="text" class="form-control" id="floatingName"
-                                                   placeholder="name"
-                                                   th:field="*{name}">
-                                            <div th:if="${#fields.hasErrors('name')}" class="alert alert-danger"
-                                                 th:errors="*{name}">
+                                            <div class="form-group col-md-12">
+                                                <label for="floatingName">name</label>
+                                                <input type="text" class="form-control" id="floatingName"
+                                                       placeholder="name"
+                                                       th:field="*{name}">
+                                                <div th:if="${#fields.hasErrors('name')}" class="alert alert-danger"
+                                                     th:errors="*{name}">
+                                                </div>
+                                                <br>
                                             </div>
-                                            <br>
-                                        </div>
-                                        <div class="form-group col-md-12">
-                                            <label for="floatingSurName">Surname</label>
-                                            <input type="text" class="form-control" id="floatingSurName"
-                                                   placeholder="surname"
-                                                   th:field="*{surname}">
-                                            <div th:if="${#fields.hasErrors('surname')}" class="alert alert-danger"
-                                                 th:errors="*{surname}">
+                                            <div class="form-group col-md-12">
+                                                <label for="floatingSurName">Surname</label>
+                                                <input type="text" class="form-control" id="floatingSurName"
+                                                       placeholder="surname"
+                                                       th:field="*{surname}">
+                                                <div th:if="${#fields.hasErrors('surname')}" class="alert alert-danger"
+                                                     th:errors="*{surname}">
+                                                </div>
+                                                <br>
                                             </div>
-                                            <br>
-                                        </div>
-                                        <div class="form-group col-sm-12">
-                                            <label class="form-label">Город:</label>
-                                            <select name="type" class="selectpicker form-control" data-style="py-0">
-                                                <option>Днепр</option>
-                                                <option>Киев</option>
-                                                <option>Львов</option>
-                                                <option>Одесса</option>
-                                                <option>Харьков</option>
-                                                <option>Ивано-Франковск</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group col-md-6">
-                                            <label for="floatingEmail">Email address</label>
-                                            <input type="text" class="form-control" id="floatingEmail"
-                                                   placeholder="E-mail"
-                                                   th:field="*{email}">
-                                            <div th:if="${#fields.hasErrors('email')}" class="alert alert-danger"
-                                                 th:errors="*{email}">
+                                            <div class="form-group col-sm-12">
+                                                <label class="form-label">Город:</label>
+                                                <select name="type" class="selectpicker form-control" data-style="py-0">
+                                                    <option>Днепр</option>
+                                                    <option>Киев</option>
+                                                    <option>Львов</option>
+                                                    <option>Одесса</option>
+                                                    <option>Харьков</option>
+                                                    <option>Ивано-Франковск</option>
+                                                </select>
                                             </div>
-                                            <br>
+                                            <div class="form-group col-md-6">
+                                                <label for="floatingEmail">Email address</label>
+                                                <input type="text" class="form-control" id="floatingEmail"
+                                                       placeholder="E-mail"
+                                                       th:field="*{email}">
+                                                <div th:if="${#fields.hasErrors('email')}" class="alert alert-danger"
+                                                     th:errors="*{email}">
+                                                </div>
+                                                <br>
+                                            </div>
                                         </div>
+                                        <hr>
+                                        <button type="submit" class="btn btn-primary">Сохранить</button>
                                     </div>
-                                    <hr>
-                                    <button type="submit" class="btn btn-primary">Сохранить</button>
                                 </div>
                             </div>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</main>
+
+<script th:inline="javascript">
+    $("#fileButtonUserImg").on("click", function () {
+        let file = $("#fileUserImg");
+        file.click();
+    })
+</script>
+
+
+<!-- Library Bundle Script -->
+<script th:src="@{/static/assets/js/core/libs.min.js}"></script>
+
+<!-- External Library Bundle Script -->
+<script th:src="@{/static/assets/js/core/external.min.js}"></script>
+
+<!-- Widgetchart Script -->
+<script th:src="@{/static/assets/js/charts/widgetcharts.js}"></script>
+
+<!-- mapchart Script -->
+<script th:src="@{/static/assets/js/charts/vectore-chart.js}"></script>
+<script th:src="@{/static/assets/js/charts/dashboard.js}"></script>
+
+<!-- fslightbox Script -->
+<script th:src="@{/static/assets/js/plugins/fslightbox.js}"></script>
+
+<!-- Settings Script -->
+<script th:src="@{/static/assets/js/plugins/setting.js}"></script>
+
+<!-- Slider-tab Script -->
+<script th:src="@{/static/assets/js/plugins/slider-tabs.js}"></script>
+
+<!-- Form Wizard Script -->
+<script th:src="@{/static/assets/js/plugins/form-wizard.js}"></script>
+
+<!-- AOS Animation Plugin-->
+<script th:src="@{/static/assets/vendor/aos/dist/aos.js}"></script>
+
+<!-- App Script -->
+<script th:src="@{/static/assets/js/hope-ui.js}" defer></script>
+
+<script th:src="@{/static/assets/js/myJs/script.js}"></script>
 
 </body>
 </html>

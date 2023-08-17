@@ -57,7 +57,7 @@
                                     <tbody>
                                     <tr class="text-center" th:each="user,i:${users}">
                                         <td class="short-col">
-                                            <div th:text="${(i.index+1)+(users.size()*currentPage)}"></div>
+                                            <div th:text="${(i.index+1)+(sizePageItems*currentPage)}"></div>
                                         </td>
                                         <td class="text-center">
                                             <div th:text="${user.login}"></div>

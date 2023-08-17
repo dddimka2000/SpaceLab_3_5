@@ -1,8 +1,14 @@
 package org.example.service;
 
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.transaction.Transactional;
 import lombok.extern.log4j.Log4j2;
 import org.example.entity.UserEntity;
 import org.example.repository.UserRepository;
+import org.hibernate.Hibernate;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -16,11 +22,12 @@ import java.util.Optional;
 public class UserEntityService {
     final
     UserRepository userRepository;
-
-    public UserEntityService(UserRepository userRepository) {
+    @Autowired
+    public UserEntityService(UserRepository userRepository, EntityManagerFactory entityManagerFactory, SessionFactory sessionFactory) {
         this.userRepository = userRepository;
+        this.entityManagerFactory = entityManagerFactory;
+        this.sessionFactory = sessionFactory;
     }
-
     public Optional<UserEntity> findByEmail(String email) {
         log.info("UserEntity-findByEmail start: " + email);
         Optional<UserEntity> user;
@@ -29,7 +36,6 @@ public class UserEntityService {
 
         return user;
     }
-
     public Optional<UserEntity> findByTelephone(String telephone) {
         log.info("UserEntity-findByTelephone start: " + telephone);
         Optional<UserEntity> user;
@@ -38,7 +44,6 @@ public class UserEntityService {
 
         return user;
     }
-
     public Optional<UserEntity> findByLogin(String login) {
         log.info("UserEntity-findByLogin start: " + login);
         Optional<UserEntity> user = userRepository.findByLogin(login);
@@ -46,26 +51,36 @@ public class UserEntityService {
 
         return user;
     }
-
     public Optional<UserEntity> findById(Integer id) {
         log.info("UserEntity-findById start: " + id);
         Optional<UserEntity> user = userRepository.findById(id);
         log.info("UserEntity-findById successful");
         return user;
     }
+    private final EntityManagerFactory entityManagerFactory;
 
     public void save(UserEntity userEntity) {
-        log.info("UserEntity-saveByLogin start: " + userEntity);
-        userRepository.save(userEntity);
-        log.info("UserEntity-findByLogin successful");
+//        try (Session session = sessionFactory.openSession()) {
+
+//            log.info("UserEntity-saveByLogin start: " + userEntity);
+            userRepository.save(userEntity);
+            log.info("UserEntity-findByLogin successful");
+//        } catch (Exception e) {
+//            log.error(e);
+//        }
 
     }
+
     public void delete(UserEntity userEntity) {
         log.info("UserEntity-delete start: " + userEntity);
         userRepository.delete(userEntity);
         log.info("UserEntity-delete successful");
 
     }
+    private final SessionFactory sessionFactory;
+
+
+
     public Page<UserEntity> findAllUsersPage(Integer pageNumber, Integer pageSize) {
         log.info("UserEntity-findAllUsersPage start");
         Page<UserEntity> page = null;
@@ -114,16 +129,18 @@ public class UserEntityService {
         }
         return resultPage;
     }
-    public long countBy(){
+
+    public long countBy() {
         log.info("UserEntity-countBy");
-        long count=userRepository.countBy();
-        log.info("UserEntity-countBy get: "+count);
+        long count = userRepository.countBy();
+        log.info("UserEntity-countBy get: " + count);
         return count;
     }
-    public long countByLogin(String login){
-        log.info("UserEntity-countByLogin "+ login);
-        long count=userRepository.countByLoginContainingIgnoreCase(login);
-        log.info("UserEntity-countByLogin get: "+count);
+
+    public long countByLogin(String login) {
+        log.info("UserEntity-countByLogin " + login);
+        long count = userRepository.countByLoginContainingIgnoreCase(login);
+        log.info("UserEntity-countByLogin get: " + count);
         return count;
     }
 }

@@ -45,9 +45,10 @@ int size=3;
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", userPage.getTotalPages());
         long count = userEntityService.countBy();
-        String panelCount = "Показано " + (size * page + 1) + "-" + (size + (size * page)) + " из " + count;
+        String panelCount = "Показано " + (size * page + 1) + "-" + (users.size() + (size * page)) + " из " + count;
         log.info(panelCount);
         model.addAttribute("panelCount", panelCount);
+        model.addAttribute("sizePageItems", size);
         return "/admin/positions";
     }
 

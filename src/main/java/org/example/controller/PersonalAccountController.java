@@ -1,5 +1,6 @@
 package org.example.controller;
 
+import jakarta.transaction.Transactional;
 import lombok.extern.log4j.Log4j2;
 import org.example.dto.UploadImg;
 import org.example.dto.UserDTO;
@@ -7,6 +8,7 @@ import org.example.entity.UserEntity;
 import org.example.security.UserDetailsImpl;
 import org.example.service.UserEntityService;
 import org.example.util.UserValidatorAndConvert.*;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -16,7 +18,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -60,16 +62,20 @@ public class PersonalAccountController {
     String regex;
     @Value("${spring.pathImg}")
     String path;
-
     @GetMapping
     public String showPersonalAccount(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                       @ModelAttribute("userEntity") UserDTO person, Model model,
                                       @ModelAttribute("uploadFile") UploadImg uploadFile) {
-        model.addAttribute("userEntity", userDetails.getUserEntity());
+        UserEntity userEntity=userEntityService.findByLogin(userDetails.getUsername()).get();
+        person.setPath(userEntity.getPath());
+        person.setEmail(userEntity.getEmail());
+        person.setLogin(userEntity.getLogin());
+        person.setName(userEntity.getName());
+        person.setSurname(userEntity.getSurname());
+        person.setTelephone(userEntity.getTelephone());
         model.addAttribute("passwordRepeat", true);
         return "/info/personalAccount";
     }
-
     @PostMapping("/uploader/path")
     public String updateUserPublicPath(@ModelAttribute("uploadFile") @Valid UploadImg uploadFile,
                                        BindingResult bindingResult,
@@ -108,7 +114,7 @@ public class PersonalAccountController {
                                    Errors errors,
                                    Model model,
                                    @ModelAttribute("uploadFile") UploadImg uploadFile) {
-        userDTO.setPass(userDetails.getUserEntity().getPass());
+        userDTO.setPass(userDetails.getPassword());
         if (!passwordRepeat.get().isBlank() || !password.get().isBlank()) {
             userDTO.setPass(password.get());
             passwordValidator.validate(userDTO, errors);

@@ -1,7 +1,9 @@
 package org.example.security;
 
+import jakarta.transaction.Transactional;
 import org.example.entity.UserEntity;
 import org.example.entity.UserRole;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -31,6 +31,7 @@ public interface UserRepository extends JpaRepository<UserEntity,Integer> {
 
     Page<UserEntity> findAllByOrderByLoginAsc(Pageable pageable);
     Long countBy();
+
     Long countByLoginContainingIgnoreCase(String login);
 
 }

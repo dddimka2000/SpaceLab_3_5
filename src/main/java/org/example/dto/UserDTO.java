@@ -2,9 +2,7 @@ package org.example.dto;
 
 import lombok.Data;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 @Data
 public class UserDTO {
@@ -13,7 +11,7 @@ public class UserDTO {
     @Pattern(regexp = "^[a-zA-Z0-9_]+$", message = "Логин должен содержать только буквы a-z A-Z, цифры 0-9 и символ подчеркивания \"_\".")
     public String login;
 
-    @Size(min = 8, max = 30, message = "Пароль должен быть от 8 до 30 символов")
+//    @Size(min = 8, max = 30, message = "Пароль должен быть от 8 до 30 символов")
     private String pass;
 
     @Size(min = 2, max = 30, message = "Имя должен быть от 2 до 30 символов")

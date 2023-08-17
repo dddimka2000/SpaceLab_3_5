@@ -4,18 +4,22 @@ import lombok.extern.log4j.Log4j2;
 import org.example.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.context.AbstractSecurityWebApplicationInitializer;
 
+@Configuration
 @EnableWebSecurity
 @Log4j2
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class WebSecurityConfig extends AbstractSecurityWebApplicationInitializer {
+public class WebSecurityConfig {
     private final UserDetailsServiceImpl userDetailsServiceImpl;
 
     @Autowired
@@ -30,20 +34,21 @@ public class WebSecurityConfig extends AbstractSecurityWebApplicationInitializer
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.
                 csrf().disable().
-                cors().disable().authorizeRequests(authorize ->
+                cors().disable().authorizeHttpRequests(authorize ->
                         authorize
-                                .antMatchers("/auth/login", "/auth/registration", "/auth/process_login").permitAll()
-                                .antMatchers("/admin/**").hasAnyAuthority("ADMIN", "MODERATOR")
-                                .antMatchers("/personal_account").authenticated()
+                                .requestMatchers("/auth/login", "/auth/registration", "/auth/process_login").permitAll()
+                                .requestMatchers("/admin/**").hasAnyAuthority("ADMIN", "MODERATOR")
+                                .requestMatchers("/personal_account").authenticated()
                                 .anyRequest().permitAll())
-                .formLogin(form ->  form.loginPage("/auth/login")
+                .formLogin(form ->
+                        form.loginPage("/auth/login")
                         .loginProcessingUrl("/auth/process_login")
                         .successHandler(new CustomAuthenticationSuccessHandler())
                         .failureUrl("/auth/login?error"))
-                .httpBasic();
+                .httpBasic()
+        ;
         return http.build();
     }
-
 
 }
 //public class WebSecurityConfig extends WebSecurityConfigurerAdapter {

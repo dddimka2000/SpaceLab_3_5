@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en" dir="ltr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="shortcut icon" th:href="@{/assets/images/favicon.ico}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/core/libs.min.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/vendor/aos/dist/aos.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/hope-ui.min.css?v=2.0}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/custom.min.css?v=2.0}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/dark.min.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/customizer.min.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/rtl.min.css}"/>
+    <link rel="shortcut icon" th:href="@{/assets/images/favicon.ico}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/myCss/modal.css}"/>
+</head>
+<body>
+<div id="loading">
+    <div class="loader simple-loader">
+        <div class="loader-body"></div>
+    </div>
+</div>
+<aside class="sidebar sidebar-default sidebar-white sidebar-base navs-rounded-all ">
+    <div th:insert="admin/blocks/sidebar::sidebarMenu"></div>
+</aside>
+<main class="main-content">
+    <div th:insert="admin/blocks/topPanel::topPanel"></div>
+    <div class="container-fluid content-inner mt-n5 py-0">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="header-title">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <h3>Классификации категорий продуктов</h3>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div style="text-align: right">
+                                        <a th:href="@{/admin/classifications/create}">
+                                            <button class="btn btn-outline-dark" type="submit">Создать
+                                                классификацию
+                                            </button>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-6" th:each="ob : ${objects}" style="text-align: center; padding-top: 20px">
+                                <a th:href="@{/admin/classifications/{name}(name=${ob.name})}">
+                                    <img th:src="@{${ob.path}}" width="400px" height="300px">
+                                    <h5 th:text="${ob.name}"
+                                        th:style="${ob.status == true ? 'color: green;' : 'color: red;'}"></h5>
+                                </a>
+                            </div>
+                        </div>
+                        <br>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<script th:src="@{/assets/js/myJs/script.js}"></script>
+<script th:src="@{/assets/js/core/libs.min.js}"></script>
+<script th:src="@{/assets/js/core/external.min.js}"></script>
+<script th:src="@{/assets/js/charts/widgetcharts.js}"></script>
+<script th:src="@{/assets/js/charts/vectore-chart.js}"></script>
+<script th:src="@{/assets/js/charts/dashboard.js}"></script>
+<script th:src="@{/assets/js/plugins/fslightbox.js}"></script>
+<script th:src="@{/assets/js/plugins/setting.js}"></script>
+<script th:src="@{/assets/js/plugins/slider-tabs.js}"></script>
+<script th:src="@{/assets/js/plugins/form-wizard.js}"></script>
+<script th:src="@{/assets/vendor/aos/dist/aos.js}"></script>
+<script th:src="@{/assets/js/hope-ui.js}" defer></script>
+
+</body>
+</html>

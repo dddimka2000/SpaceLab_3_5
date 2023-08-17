@@ -1,0 +1,568 @@
+<!doctype html>
+<html lang="en" dir="ltr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" type="image/x-icon" th:href="@{/static/assets/images/favicon.ico}">
+    <link rel="stylesheet" th:href="@{/static/assets/css/core/libs.min.css}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/vendor/aos/dist/aos.css}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/hope-ui.min.css?v=2.0}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/custom.min.css?v=2.0}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/dark.min.css}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/customizer.min.css}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/rtl.min.css}"/>
+    <link rel="shortcut icon" th:href="@{/assets/images/favicon.ico}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/myCss/modal.css}"/>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .disabled-block {
+            pointer-events: none;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+<div id="loading">
+    <div class="loader simple-loader">
+        <div class="loader-body"></div>
+    </div>
+</div>
+<aside class="sidebar sidebar-default sidebar-white sidebar-base navs-rounded-all ">
+    <div th:insert="admin/blocks/sidebar::sidebarMenu"></div>
+</aside>
+<main class="main-content">
+    <div th:insert="admin/blocks/topPanel::topPanel"></div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="header-title">
+                            <h4 class="card-title mb-0">Пользователи</h4>
+                            <div th:if="${errorRedirect}">
+                                <p th:text="${errorRedirect}" style="color: red"></p>
+                            </div>
+                            <div id="blockUserInfo"></div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <input type="text" name="userName" id="userSearchInput"
+                               placeholder="Введите Login пользователя">
+                        <br>
+                        <br>
+                        <div class="table-responsive">
+                            <table class="table table-bordered custom-table">
+                                <thead>
+                                <tr>
+                                    <th class="text-center">#
+                                    </th>
+                                    <th class="text-center">Login
+                                    </th>
+                                    <th class="text-center">Telephone
+                                    </th>
+                                    <th class="text-center">E-mail
+                                    </th>
+                                    <th class="text-center">Edit</th>
+                                    <th class="text-center">Delete</th>
+                                </tr>
+                                </thead>
+                                <tbody id="tableBody">
+                                <tr class="text-center" th:each="user,i:${users}" th:id="idDeleteItem+${user.id}">
+                                    <td class="short-col">
+                                        <div th:text="${(i.index+1)+(users.size()*currentPage)}"></div>
+                                    </td>
+                                    <td class="text-center" style="word-wrap: break-word">
+                                        <div th:text="${user.login}"></div>
+                                    </td>
+                                    <td class="text-center">
+                                        <div th:text="${user.telephone}"></div>
+                                    </td>
+                                    <td class="text-center">
+                                        <div th:text="${user.email}"></div>
+                                    </td>
+                                    <td class="text-center" id="EditButton">
+                                        <a th:href="@{/admin/users/{id}(id=${user.id})}">
+                                            <div class="btn btn-warning">Edit</div>
+                                        </a>
+                                    </td>
+                                    <td class="text-center" id="DeleteButton">
+                                        <div class="btn btn-danger"
+                                             th:id="'deleteUserButton_' + ${user.id}"
+                                             th:attr="data-user-id=${user.id}"
+                                             onclick="openModal(this)">
+                                            Delete
+                                        </div>
+                                        <div id="deleteModal" class="modal">
+                                            <div class="modal-content" style="text-align: center;">
+                                                <p>Вы хотите удалить пользователя ?</p>
+                                                <div class="row">
+                                                    <div class="col-lg-6">
+                                                        <div class="btn btn-primary" id="okBtn">
+                                                            Да
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <div class="btn btn-warning" id="cancelBtn">Отмена
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-6" id="rowPanelCount">
+                                <p th:text="${panelCount}"></p>
+                            </div>
+                            <div class="col-sm-6">
+                                <nav aria-label="Page navigation example">
+                                    <ul class="pagination justify-content-end" id="paginationItems">
+                                        <li class="page-item">
+                                            <a class="page-link" href="#" aria-label="Previous"
+                                               th:hidden="${currentPage == 0}">
+                                                <span aria-hidden="true">&#10094;</span>
+                                            </a>
+                                        </li>
+                                        <li class="page-item" th:if="${currentPage >= 2}">
+                                            <a class="page-link" href="#"
+                                               th:text="1"></a>
+                                        </li>
+                                        <li class="page-item" th:if="${currentPage >= 3}">
+                                            <span class="page-link">...</span>
+                                        </li>
+                                        <li class="page-item"
+                                            th:each="pageNumber : ${#numbers.sequence(currentPage - 1, currentPage + 1)}"
+                                            th:classappend="${pageNumber == currentPage} ? 'active' : ''"
+                                            th:if="${pageNumber >= 0 && pageNumber <= (totalPages - 1)}">
+                                            <a class="page-link" href="#"
+                                               th:text="${pageNumber + 1}">
+                                            </a>
+                                        </li>
+                                        <li class="page-item" th:if="${currentPage==0 && totalPages>5}">
+                                            <a class="page-link" href="#"
+                                               th:text="${2 + 1}">
+                                            </a>
+                                        </li>
+                                        <li class="page-item" th:if="${currentPage <= totalPages - 4}">
+                                            <span class="page-link">...</span>
+                                        </li>
+                                        <li class="page-item" th:if="${currentPage <= totalPages - 3}">
+                                            <a class="page-link" href="#"
+                                               th:text="${totalPages}"></a>
+                                        </li>
+                                        <li class="page-item" th:data-page="${currentPage+2}">
+                                            <a class="page-link" href="#" aria-label="Next">
+                                                <span aria-hidden="true">&#10095;</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script th:inline="javascript">
+    var currentPage = 0
+    var sizeItems = 0
+    var totalPages = 0
+    let searchName = ""
+    $("#userSearchInput").on("input", function () {
+        $("#blockUserInfo").empty()
+        searchName = $("#userSearchInput").val();
+        currentPage =/*[[${currentPage}]]*/0;
+        sizeItems =/*[[${sizeItems}]]*/0;
+        totalPages =/*[[${totalPages}]]*/0;
+        console.log(totalPages)
+        console.log(searchName);
+        console.log(sizeItems);
+        let url =/*[[@{/admin/users/getPage}]]*/ '';
+        console.log(url);
+        $.ajax({
+            method: "GET",
+            url: url,
+            data: {search: searchName},
+            dataType: "json",
+            success: function (data) {
+                console.log(data);
+                let tableBody = $("#tableBody");
+                tableBody.empty();
+                let userPanelArray = [];
+                let ElementsCount = data.count;
+                data.resultPage.content.forEach(function (user, index) {
+                    currentPage = 0;
+                    let showIndexPart2 = sizeItems * currentPage;
+                    console.log(showIndexPart2);
+                    userPanelArray.push(index + 1 + showIndexPart2);
+                    let contextPath = /*[[@{/}]]*/ '';
+                    let newTableBody = "<tr id='idDeleteItem" + user.id + "' >" +
+                        "<td>" + (index + 1 + showIndexPart2) + "</td>" +
+                        "<td>" + (user.login) + "</td>" +
+                        "<td>" + (user.telephone) + "</td>" +
+                        "<td>" + (user.email) + "</td>" +
+                        "<td><a href='" + contextPath + "admin/users/" + user.id + "'  id='EditButton'> <div class='btn btn-warning'>Edit</div></a>" +
+                        "<td><div class='btn btn-danger' id='deleteUserButton_'" + user.id + " data-user-id='" + user.id + "' onclick='openModal(this)' >Delete</div>" +
+                        "                                       <div id='deleteModal' class='modal'>\n" +
+                        "                                            <div class='modal-content'>\n" +
+                        "                                                <p>Вы хотите удалить пользователя ?</p>\n" +
+                        "                                                <div class='row'>\n" +
+                        "                                                    <div class='col-lg-6'>\n" +
+                        "                                                        <div class='btn btn-primary' id='okBtn'>\n" + "Да" +
+                        "                                                        </div>\n" +
+                        "                                                    </div>\n" +
+                        "                                                    <div class='col-lg-6'>\n" +
+                        "                                                        <div class='btn btn-warning' id='cancelBtn'>Отмена" +
+                        "                                                        </div>\n" +
+                        "                                                    </div>\n" +
+                        "                                                </div>\n" +
+                        "                                            </div>\n" +
+                        "                                        </div>" +
+                        "</td></tr>";
+
+
+                    tableBody.append(newTableBody);
+                });
+                let panelCount = $("#rowPanelCount");
+                panelCount.empty();
+                if (userPanelArray.length < 1) {
+                    userPanelArray.push(0);
+                    userPanelArray.push(0);
+                }
+                var resultPagesCount = Math.round(ElementsCount / (userPanelArray.length));
+                let newPanelCount = "<p>" + "Показано " + userPanelArray[0] + "-" + userPanelArray[userPanelArray.length - 1] + " из " + ElementsCount + "</p>";
+                panelCount.append(newPanelCount);
+                let paginationItems = $("#paginationItems").empty();
+                let paginationNewItems = "";
+                console.log("ElementsCount "+ElementsCount)
+                console.log("currentPage "+currentPage)
+                console.log("resultPagesCount"+ resultPagesCount)
+                if (ElementsCount > 0) {
+                    if (currentPage != 0) {
+                        paginationNewItems +=
+                            "  <li class=\"page-item\" data-page=" + (currentPage) + ">\n" +
+                            "        <a class=\"page-link\">                                     <span >&#10094;</span>\n </a>    " +
+                            "                                            </li>\n";
+                    }
+                    if (currentPage >= 1) {
+                        paginationNewItems +=
+                            "                                            <li class=\"page-item\">    <a class=\"page-link\"> \n" + 1 + "</a>\n" +
+                            "                                            </li>\n";
+                    }
+                    if (currentPage <= 3 && (resultPagesCount+1) > 5) {
+                        for (let pageNumber = 0; pageNumber <= currentPage + 1; pageNumber++) {
+                            console.log(pageNumber)
+                            paginationNewItems +=
+                                "                                            <li class=\"page-item\">   <a class=\"page-link ";
+                            if (currentPage == pageNumber) {
+                                paginationNewItems += "active\" style='color:white'";
+                            } else {
+                                paginationNewItems += "\"";
+                            }
+                            paginationNewItems += ">\n" +
+                                (pageNumber + 1) +
+                                "                                         </a>   </li>\n";
+                        }
+                    }
+                    if (currentPage >= 3) {
+                        paginationNewItems +=
+                            "                                            <li class=\"page-item\">\n" +
+                            "                                             <span class=\"page-link\">...</span>\n" +
+                            "                                            </li>";
+                    }
+                    if (resultPagesCount < 5) {
+                        for (let pageNumber = 0; pageNumber <= resultPagesCount - 1; pageNumber++) {
+                            console.log(pageNumber)
+                            paginationNewItems +=
+                                "                                            <li class=\"page-item\">   <a class=\"page-link ";
+                            if (currentPage == pageNumber) {
+                                paginationNewItems += "active\" style='color:white'";
+                            } else {
+                                paginationNewItems += "\"";
+                            }
+                            paginationNewItems += ">\n" +
+                                (pageNumber + 1) +
+                                "                                         </a>   </li>\n";
+                        }
+                    }
+                    if (currentPage >= 3 && (resultPagesCount+1) > 5) {
+                        for (let pageNumber = currentPage - 1; pageNumber <= currentPage + 1; pageNumber++) {
+                            console.log(pageNumber)
+                            paginationNewItems +=
+                                "                                            <li class=\"page-item\">   <a class=\"page-link ";
+                            if (currentPage == pageNumber) {
+                                paginationNewItems += "active\" style='color:white'";
+                            } else {
+                                paginationNewItems += "\"";
+                            }
+                            paginationNewItems += ">\n" +
+                                (pageNumber + 1) +
+                                "                                         </a>   </li>\n";
+                        }
+                    }
+                    if (currentPage == 0 && (resultPagesCount+1) > 5) {
+                        paginationNewItems +=
+                            "                                            <li class=\"page-item\">\n   <a class=\"page-link\">" +
+                            3 +
+                            "                                          </a>  </li>\n"
+                    }
+                    if (currentPage <= (resultPagesCount - 4) && (resultPagesCount+1) > 5) {
+                        paginationNewItems +=
+                            "                                            <li class=\"page-item\">  \n" +
+                            "                                                <span class=\"page-link\">...</span>\n" +
+                            "                                          </li>\n";
+                    }
+                    if (currentPage <= (resultPagesCount - 3) && (resultPagesCount+1) > 5) {
+                        paginationNewItems +=
+                            "                                            <li class=\"page-item\">   <a class=\"page-link\">\n" + resultPagesCount +
+                            "                                        </a>    </li>\n";
+                    }
+                    if (currentPage < (resultPagesCount - 1)) {
+                        paginationNewItems +=
+                            "                                            <li class=\"page-item\" data-page=" + (currentPage + 2) + ">   <a class=\"page-link\">\n" +
+                            "                                                    <span >&#10095;</span>\n" +
+                            "                                </a>            </li>";
+                    }
+                }
+                paginationItems.append(paginationNewItems);
+            },
+            error: function (error) {
+                console.log("Error:", error);
+            }
+        })
+    });
+
+
+    $(document).on("click", ".page-link", function (event) {
+        $("#blockUserInfo").empty()
+        console.log("click");
+        event.preventDefault();
+        sizeItems =/*[[${sizeItems}]]*/0;
+        let url =/*[[@{/admin/users/getPage}]]*/ '';
+        var pageNumber = parseInt($(this).text());
+        if (isNaN(pageNumber)) {
+            var inputValue = $(this).parent().data("page");
+            var numericValue = parseInt(inputValue);
+            console.log("TESTTT " + numericValue);
+            if (!isNaN(numericValue)) {
+                pageNumber = numericValue;
+            } else {
+                return;
+            }
+        }
+        console.log(pageNumber);
+        $.ajax({
+            method: "GET",
+            url: url,
+            data: {
+                search: searchName,
+                page: (pageNumber - 1)
+            },
+            dataType: "json",
+            success: function (data) {
+                console.log(data);
+                let tableBody = $("#tableBody");
+                tableBody.empty();
+                let userPanelArray = [];
+                let ElementsCount = data.count;
+                data.resultPage.content.forEach(function (user, index) {
+                    currentPage = pageNumber - 1;
+                    let showIndexPart2 = sizeItems * currentPage;
+                    console.log(showIndexPart2);
+                    userPanelArray.push(index + 1 + showIndexPart2);
+                    let contextPath = /*[[@{/}]]*/ '';
+                    let newTableBody = "<tr id='idDeleteItem" + user.id + "' >" +
+                        "<td>" + (index + 1 + showIndexPart2) + "</td>" +
+                        "<td>" + (user.login) + "</td>" +
+                        "<td>" + (user.telephone) + "</td>" +
+                        "<td>" + (user.email) + "</td>" +
+                        "<td><a href='" + contextPath + "admin/users/" + user.id + "'  id='EditButton'> <div class='btn btn-warning'>Edit</div></a>" +
+                        "<td><div class='btn btn-danger' id='deleteUserButton_'" + user.id + " data-user-id='" + user.id + "' onclick='openModal(this)' >Delete</div>" +
+                        "                                       <div id='deleteModal' class='modal'>\n" +
+                        "                                            <div class='modal-content'>\n" +
+                        "                                                <p>Вы хотите удалить пользователя ?</p>\n" +
+                        "                                                <div class='row'>\n" +
+                        "                                                    <div class='col-lg-6'>\n" +
+                        "                                                        <div class='btn btn-primary' id='okBtn'>\n" + "Да" +
+                        "                                                        </div>\n" +
+                        "                                                    </div>\n" +
+                        "                                                    <div class='col-lg-6'>\n" +
+                        "                                                        <div class='btn btn-warning' id='cancelBtn'>Отмена" +
+                        "                                                        </div>\n" +
+                        "                                                    </div>\n" +
+                        "                                                </div>\n" +
+                        "                                            </div>\n" +
+                        "                                        </div>" +
+                        "</td></tr>";
+
+                    tableBody.append(newTableBody);
+
+
+                });
+                let panelCount = $("#rowPanelCount");
+                panelCount.empty();
+                if (userPanelArray.length < 1) {
+                    userPanelArray.push(0);
+                    userPanelArray.push(0);
+                }
+                var resultPagesCount = Math.round(ElementsCount / sizeItems);
+                let newPanelCount = "<p>" + "Показано " + userPanelArray[0] + "-" + userPanelArray[userPanelArray.length - 1] + " из " + ElementsCount + "</p>";
+                panelCount.append(newPanelCount);
+                let paginationItems = $("#paginationItems").empty();
+                let paginationNewItems = "";
+                console.log("ElementsCount "+ElementsCount)
+                console.log("currentPage "+currentPage)
+                console.log("resultPagesCount"+ resultPagesCount)
+                if (ElementsCount > 0) {
+                    if (currentPage != 0) {
+                        paginationNewItems +=
+                            "  <li class=\"page-item\" data-page=" + (currentPage) + ">\n" +
+                            "        <a class=\"page-link\">                                     <span >&#10094;</span>\n </a>    " +
+                            "                                            </li>\n";
+                    }
+                    if (currentPage > 2 && resultPagesCount>4) {
+                        paginationNewItems +=
+                            "                                            <li class=\"page-item\">    <a class=\"page-link\"> \n" + 1 + "</a>\n" +
+                            "                                            </li>\n";
+                    }
+                    if (currentPage < 3 && (resultPagesCount+1) > 5) {
+                        for (let pageNumber = 0; pageNumber <= currentPage + 1; pageNumber++) {
+                            console.log(pageNumber)
+                            paginationNewItems +=
+                                "                                            <li class=\"page-item\">   <a class=\"page-link ";
+                            if (currentPage == pageNumber) {
+                                paginationNewItems += "active\" style='color:white'";
+                            } else {
+                                paginationNewItems += "\"";
+                            }
+                            paginationNewItems += ">\n" +
+                                (pageNumber + 1) +
+                                "                                         </a>   </li>\n";
+                        }
+                    }
+                    if (currentPage >= 3 && resultPagesCount>4) {
+                        paginationNewItems +=
+                            "                                            <li class=\"page-item\">\n" +
+                            "                                             <span class=\"page-link\">...</span>\n" +
+                            "                                            </li>";
+                    }
+                    if (resultPagesCount < 5) {
+                        for (let pageNumber = 0; pageNumber <= resultPagesCount - 1; pageNumber++) {
+                            console.log(pageNumber)
+                            paginationNewItems +=
+                                "                                            <li class=\"page-item\">   <a class=\"page-link ";
+                            if (currentPage == pageNumber) {
+                                paginationNewItems += "active\" style='color:white'";
+                            } else {
+                                paginationNewItems += "\"";
+                            }
+                            paginationNewItems += ">\n" +
+                                (pageNumber + 1) +
+                                "                                         </a>   </li>\n";
+                        }
+                    }
+                    if (currentPage >= 3 && (resultPagesCount+1) > 5) {
+                        for (let pageNumber = currentPage - 1; (pageNumber <= currentPage + 1)&&(pageNumber!=resultPagesCount); pageNumber++) {
+                            console.log(pageNumber)
+                            paginationNewItems +=
+                                "                                            <li class=\"page-item\">   <a class=\"page-link ";
+                            if (currentPage == pageNumber) {
+                                paginationNewItems += "active\" style='color:white'";
+                            } else {
+                                paginationNewItems += "\"";
+                            }
+                            paginationNewItems += ">\n" +
+                                (pageNumber + 1) +
+                                "                                         </a>   </li>\n";
+                        }
+                    }
+                    if (currentPage == 0 && (resultPagesCount+1) > 5) {
+                        paginationNewItems +=
+                            "                                            <li class=\"page-item\">\n   <a class=\"page-link\">" +
+                            3 +
+                            "                                          </a>  </li>\n"
+                    }
+                    if (currentPage <= (resultPagesCount - 3) && (resultPagesCount+1) > 5) {
+                        paginationNewItems +=
+                            "                                            <li class=\"page-item\">  \n" +
+                            "                                                <span class=\"page-link\">...</span>\n" +
+                            "                                          </li>\n";
+                    }
+                    if (currentPage <= (resultPagesCount - 3) && (resultPagesCount+1) > 5) {
+                        paginationNewItems +=
+                            "                                            <li class=\"page-item\">   <a class=\"page-link\">\n" + resultPagesCount +
+                            "                                        </a>    </li>\n";
+                    }
+                    if (currentPage < (resultPagesCount - 1)) {
+                        paginationNewItems +=
+                            "                                            <li class=\"page-item\" data-page=" + (currentPage + 2) + ">   <a class=\"page-link\">\n" +
+                            "                                                    <span >&#10095;</span>\n" +
+                            "                                </a>            </li>";
+                    }
+                }                paginationItems.append(paginationNewItems);
+            },
+            error: function (error) {
+                console.log("Error:", error);
+            }
+        })
+    });
+
+    let userId = 0;
+    function openModal(button) {
+        userId = button.getAttribute('data-user-id');
+        console.log(userId);
+        let modal = document.getElementById('deleteModal');
+        modal.style.display = 'block';
+    }
+    $(document).on("click", "#cancelBtn", function () {
+        $("#deleteModal").hide();
+    });
+    $(document).on("click", "#okBtn", function () {
+        let context =/*[[@{/}]]*/ '';
+        $.ajax({
+            url: context + "admin/users/delete",
+            method: "DELETE",
+            data: {id: userId},
+            success: function (context) {
+                console.log(context);
+                $("#blockUserInfo").empty()
+                $("#blockUserInfo").append(context);
+                if (context.includes("Пользователь успешно удален")) {
+                    var idSelector = "#idDeleteItem" + userId.toString();
+                    $(idSelector).addClass("disabled-block");
+                    $(idSelector).find("#DeleteButton").empty().append("<p style='color: red'>Удален</p>");
+                    $(idSelector).find("#EditButton").empty();
+                    $("#deleteModal").hide();
+                }
+            },
+            error: function (context) {
+                console.log("ERROR " + context);
+            }
+        })
+    });
+</script>
+
+
+<script th:src="@{/static/assets/js/myJs/script.js}"></script>
+<script th:src="@{/static/assets/js/core/libs.min.js}"></script>
+<script th:src="@{/static/assets/js/core/external.min.js}"></script>
+<script th:src="@{/static/assets/js/charts/widgetcharts.js}"></script>
+<script th:src="@{/static/assets/js/charts/vectore-chart.js}"></script>
+<script th:src="@{/static/assets/js/charts/dashboard.js}"></script>
+<script th:src="@{/static/assets/js/plugins/fslightbox.js}"></script>
+<script th:src="@{/static/assets/js/plugins/setting.js}"></script>
+<script th:src="@{/static/assets/js/plugins/slider-tabs.js}"></script>
+<script th:src="@{/static/assets/js/plugins/form-wizard.js}"></script>
+<script th:src="@{/static/assets/vendor/aos/dist/aos.js}"></script>
+<script th:src="@{/static/assets/js/hope-ui.js}" defer></script>
+
+</body>
+</html>

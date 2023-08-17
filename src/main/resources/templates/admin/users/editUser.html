@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="en" dir="ltr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" type="image/x-icon" th:href="@{/static/assets/images/favicon.ico}">
+    <link rel="stylesheet" th:href="@{/static/assets/css/core/libs.min.css}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/vendor/aos/dist/aos.css}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/hope-ui.min.css?v=2.0}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/custom.min.css?v=2.0}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/dark.min.css}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/customizer.min.css}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/rtl.min.css}"/>
+    <link rel="shortcut icon" th:href="@{/assets/images/favicon.ico}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/myCss/modal.css}"/>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<div id="loading">
+    <div class="loader simple-loader">
+        <div class="loader-body"></div>
+    </div>
+</div>
+<aside class="sidebar sidebar-default sidebar-white sidebar-base navs-rounded-all ">
+    <div th:insert="admin/blocks/sidebar::sidebarMenu"></div>
+</aside>
+<main class="main-content">
+    <div th:insert="admin/blocks/topPanel::topPanel"></div>
+
+    <div class="wrapper">
+        <div class="content-wrapper">
+            <div class="content-header" style="text-align: center">
+                <img src="https://cdn-icons-png.flaticon.com/512/926/926122.png" style="width: 10%;height: auto;"
+                     title="main">
+                <h4 class="card-title">Редактировать Пользователя id<span th:text="${userId}"></span></h4>
+                <br>
+                <div style="text-align: left" id="successfulEdit"></div>
+            </div>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-xl-3 col-lg-4">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between">
+                                <div class="header-title">
+                                    <h4 class="card-title">Обновить фотографию</h4>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div id="edit-user-img" th:object="${uploadFile}">
+                                    <div class="form-group">
+                                        <div class="profile-img-edit position-relative" id="fileButtonUserImg">
+                                            <img th:src="@{${userEntity.getPath()}}" alt="profile-pic"
+                                                 class="theme-color-default-img profile-pic rounded avatar-100">
+                                            <div class="upload-icone bg-primary">
+                                                <svg class="upload-button icon-14" width="14" viewBox="0 0 24 24">
+                                                    <path fill="#ffffff"
+                                                          d="M14.06,9L15,9.94L5.92,19H5V18.08L14.06,9M17.66,3C17.41,3 17.15,3.1 16.96,3.29L15.13,5.12L18.88,8.87L20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18.17,3.09 17.92,3 17.66,3M14.06,6.19L3,17.25V21H6.75L17.81,9.94L14.06,6.19Z"></path>
+                                                </svg>
+                                                <button class="file-upload"></button>
+                                                <input id="fileUserImg" type="file" hidden="true">
+                                            </div>
+                                        </div>
+                                        <div th:if="${#fields.hasErrors('file')}">
+                                            <div class="alert alert-danger" th:errors="*{file}">
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <div id="fieldPhoto"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-9 col-lg-8">
+                        <div id="edit-user-info" th:object="${userEntity}">
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between">
+                                    <div class="header-title">
+                                        <h4 class="card-title">Изменить личные данные</h4>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="new-user-info">
+                                        <div class="row">
+                                            <input type="hidden" th:field="*{path}">
+                                            <div class="form-group col-md-6">
+                                                <label for="floatingLogin">Логин</label>
+                                                <input type="text" class="form-control" id="floatingLogin"
+                                                       placeholder="Логин"
+                                                       th:field="*{login}">
+                                                <div id="loginError">
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <label for="floatingTelephone">Номер телефона</label>
+                                                <input type="text" class="form-control" id="floatingTelephone"
+                                                       placeholder="Номер телефона"
+                                                       th:field="*{telephone}">
+                                                <div id="telephoneError">
+                                                </div>
+                                                <br>
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <label for="floatingPassword">Пароль</label>
+                                                <input type="password" class="form-control" id="floatingPassword"
+                                                       placeholder="Пароль" name="password">
+                                                <div id="passError">
+                                                </div>
+                                                <br>
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <label for="floatingPasswordRepeat">Повторите пароль</label>
+                                                <input type="password" class="form-control" id="floatingPasswordRepeat"
+                                                       placeholder="Повторите пароль" name="passwordRepeat">
+                                                <div id="passRepeatError">
+                                                </div>
+
+                                                <br>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="floatingName">Name</label>
+                                                <input type="text" class="form-control" id="floatingName"
+                                                       placeholder="name"
+                                                       th:field="*{name}">
+                                                <div id="nameError">
+                                                </div>
+                                                <br>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="floatingSurName">Surname</label>
+                                                <input type="text" class="form-control" id="floatingSurName"
+                                                       placeholder="surname"
+                                                       th:field="*{surname}">
+                                                <div id="surnameError">
+                                                </div>
+                                                <br>
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <label for="floatingEmail">Email address</label>
+                                                <input type="text" class="form-control" id="floatingEmail"
+                                                       placeholder="E-mail"
+                                                       th:field="*{email}">
+                                                <div id="emailError">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <button id="btnSendForm" class="btn btn-primary">Сохранить</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<script th:inline="javascript">
+    $("#fileButtonUserImg").on("click", function () {
+        let file = $("#fileUserImg");
+        file.click();
+    })
+
+    $("#btnSendForm").on("click", function () {
+        let login = $("#floatingLogin").val();
+        let email = $("#floatingEmail").val();
+        let telephone = $("#floatingTelephone").val();
+        let name = $("#floatingName").val();
+        let surname = $("#floatingSurName").val();
+        let passwordRepeat = $("#floatingPasswordRepeat").val();
+        let password = $("#floatingPassword").val();
+        console.log("password " + (password) + passwordRepeat)
+        let dataToSend = {
+
+            pass: password,
+            passRepeat: passwordRepeat,
+            // userEntity: {
+            login: login,
+            name: name,
+            surName: surname,
+            telephone: telephone,
+            email: email
+            // }
+        };
+        let formData = new FormData();
+        formData.append('pass', password);
+        formData.append('passRepeat', passwordRepeat);
+        formData.append('login', login);
+        formData.append('name', name);
+        formData.append('surname', surname);
+        formData.append('telephone', telephone);
+        formData.append('email', email);
+
+        let context =/*[[@{/}]]*/ '';
+        let userId =/*[[${userId}]]*/ 0;
+        $.ajax({
+            url: context + "admin/users/" + userId + "/uploadInfo",
+            method: "PUT",
+            contentType: false,
+            processData: false,
+            data: formData,
+
+
+            // url: context + "admin/users/" + userId + "/uploadInfo",
+            // method: "PUT",
+            // data: JSON.stringify(dataToSend),
+            // contentType: "application/json",
+            success: function (response) {
+                $(".alert.alert-danger").remove();
+                $(".alert.alert-success").remove();
+                var successDivInfo=$("#successfulEdit");
+                successDivInfo.append("<div class='alert alert-success'>Информаия профиля успешно обновлена</div>")
+                window.scrollTo(0, 0);
+                $("#successfulEdit").append(successDivInfo);
+                successDivInfo.fadeIn("slow");
+            },
+            error: function (xhr, status, error) {
+
+                console.log("Error:", error);
+                console.log("Status:", status);
+                let response = xhr.responseJSON;
+                let fields = response.fields;
+                console.log("Response:", fields);
+                $(".alert.alert-danger").remove();
+                $(".alert.alert-success").remove();
+                if (fields.login)
+                    $("#loginError").empty().append("<div class='alert alert-danger'>" + fields.login + "</div>");
+                if (fields.telephone)
+                    $("#telephoneError").empty().append("<div class='alert alert-danger'>" + fields.telephone + "</div>");
+                if (fields.email)
+                    $("#emailError").empty().append("<div class='alert alert-danger'>" + fields.email + "</div>");
+                if (fields.name)
+                    $("#nameError").empty().append("<div class='alert alert-danger'>" + fields.name + "</div>");
+                if (fields.surName)
+                    $("#surnameError").empty().append("<div class='alert alert-danger'>" + fields.surName + "</div>");
+                if (fields.pass)
+                    $("#passError").empty().append("<div class='alert alert-danger'>" + fields.pass + "</div>");
+                if (fields.pass)
+                    $("#passRepeatError").empty().append("<div class='alert alert-danger'>" + fields.pass + "</div>");
+            }
+        })
+    })
+
+    $("#fileUserImg").on("change", function () {
+        let file = $("#fileUserImg");
+        let fileInput = file[0].files[0];
+        let formData = new FormData();
+        if (fileInput) {
+            formData.append('file', fileInput);
+        }
+        let userId =/*[[${userId}]]*/ 0;
+        console.log("userId" + userId);
+        let context =/*[[@{/}]]*/ '';
+        $(".alert.alert-danger").remove();
+        $(".alert.alert-success").remove();
+        $.ajax({
+            url: context + "admin/users/" + userId + "/uploadImg",
+            method: "PUT",
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                let imgElement = $("img[alt='profile-pic']");
+                imgElement.attr("src", context + response.newPath);
+                console.log(response.newPath);
+                var successDiv=$("#fieldPhoto");
+                successDiv.empty().append("<div class='alert alert-success'>Фото профиля успешно обновлено</div>")
+                window.scrollTo(0, 0);
+                $("#fieldPhoto").append(successDiv);
+
+                successDiv.fadeIn("slow");
+            },
+            error: function (xhr, status, error) {
+                console.log("Error:", error);
+                console.log("Status:", status);
+                let response = xhr.responseJSON;
+                let fields = response.fields;
+                console.log("Response:", fields);
+                console.log("Response:", fields.file);
+                $("#fieldPhoto").empty().append("<div class='alert alert-danger'>" + fields.file + "</div>");
+            }
+        })
+    });
+</script>
+
+<script th:src="@{/static/assets/js/myJs/script.js}"></script>
+<script th:src="@{/static/assets/js/core/libs.min.js}"></script>
+<script th:src="@{/static/assets/js/core/external.min.js}"></script>
+<script th:src="@{/static/assets/js/charts/widgetcharts.js}"></script>
+<script th:src="@{/static/assets/js/charts/vectore-chart.js}"></script>
+<script th:src="@{/static/assets/js/charts/dashboard.js}"></script>
+<script th:src="@{/static/assets/js/plugins/fslightbox.js}"></script>
+<script th:src="@{/static/assets/js/plugins/setting.js}"></script>
+<script th:src="@{/static/assets/js/plugins/slider-tabs.js}"></script>
+<script th:src="@{/static/assets/js/plugins/form-wizard.js}"></script>
+<script th:src="@{/static/assets/vendor/aos/dist/aos.js}"></script>
+<script th:src="@{/static/assets/js/hope-ui.js}" defer></script>
+</body>
+</html>

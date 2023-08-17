@@ -1,0 +1,487 @@
+<!doctype html>
+<html lang="en" dir="ltr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" type="image/x-icon" th:href="@{/static/assets/images/favicon.ico}">
+    <link rel="stylesheet" th:href="@{/static/assets/css/core/libs.min.css}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/vendor/aos/dist/aos.css}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/hope-ui.min.css?v=2.0}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/custom.min.css?v=2.0}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/dark.min.css}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/customizer.min.css}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/rtl.min.css}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/myCss/modal.css}"/>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .disabled-block {
+            pointer-events: none;
+            opacity: 0.5;
+        }
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            text-align: center;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .notification.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+
+    </style>
+</head>
+<body>
+<div id="loading">
+    <div class="loader simple-loader">
+        <div class="loader-body"></div>
+    </div>
+</div>
+<aside class="sidebar sidebar-default sidebar-white sidebar-base navs-rounded-all ">
+    <div th:insert="admin/blocks/sidebar::sidebarMenu"></div>
+</aside>
+<main class="main-content">
+    <div th:insert="admin/blocks/topPanel::topPanel"></div>
+    <div class="container-fluid content-inner mt-n5 py-0">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between">
+                        <div class="header-title">
+                            <h4 class="card-title" th:text="'Изменить заказ #'+${id}"></h4>
+                        </div>
+                    </div>
+                    <div class="card-body" th:object="${orderTableDTO}" id="productWithChoiceDtoId">
+                        <p>Заполните данные для создания нового заказа</p>
+                        <div class="form-group" id="nameProduct">
+                            <div class="position-relative">
+                                <label for="validationTooltip01" class="form-label">Логин пользователя</label>
+                                <input type="text" class="form-control" id="validationTooltip01"
+                                       required="" th:field="*{login}">
+                                <div th:if="${#fields.hasErrors('login')}">
+                                    <div class="alert alert-danger" th:errors="*{login}">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h4>Список товаров</h4>
+                                    <div id="notification" class="notification alert alert-dismissible fade show hidden" role="alert">
+                                        <span id="notification-message"></span>
+                                    </div>
+                                    <table class="table table-bordered custom-table">
+                                        <thead>
+                                        <tr>
+                                            <th class="text-center">Имя</th>
+                                            <th class="text-center">Кол-во</th>
+                                            <th class="text-center">Удаление</th>
+                                        </tr>
+                                        <tbody id="myTable">
+                                        <tr th:each="product, iter : *{products}" th:data-product-name="${product}"
+                                            th:id="'tr'+${product}">
+                                            <td th:text="${product}"/>
+                                            <td>
+                                                <input name="quantity" class="form-control" type="number" step="1"
+                                                       min="1"
+                                                       th:value="*{quantity.get(__${iter.index}__)}">
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-soft-warning"
+                                                        th:attr="data-product=${product}"
+                                                        onclick="deleteProduct(this.getAttribute('data-product'))">
+                                                    Удалить
+                                                </button>
+
+                                            </td>
+                                        </tr>
+
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                                <div class="col-md-6">
+                                    <div id="nameClassification">
+                                        <label class="form-label">Классификация:</label>
+                                        <select class="form-select" required="" id="classificationSelect"
+                                                name="classification">
+                                            <option selected="" disabled="" value="">Выберите
+                                                классификацию
+                                            </option>
+                                            <option th:each="classification : ${classifications}"
+                                                    th:value="${classification}" th:text="${classification}"></option>
+                                        </select>
+                                    </div>
+                                    <div id="nameCategory">
+                                        <label for="disabledSelect" class="form-label">Категория:</label>
+                                        <div id="disabledSelect">
+                                            <select class="form-select" disabled="true" id="categorySelect"
+                                                    name="category">
+                                                <option selected="" disabled="" value="">Выберите категорию</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div id="showNameProduct">
+                                                <label for="disabledSelectProduct" class="form-label">Продукт:</label>
+                                                <div id="disabledSelectProduct">
+                                                    <select class="form-select" disabled="true" name="product">
+                                                        <option selected="" disabled="" value="">Выберите продукт
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6" id="addCountProduct">
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="errorProducts">
+                                <button style="margin-top: 30px; width: 100%" class="btn btn-success disabled-block"
+                                        id="addProducts">Добавить продукт в
+                                    заказ
+                                </button>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="form-group" id="nameComment">
+                            <label for="validationTextarea" class="form-label">Комментарий</label>
+                            <textarea class="form-control" id="validationTextarea"
+                                      th:field="*{comment}"></textarea>
+                            <div th:if="${#fields.hasErrors('comment')}">
+                                <div class="alert alert-danger" th:errors="*{comment}">
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="form-check form-group">
+                            <input type="radio" class="form-check-input" id="validationFormCheck1"
+                                   name="radio-stacked" required="" th:value="true" th:checked="*{status==true}">
+                            <label class="form-check-label" for="validationFormCheck2">Выполнен</label>
+                        </div>
+                        <div class="form-check form-group">
+                            <input type="radio" class="form-check-input" id="validationFormCheck2"
+                                   name="radio-stacked" required="" th:value="null" th:checked="*{status==null}">
+                            <label class="form-check-label" for="validationFormCheck2">В обработке</label>
+                        </div>
+                        <div class="form-check form-group" id="nameStatus">
+                            <input type="radio" class="form-check-input" id="validationFormCheck3"
+                                   name="radio-stacked" required="" th:value="false" th:checked="*{status==false}">
+                            <label class="form-check-label" for="validationFormCheck2">Отменен</label>
+                            <div class="invalid-feedback">Выберите статус</div>
+                        </div>
+                        <br>
+                        <div class="form-group">
+                            <button id="createOrder" class="btn btn-outline-dark" style="text-align: center"
+                                    type="submit">Сохранить
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</main>
+<script th:inline="javascript">
+    function deleteProduct(buttonElement) {
+        // let rowToDelete = $(".tr").find(productName).closest("tr");
+        console.log(buttonElement);
+        let tr = '#tr' + buttonElement
+        console.log(tr)
+        $(tr).remove();
+    }
+
+    $(document).ready(function () {
+        $("#classificationSelect").change(function () {
+            $("#addCountProduct").empty();
+            $(".btn.btn-success").addClass("disabled-block");
+            var selectedValue = $(this).val();
+            let contextPath = /*[[@{/}]]*/ '';
+
+            console.log(contextPath);
+            var url = contextPath + "admin/orders/create/getCategories";
+            console.log(url)
+            console.log(selectedValue)
+            $.ajax({
+                url: url,
+                method: "GET",
+                data: {
+                    selectedValue: selectedValue
+                },
+                dataType: 'json',
+                success: function (data) {
+                    console.log(data)
+                    if (Array.isArray(data)) {
+                        const container = $("#disabledSelect");
+                        container.empty();
+                        $("#disabledSelectProduct").empty().append('<select class="form-select" disabled="true" name="product">\n' +
+                            '                                                        <option selected="" disabled="" value="">Выберите продукт\n' +
+                            '                                                        </option>\n' +
+                            '                                                    </select>');
+                        let selectionItem = '<select class="form-select" name="category" required=""' +
+                            'id="categorySelect">' +
+                            '<option selected="" disabled="" value="">Выберите категорию</option>'
+                        if (data.length > 0) {
+                            data.forEach(function (category) {
+                                selectionItem += '<option value="' + category + '">' + category + '</option>';
+                            });
+                        }
+                        selectionItem += '</select>';
+                        container.append(selectionItem);
+                    }
+                },
+                error: function (error) {
+                    console.log("Error:", error);
+                }
+            });
+        })
+    })
+
+    $(document).on("change", "#categorySelect", function () {
+        $("#addCountProduct").empty();
+        $(".btn.btn-success").addClass("disabled-block");
+        var selectedValue = $("#categorySelect").val();
+        let contextPath = /*[[@{/}]]*/ '';
+
+        console.log(contextPath);
+        var url = contextPath + "admin/orders/create/getProducts";
+        console.log(url)
+        console.log(selectedValue)
+        $.ajax({
+            url: url,
+            method: "GET",
+            data: {
+                selectedValue: selectedValue
+            },
+            dataType: 'json',
+            success: function (data) {
+                console.log(data)
+                if (Array.isArray(data)) {
+                    const container = $("#disabledSelectProduct");
+                    container.empty();
+                    let selectionItem = '<select class="form-select" name="product" required="" id="productSelect">' +
+                        '<option selected="" disabled="" value="">Выберите продукт</option>'
+                    if (data.length > 0) {
+                        data.forEach(function (product) {
+                            selectionItem += '<option value="' + product + '">' + product + '</option>';
+                        });
+                    }
+                    selectionItem += '</select>';
+                    container.append(selectionItem);
+                }
+            },
+            error: function (error) {
+                console.log("Error:", error);
+            }
+        });
+    })
+    $(document).on("change", "#productSelect", function () {
+        const container = $("#addCountProduct");
+        container.empty();
+        let selectionItem = '   <label>Кол-во:</label>\n' +
+            '                                            <br><input class=\"form-control\" type="number" step="1" min="1"\n' +
+            '                                           title="Введите кол-во"\n' +
+            '                                           сlass="form-control" id="countByProduct"\n' +
+            '                                           required=""\pattern="\\d?" value="1">'
+        $("#addCountProduct").append(selectionItem);
+
+        $(".btn.btn-success.disabled-block").removeClass("disabled-block");
+
+    })
+    $(document).on("click", "#addProducts", function () {
+        let count = $("#countByProduct").val();
+        let product = $("#productSelect").val();
+        let table = $("#myTable");
+
+        // Создаем новую строку
+        let newRow = $("<tr >");
+
+        // Создаем ячейку для ввода количества продукта
+        let productCell = $("<td>").text(product);
+        newRow.append(productCell);
+        let countCell = $("<td>").append($("<input class=\"form-control\" type='number' min='1' step='1'>").attr("name", "quantity").attr("value", count));
+
+        newRow.append(countCell);
+        // Создаем ячейку для названия продукта
+
+        let deleteCell = $("<td>").append($("<button class='btn btn-soft-warning'>").text("Удалить").click(function () {
+            $(this).closest("tr").remove();
+        }));
+        newRow.append(deleteCell);
+        let checkTable = false;
+        $("#myTable tr").each(function (index) {
+            let name = $(this).find('td:first-child').text();
+            if (name == product) {
+                checkTable = true;
+            }
+        })
+        if (checkTable == false) {
+            table.append(newRow);
+            showNotification("Вы добавили товар \""+product+"\"", true);
+        }else {
+            showNotification("Товар уже добавлен!", false);
+        }
+    })
+
+
+    function showNotification(message, isSuccess) {
+        const notification = document.getElementById("notification");
+        const notificationMessage = document.getElementById("notification-message");
+
+        notificationMessage.textContent = message;
+        notification.classList.remove("hidden");
+        notification.classList.toggle("alert-success", isSuccess);
+        notification.classList.toggle("alert-warning", !isSuccess);
+
+        setTimeout(() => {
+            notification.classList.add("hidden");
+        }, 5000);
+    }
+
+</script>
+<script th:inline="javascript">
+    $(document).ready(function () {
+        $("#createOrder").click(function () {
+            console.log("START Edit");
+            let contextPath =/*[[@{/}]]*/'';
+            let selectedCategory = $(".form-select[name='category']").val();
+            console.log(selectedCategory);
+            let selectedClassification = $(".form-select[name='classification']").val();
+            console.log(selectedClassification);
+            let selectedProduct = $(".form-select[name='product']").val();
+            console.log(selectedProduct);
+            let idUrl =/*[[${id}]]*/'';
+
+            let url = contextPath.toString() + "admin/orders/" + idUrl;
+            console.log(url);
+            let login = $('#validationTooltip01').val();
+            console.log(login);
+            let comment = $('#validationTextarea').val();
+            console.log(comment);
+            const selectedValue = $('input[name="radio-stacked"]:checked').val();
+            console.log(selectedValue);
+            var nameArray = [];
+            var valueArray = [];
+
+            $("#myTable tr").each(function (index) {
+                var name = $(this).find('td:first-child').text();
+                var value = $(this).find('input[name="quantity"]').val();
+                console.log('Имя:', name, 'Значение:', value);
+                nameArray.push(name)
+                valueArray.push(value)
+
+            })
+
+            console.log('Имя:', nameArray);
+
+
+            let formData = new FormData();
+            formData.append('login', login);
+            formData.append('products', JSON.stringify(nameArray));
+            formData.append('quantity', JSON.stringify(valueArray));
+            formData.append('comment', comment);
+            formData.append('status',selectedValue)
+
+            $.ajax({
+                url: url,
+                method: "PUT",
+                contentType: false,
+                processData: false,
+                data: formData,
+                success: function (response) {
+                    if (response.success) {
+                        $(".alert.alert-danger").remove()
+                        $(".alert.alert-success").remove();
+                        console.log("УСПЕШНО СОЗДАН");
+                        var successDiv = $("<div>").addClass("d-flex align-items-center")
+                            .append(
+                                $("<div>").addClass("mb-0 alert alert-success").append(
+                                    $("<h5>").text("Заказ #" + idUrl + " обновлен."),
+                                    $("<p>").text("Можете вернуться ").append(
+                                        $("<a>").attr("href", /*[[@{/admin/orders}]]*/).text("назад")
+                                    )
+                                )
+                            )
+                            .hide();
+                        window.scrollTo(0, 0);
+
+                        $(".header-title").append(successDiv);
+
+                        successDiv.fadeIn("slow");
+                    }
+
+
+                },
+                error: function (xhr, status, error) {
+                    console.error("Ошибка валидации:", error);
+                    let response = xhr.responseJSON;
+                    let fields = response.fields;
+                    console.log("НЕ ПРОШЕЛ ВАЛИДАЦИЮ");
+                    $(".alert.alert-success").remove();
+                    $(".alert.alert-danger").remove();
+
+                    if (fields.login) {
+                        console.log("НЕ ПРОШЕЛ ВАЛИДАЦИЮ name");
+                        $("#nameProduct").append(
+                            $("<div>").addClass("alert alert-danger").text(response.fields.login)
+                        );
+                    }
+
+                    if (fields.comment) {
+                        console.log("НЕ ПРОШЕЛ ВАЛИДАЦИЮ price");
+                        $("#nameComment")
+                            .append(
+                                $("<div>").addClass("alert alert-danger").text(response.fields.comment)
+                            );
+                    }
+                    if (fields.products) {
+                        console.log("НЕ ПРОШЕЛ ВАЛИДАЦИЮ products");
+                        $("#errorProducts")
+                            .append(
+                                $("<div>").addClass("alert alert-danger").text(response.fields.products)
+                            );
+                    }
+                    if (fields.quantity) {
+                        console.log("НЕ ПРОШЕЛ ВАЛИДАЦИЮ quantity");
+                        $("#errorProducts")
+                            .append(
+                                $("<div>").addClass("alert alert-danger").text(response.fields.quantity)
+                            );
+                    }
+                }
+            })
+        })
+    })
+</script>
+
+<script th:src="@{/assets/js/myJs/script.js}"></script>
+<script th:src="@{/assets/js/core/libs.min.js}"></script>
+<script th:src="@{/assets/js/core/external.min.js}"></script>
+<script th:src="@{/assets/js/charts/widgetcharts.js}"></script>
+<script th:src="@{/assets/js/charts/vectore-chart.js}"></script>
+<script th:src="@{/assets/js/charts/dashboard.js}"></script>
+<script th:src="@{/assets/js/plugins/fslightbox.js}"></script>
+<script th:src="@{/assets/js/plugins/setting.js}"></script>
+<script th:src="@{/assets/js/plugins/slider-tabs.js}"></script>
+<script th:src="@{/assets/js/plugins/form-wizard.js}"></script>
+<script th:src="@{/assets/vendor/aos/dist/aos.js}"></script>
+<script th:src="@{/assets/js/hope-ui.js}" defer></script>
+
+</body>
+</html>

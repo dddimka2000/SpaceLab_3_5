@@ -1,0 +1,486 @@
+<!doctype html>
+<html lang="en" dir="ltr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" type="image/x-icon" th:href="@{/static/assets/images/favicon.ico}">
+    <link rel="stylesheet" th:href="@{/static/assets/css/core/libs.min.css}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/vendor/aos/dist/aos.css}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/hope-ui.min.css?v=2.0}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/custom.min.css?v=2.0}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/dark.min.css}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/customizer.min.css}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/rtl.min.css}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/myCss/modal.css}"/>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .countdown-timer {
+            font-size: 18px;
+            color: #333;
+            margin-top: 10px;
+        }
+
+        /* Стили для модального окна */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%;
+            max-width: 500px; /* Максимальная ширина модального окна */
+        }
+
+        .close {
+            color: #aaaaaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        /* Стиль кнопок */
+        button {
+            padding: 5px 10px;
+            margin: 5px;
+        }
+
+        /* Стили для сайдбара */
+        .sidebar {
+            position: center;
+        }
+
+    </style>
+</head>
+
+<body>
+<div id="loading">
+    <div class="loader simple-loader">
+        <div class="loader-body"></div>
+    </div>
+</div>
+<aside class="sidebar sidebar-default sidebar-white sidebar-base navs-rounded-all ">
+    <div th:insert="admin/blocks/sidebar::sidebarMenu"></div>
+</aside>
+<main class="main-content">
+    <div th:insert="admin/blocks/topPanel::topPanel"></div>
+    <div class="container-fluid content-inner mt-n5 py-0">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="header-title row">
+                            <div class="col-md-6">
+
+                                <h4 class="card-title">Редактировать продукт "<span
+                                        th:text="${productWithChoiceDto.getName()}"></span>"</h4>
+                            </div>
+                            <div class="col-md-6" style="text-align: right" id="deleteProductContainer">
+                                <button class="btn btn-danger" id="deleteProduct">Удалить
+                                </button>
+                                <div id="deleteModal" class="modal">
+                                    <div class="modal-content" style="text-align: center">
+                                        <p>Вы хотите удалить продукт <span
+                                                th:text="${productWithChoiceDto.getName()}"></span> ?</p>
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <button class="btn btn-primary" id="okBtn">Ок</button>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <button class="btn btn-warning" id="cancelBtn">Отмена</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body" id="contentProduct">
+                        <p>Заполните данные продукта</p>
+                        <div class="card-body" th:object="${productWithChoiceDto}" id="productWithChoiceDtoId">
+
+                            <div class="form-group" id="nameProduct">
+                                <div class="position-relative">
+                                    <label for="validationTooltip01" class="form-label">Название</label>
+                                    <input type="text" class="form-control" id="validationTooltip01"
+                                           required="" th:field="*{name}">
+                                    <div class="valid-tooltip">
+                                        Отлично, данное поле заполнено.
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        Заполните название
+                                    </div>
+                                    <div th:if="${#fields.hasErrors('name')}">
+                                        <div class="alert alert-danger" th:errors="*{name}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div id="nameClassification">
+
+                                            <label class="form-label">Классификация:</label>
+                                            <select class="form-select" required="" id="classificationSelect"
+                                                    name="classification" th:default="*{selectedClassification}">
+                                                <option th:each="classification : ${classifications}"
+                                                        th:value="${classification}" th:text="${classification}"
+                                                        th:selected="*{selectedClassification}"></option>
+                                            </select>
+                                        </div>
+                                        <div id="nameCategory">
+                                            <label class="form-label">Категория:</label>
+                                            <div id="disabledSelect">
+                                                <select class="form-select" name="category">
+                                                    <option th:each="category : ${categories}"
+                                                            th:value="${category}" th:text="${category}"
+                                                            th:selected="*{selectedCategory}"></option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6" id="namePrice">
+                                        <label for="validationTextarea" class="form-label">Цена:</label>
+                                        <br>
+                                        <input type="number" step="0.01" min="0.01"
+                                               title="Введите цену в формате XX.XX"
+                                               сlass="form-control" id="priceProduct"
+                                               required="" th:field="*{price}" pattern="\d+(\.\d{2})?"><span>грн</span>
+
+                                        <div th:if="${#fields.hasErrors('price')}">
+                                            <div class="alert alert-danger" th:errors="*{price}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="form-group" id="nameDescription">
+                                <div class="position-relative">
+                                    <label for="validationTextarea" class="form-label">Описание</label>
+                                    <textarea class="form-control" id="validationTextarea"
+                                              required="" th:field="*{description}"></textarea>
+                                    <div class="valid-tooltip">
+                                        Отлично, данное поле заполнено.
+                                    </div>
+                                    <div th:if="${#fields.hasErrors('description')}">
+                                        <div class="alert alert-danger" th:errors="*{description}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="form-check form-group">
+                                <input type="radio" class="form-check-input" id="validationFormCheck2"
+                                       name="radio-stacked" required="" th:checked="*{status == true}" th:value="true">
+                                <label class="form-check-label" for="validationFormCheck2">Вкл</label>
+                            </div>
+                            <div class="form-check form-group" id="nameStatus">
+                                <input type="radio" class="form-check-input" id="validationFormCheck3"
+                                       name="radio-stacked" required="" th:checked="*{status == false}"
+                                       th:value="false">
+                                <label class="form-check-label" for="validationFormCheck3">Выкл</label>
+                                <div class="invalid-feedback">Выберите статус</div>
+                                <div th:if="${#fields.hasErrors('status')}">
+                                    <div class="alert alert-danger" th:errors="*{status}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <img th:src="@{*{path}}" height="100px" width="150px">
+                            </div>
+                            <div class="form-group mb-0" id="nameFile">
+                                <input type="file" class="form-control" th:checked="*{status} ? 'checked' : ''"
+                                       id="fileProduct">
+                                <div th:if="${#fields.hasErrors('file')}">
+                                    <div class="alert alert-danger" th:errors="*{file}">
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="form-group">
+                                <button class="btn btn-outline-dark" style="text-align: center" type="submit"
+                                        id="editProduct">Сохранить
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<script>
+    $(document).ready(function () {
+        $("#classificationSelect").change(function () {
+            var selectedValue = $(this).val();
+            var contextPath = /*[[${contextPath}]]*/ '';
+            var url = contextPath.toString() + "create/getCategories";
+            console.log(url)
+            console.log(selectedValue)
+            console.log(contextPath);
+            $.ajax({
+                url: url,
+                method: "GET",
+                data: {
+                    selectedValue: selectedValue
+                },
+                dataType: 'json',
+                success: function (data) {
+                    console.log(data)
+                    if (Array.isArray(data)) {
+                        const container = $("#disabledSelect");
+                        container.empty();
+                        let selectionItem = '<select class="form-select" name="category" required="">' +
+                            '<option selected="" disabled="" value="">Выберите категорию</option>'
+                        if (data.length > 0) {
+                            data.forEach(function (category) {
+                                selectionItem += '<option value="' + category + '">' + category + '</option>';
+                            });
+                        }
+                        selectionItem += '</select>';
+                        container.append(selectionItem);
+                    }
+                },
+                error: function (error) {
+                    console.log("Error:", error);
+                }
+            });
+        })
+    })
+</script>
+
+<script th:inline="javascript">
+    $(document).ready(function () {
+        $("#editProduct").click(function () {
+            var idValue = [[${id}]];
+            let contextPath =/*[[${contextPath}]]*/'';
+            let selectedCategory = $(".form-select[name='category']").val();
+            console.log(selectedCategory);
+            let selectedClassification = $(".form-select[name='classification']").val();
+            console.log(selectedClassification);
+            let url = contextPath.toString() + "admin/products/" + idValue;
+            console.log(url);
+            let name = $('#validationTooltip01').val();
+            let price = $('#priceProduct').val();
+            let description = $('#validationTextarea').val();
+
+            const selectedValue = $('input[name="radio-stacked"]:checked').val();
+            console.log(selectedValue);
+
+
+            let fileInput = $('#fileProduct')[0];
+            let file = fileInput.files[0];
+            let formData = new FormData();
+            if (file) {
+                formData.append('file', file);
+            }
+            if (selectedValue) {
+                formData.append('status', String(selectedValue));
+            }
+            formData.append('name', name);
+            formData.append('price', String(price));
+            formData.append('description', description);
+            formData.append('selectedClassification', selectedClassification);
+            formData.append('selectedCategory', selectedCategory);
+            $.ajax({
+                url: url,
+                method: "PUT",
+                contentType: false,
+                processData: false,
+                data: formData,
+                success: function (response) {
+                    if (response.success) {
+                        $(".alert.alert-danger").remove();
+                        $(".alert.alert-success").remove();
+                        console.log("УСПЕШНО СОЗДАН");
+                        var successDiv = $("<div>").addClass("d-flex align-items-center")
+                            .append(
+                                $("<div>").addClass("mb-0 alert alert-success").append(
+                                    $("<h5>").text("Изменения продукта \"" + name + "\" сохранены."),
+                                    $("<p>").text("Новые данные будут отражены. Можете вернуться ").append($("<a>").attr("href", /*[[@{/admin/products}]]*/).text("назад в раздел \"Продукты\""))
+                                )
+                            )
+                            .hide();
+                        window.scrollTo(0, 0);
+                        $(".header-title").append(successDiv);
+
+                        successDiv.fadeIn("slow");
+                    }
+
+
+                },
+                error: function (xhr, status, error) {
+                    console.error("Ошибка валидации:", error);
+                    let response = xhr.responseJSON;
+                    let fields = response.fields;
+                    console.log("НЕ ПРОШЕЛ ВАЛИДАЦИЮ ");
+                    $(".alert.alert-success").remove();
+                    $(".alert.alert-danger").remove();
+
+                    if (fields.name) {
+                        console.log("НЕ ПРОШЕЛ ВАЛИДАЦИЮ name");
+                        $("#nameProduct").append(
+                            $("<div>").addClass("alert alert-danger").text(response.fields.name)
+                        );
+                    }
+
+                    if (fields.price) {
+                        console.log("НЕ ПРОШЕЛ ВАЛИДАЦИЮ price");
+                        $("#namePrice")
+                            .append(
+                                $("<div>").addClass("alert alert-danger").text(response.fields.price)
+                            );
+                    }
+
+                    if (response.fields.description) {
+                        console.log("НЕ ПРОШЕЛ ВАЛИДАЦИЮ description");
+                        $("#nameDescription")
+                            .append(
+                                $("<div>").addClass("alert alert-danger").text(response.fields.description)
+                            );
+                    }
+
+                    if (fields.selectedClassification) {
+                        console.log("НЕ ПРОШЕЛ ВАЛИДАЦИЮ classification");
+                        $("#nameClassification").append(
+                            $("<div>").addClass("alert alert-danger").text(response.fields.selectedClassification)
+                        );
+                    }
+                    if (fields.selectedCategory) {
+                        console.log("НЕ ПРОШЕЛ ВАЛИДАЦИЮ category");
+                        $("#nameCategory")
+                            .append(
+                                $("<div>").addClass("alert alert-danger").text(response.fields.selectedCategory)
+                            );
+                    }
+
+                    if (response.fields.status) {
+                        console.log("НЕ ПРОШЕЛ ВАЛИДАЦИЮ status");
+                        $("#nameStatus")
+                            .append(
+                                $("<div>").addClass("alert alert-danger").text(response.fields.status)
+                            );
+                    }
+                    if (response.fields.file) {
+                        console.log("НЕ ПРОШЕЛ ВАЛИДАЦИЮ file");
+                        $("#nameFile")
+                            .append(
+                                $("<div>").addClass("alert alert-danger").text(response.fields.file)
+                            );
+                    }
+                }
+            })
+        })
+    })
+</script>
+
+
+<script th:inline="javascript">
+    $("#deleteProduct").on("click", function () {
+
+        let modal = $("#deleteModal");
+        modal.css("display", "block");
+    });
+
+    $(".close").on("click", function () {
+        let modal = $("#deleteModal");
+        modal.css("display", "none");
+    });
+    let savedContent = null;
+
+    $("#okBtn").on("click", function () {
+        let modal = $("#deleteModal");
+        modal.css("display", "none");
+        let idValue = Number([[${id}]]);
+        let contextPath =/*[[${contextPath}]]*/'';
+        let idUrl =/*[[@{/admin/products/{productId}}]]*/'';
+        savedContent = $("#contentProduct").html();
+        $("#contentProduct").empty();
+        $("#deleteProductContainer").empty();
+        $(".alert-success").remove();
+        let successDiv = $("<div>").addClass("d-flex align-items-center")
+            .append(
+                $("<div>").addClass("mb-0 alert alert-danger")
+                    .append($("<h5>").text("Продукт удален."), $("<p>")
+                        .append($("<a>").attr("href", idUrl.replace("{productId}", idValue.toString())).text("Отменить удаление"))
+                    )
+            )
+            .hide();
+        $("#contentProduct").append(successDiv);
+
+        successDiv.fadeIn("slow");
+        var countdown = 5; // Время в секундах
+
+        var containerDelete = $("<div>").addClass("d-flex align-items-center");
+        var countdownElement = $("<div>").addClass("countdown-timer").text("Перенаправление через " + countdown + " секунд");
+        var spinnerElement = $("<div>").addClass("spinner-grow text-primary").attr("role", "status")
+            .append($("<span>").addClass("visually-hidden").text("Loading..."));
+
+        containerDelete.append(spinnerElement).append(countdownElement);
+        $("#contentProduct").append($("<br>")).append(containerDelete);
+
+        var countdownInterval = setInterval(function () {
+            countdown--;
+            countdownElement.text("Перенаправление через " + countdown + " секунд");
+
+            if (countdown === 0) {
+                $.ajax({
+                    url: contextPath + "admin/products/delete/" + idValue,
+                    method: "DELETE",
+                    success: function (successful) {
+                        clearInterval(countdownInterval);
+                        window.location.href =/*[[@{/admin/products}]]*/'';
+                    },
+                    error: function (error) {
+                        console.log("Error:", error);
+                    }
+                });
+            }
+        }, 1000);
+
+    })
+    $("#returnContent").on("click", function () {
+        let modal = $("#deleteModal");
+        modal.css("display", "none");
+    });
+
+
+    $("#cancelBtn").on("click", function () {
+        let modal = $("#deleteModal");
+        modal.css("display", "none");
+    });
+</script>
+
+
+<script th:src="@{/assets/js/myJs/script.js}"></script>
+<script th:src="@{/assets/js/core/libs.min.js}"></script>
+<script th:src="@{/assets/js/core/external.min.js}"></script>
+<script th:src="@{/assets/js/charts/widgetcharts.js}"></script>
+<script th:src="@{/assets/js/charts/vectore-chart.js}"></script>
+<script th:src="@{/assets/js/charts/dashboard.js}"></script>
+<script th:src="@{/assets/js/plugins/fslightbox.js}"></script>
+<script th:src="@{/assets/js/plugins/setting.js}"></script>
+<script th:src="@{/assets/js/plugins/slider-tabs.js}"></script>
+<script th:src="@{/assets/js/plugins/form-wizard.js}"></script>
+<script th:src="@{/assets/vendor/aos/dist/aos.js}"></script>
+<script th:src="@{/assets/js/hope-ui.js}" defer></script>
+
+</body>
+</html>

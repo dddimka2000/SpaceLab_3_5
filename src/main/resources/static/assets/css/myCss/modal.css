@@ -1,0 +1,48 @@
+.countdown-timer {
+     font-size: 18px;
+     color: #333;
+     margin-top: 10px;
+ }
+
+/* Стили для модального окна */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%;
+    max-width: 500px; /* Максимальная ширина модального окна */
+}
+
+.close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+/* Стиль кнопок */
+button {
+    padding: 5px 10px;
+    margin: 5px;
+}
+
+/* Стили для сайдбара */
+.sidebar {
+    position: center;
+}

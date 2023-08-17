@@ -23,10 +23,8 @@ public class UserEntityService {
     final
     UserRepository userRepository;
     @Autowired
-    public UserEntityService(UserRepository userRepository, EntityManagerFactory entityManagerFactory, SessionFactory sessionFactory) {
+    public UserEntityService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.entityManagerFactory = entityManagerFactory;
-        this.sessionFactory = sessionFactory;
     }
     public Optional<UserEntity> findByEmail(String email) {
         log.info("UserEntity-findByEmail start: " + email);
@@ -57,7 +55,6 @@ public class UserEntityService {
         log.info("UserEntity-findById successful");
         return user;
     }
-    private final EntityManagerFactory entityManagerFactory;
 
     public void save(UserEntity userEntity) {
 //        try (Session session = sessionFactory.openSession()) {
@@ -77,7 +74,6 @@ public class UserEntityService {
         log.info("UserEntity-delete successful");
 
     }
-    private final SessionFactory sessionFactory;
 
 
 

@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en" dir="ltr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" type="image/x-icon" th:href="@{/static/assets/images/favicon.ico}">
+    <link rel="stylesheet" th:href="@{/static/assets/css/core/libs.min.css}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/vendor/aos/dist/aos.css}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/hope-ui.min.css?v=2.0}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/custom.min.css?v=2.0}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/dark.min.css}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/customizer.min.css}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/rtl.min.css}"/>
+    <link rel="shortcut icon" th:href="@{/assets/images/favicon.ico}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/myCss/modal.css}"/>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .disabled-block {
+            pointer-events: none;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+<div id="loading">
+    <div class="loader simple-loader">
+        <div class="loader-body"></div>
+    </div>
+</div>
+<aside class="sidebar sidebar-default sidebar-white sidebar-base navs-rounded-all ">
+    <div th:insert="admin/blocks/sidebar::sidebarMenu"></div>
+</aside>
+<main class="main-content">
+    <div th:insert="admin/blocks/topPanel::topPanel"></div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="header-title">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <h1>Заказы</h1>
+                                </div>
+                                <div class="col-lg-6">
+                                    <a th:href="@{/admin/orders/create}">
+                                        <div style="text-align: right">
+                                            <div class="btn btn-outline-dark">Создать
+                                                заказ
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" th:action="@{/admin/orders}">
+                            <input type="text" name="orderId" placeholder="Search by Order ID" th:value="${orderId}"/>
+                            <button type="submit" class="btn btn-soft-success">Search</button>
+                            <br>
+                            <br>
+                            <div class="table-responsive">
+                                <table class="table table-bordered custom-table">
+                                    <thead>
+                                    <tr>
+                                        <th class="text-center">#
+                                        </th>
+                                        <th class="text-center">Id
+                                        </th>
+                                        <th class="text-center">Логин пользователя
+                                        </th>
+                                        <th class="text-center">Статус
+                                        </th>
+                                        <th class="text-center">Edit</th>
+                                    </tr>
+                                    </thead>
+                                    <div th:if="${orderTableEntityList.size()>0}">
+                                        <tbody id="tableBody">
+                                        <tr class="text-center" th:each="order,i:${orderTableEntityList}">
+                                            <td class="short-col">
+                                                <div th:text="${(i.index+1)+(orderTableEntityList.size()*currentPage)}"></div>
+                                            </td>
+                                            <td class="text-center" style="word-wrap: break-word">
+                                                <div th:text="${order.id}"></div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div th:text="${order.userEntity.login}"></div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div th:if="${order.status==true}" >Выполнен</div>
+                                                <div th:if="${order.status==null}" >В обработке</div>
+                                                <div th:if="${order.status==false}" >Отменен</div>
+                                            </td>
+                                            <td class="text-center" id="EditButton">
+                                                <a th:href="@{/admin/orders/{id}(id=${order.id})}">
+                                                    <div class="btn btn-warning">Edit</div>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </div>
+                                </table>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-6" id="rowPanelCount">
+                                    <p th:text="${panelCount}"></p>
+                                </div>
+                                <div class="col-sm-6">
+                                    <nav aria-label="Page navigation example">
+                                        <ul class="pagination justify-content-end" id="paginationItems">
+                                            <li class="page-item">
+                                                <a class="page-link" href="#" aria-label="Previous"
+                                                   th:hidden="${currentPage == 0}"
+                                                   th:href="@{/admin/orders(page=${currentPage - 1 }, orderId=${orderId})}">
+                                                    <span aria-hidden="true">&#10094;</span>
+                                                </a>
+                                            </li>
+                                            <li class="page-item" th:if="${currentPage >= 2}">
+                                                <a class="page-link"
+                                                   th:href="@{/admin/orders(page=${0}, orderId=${orderId})}"
+                                                   th:text="1"></a>
+                                            </li>
+                                            <li class="page-item" th:if="${currentPage >= 3}">
+                                                <span class="page-link">...</span>
+                                            </li>
+                                            <li class="page-item"
+                                                th:each="pageNumber : ${#numbers.sequence(currentPage - 1, currentPage + 1)}"
+                                                th:classappend="${pageNumber == currentPage} ? 'active' : ''"
+                                                th:if="${pageNumber >= 0 && pageNumber <= (totalPages - 1)}">
+                                                <a class="page-link"
+                                                   th:href="@{/admin/orders(page=${pageNumber}, orderId=${orderId})}"
+                                                   th:text="${pageNumber + 1}">
+                                                </a>
+                                            </li>
+                                            <li class="page-item" th:if="${currentPage==0 && totalPages>5}">
+                                                <a class="page-link"
+                                                   th:href="@{/admin/orders(page=${2 }, orderId=${orderId})}"
+                                                   th:text="${2 + 1}">
+                                                </a>
+                                            </li>
+                                            <li class="page-item" th:if="${currentPage <= totalPages - 4}">
+                                                <span class="page-link">...</span>
+                                            </li>
+                                            <li class="page-item" th:if="${currentPage <= totalPages - 3}">
+                                                <a class="page-link"
+                                                   th:href="@{/admin/orders(page=${totalPages -1 }, orderId=${orderId})}"
+                                                   th:text="${totalPages}"></a>
+                                            </li>
+                                            <li class="page-item" th:data-page="${currentPage+2}"
+                                                th:if="${1 < totalPages&& totalPages -1>currentPage}">
+                                                <a class="page-link"
+                                                   th:href="@{/admin/orders(page=${currentPage + 1 }, orderId=${orderId})}"
+                                                   aria-label="Next">
+                                                    <span aria-hidden="true">&#10095;</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script th:src="@{/static/assets/js/myJs/script.js}"></script>
+<script th:src="@{/static/assets/js/core/libs.min.js}"></script>
+<script th:src="@{/static/assets/js/core/external.min.js}"></script>
+<script th:src="@{/static/assets/js/charts/widgetcharts.js}"></script>
+<script th:src="@{/static/assets/js/charts/vectore-chart.js}"></script>
+<script th:src="@{/static/assets/js/charts/dashboard.js}"></script>
+<script th:src="@{/static/assets/js/plugins/fslightbox.js}"></script>
+<script th:src="@{/static/assets/js/plugins/setting.js}"></script>
+<script th:src="@{/static/assets/js/plugins/slider-tabs.js}"></script>
+<script th:src="@{/static/assets/js/plugins/form-wizard.js}"></script>
+<script th:src="@{/static/assets/vendor/aos/dist/aos.js}"></script>
+<script th:src="@{/static/assets/js/hope-ui.js}" defer></script>
+
+</body>
+</html>

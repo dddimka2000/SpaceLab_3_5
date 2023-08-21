@@ -29,4 +29,7 @@ public class ProductDto {
 
     String selectedClassification;
     String selectedCategory;
+
+
+    private Integer id;
 }

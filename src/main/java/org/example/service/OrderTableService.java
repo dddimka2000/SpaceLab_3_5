@@ -26,7 +26,7 @@ public class OrderTableService {
         log.info("OrderTableService-findById start: " + id);
         Optional<OrderTableEntity> orderTableEntity = orderTableRepository.findById(id);
         if (orderTableEntity.isPresent()) {
-            log.info("OrderTableService-findById successful: " + orderTableEntity.get());
+            log.info("OrderTableService-findById successful: " + orderTableEntity.get().getId());
         } else {
             log.info("OrderTableEntity empty");
         }
@@ -34,20 +34,28 @@ public class OrderTableService {
     }
 
     public void save(OrderTableEntity OrderTableEntity) {
-        log.info("OrderTableEntity-save start: " + OrderTableEntity);
+        log.info("OrderTableEntity-save start: " + OrderTableEntity.getId());
         orderTableRepository.save(OrderTableEntity);
         log.info("OrderTableEntity-save successful");
     }
 
-    public List<OrderTableEntity> findAllOrderTableEntitiesByUserEntity(UserEntity userEntity) {
-        log.info("OrderTableService-findAllOrderTableEntitiesByUserEntity");
-        List<OrderTableEntity> orderTableEntities = orderTableRepository.findAllByUserEntity(userEntity);
-        log.info("OrderTableService-findAllOrderTableEntitiesByUserEntity successful: " + orderTableEntities);
-        return orderTableEntities;
+    public Page<OrderTableEntity> findAllOrderTableEntitiesByUserEntity(String idOrder, Integer pageNumber, Integer pageSize, UserEntity userEntity) {
+        Page<OrderTableEntity> page = null;
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        try {
+            int id = Integer.parseInt(idOrder);
+            log.info("OrderTableEntity with " + pageNumber + " and " + id);
+            page = orderTableRepository.findByIdAndUserEntity(id, pageable, userEntity);
+            log.info("OrderTableEntity-findAllOrderTableEntitiesByUserEntity successfully");
+        } catch (NumberFormatException e) {
+            page = orderTableRepository.findAllByUserEntity(pageable,userEntity);
+            log.warn("OrderTableEntity-findAllOrderTableEntitiesByUserEntity unsuccessfully");
+        }
+        return page;
     }
 
     public void delete(OrderTableEntity orderTableEntity) {
-        log.info("OrderTableService- delete: " + orderTableEntity);
+        log.info("OrderTableService- delete: " + orderTableEntity.getId());
         orderTableRepository.delete(orderTableEntity);
         log.info("OrderTableService-delete successful");
     }
@@ -69,12 +77,12 @@ public class OrderTableService {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         try {
             int id = Integer.parseInt(idOrder);
-            log.info("ProductsEntities with " + pageNumber + " and " + id);
+            log.info("OrderTableEntity with " + pageNumber + " and " + id);
             page = orderTableRepository.findById(id, pageable);
-            log.info("OrderTableService-findByIdContainingIgnoreCase successfully");
+            log.info("OrderTableEntity-findByIdContainingIgnoreCase successfully");
         } catch (NumberFormatException e) {
             page = orderTableRepository.findAll(pageable);
-            log.warn("OrderTableService-findByIdContainingIgnoreCase unsuccessfully");
+            log.warn("OrderTableEntity-findByIdContainingIgnoreCase unsuccessfully");
         }
         return page;
     }
@@ -84,6 +92,12 @@ public class OrderTableService {
         log.info("OrderTableService-countBy");
         long count = orderTableRepository.countBy();
         log.info("OrderTableService-countBy get: " + count);
+        return count;
+    }
+    public long countByUserEntity(UserEntity user) {
+        log.info("OrderTableService-countByUserEntity");
+        long count = orderTableRepository.countByUserEntity(user);
+        log.info("OrderTableService-countByUserEntity get: " + count);
         return count;
     }
 }

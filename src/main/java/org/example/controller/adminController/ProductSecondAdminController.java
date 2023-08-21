@@ -83,7 +83,7 @@ public class ProductSecondAdminController {
             productEntity.setPath(mainImaginePath);
         }
         productService.save(productEntity);
-        return "redirect:/admin/classifications/{nameClassification}/edit/{nameCategory}/";
+        return "redirect:/admin/classifications/{nameClassification}/edit/{nameCategory}";
     }
 
     String nameProductLink=null;

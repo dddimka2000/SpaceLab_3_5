@@ -22,15 +22,15 @@ public class ProductByOrderService {
 
 
     public void save(ProductByOrderEntity productByOrder) {
-        log.info("productByOrder-save start: " + productByOrder);
+        log.info("productByOrder-save start: " + productByOrder.getId());
         productByOrderRepository.save(productByOrder);
         log.info("productByOrder-save successful");
     }
 
     public List<ProductByOrderEntity> findAllByOrderTableEntity(OrderTableEntity orderTableEntity) {
-        log.info("ProductService-findAllProductsByCategoryEntity");
+        log.info("ProductService-findAllProductsByCategoryEntity by "+orderTableEntity.getId());
         List<ProductByOrderEntity> productByOrderList = productByOrderRepository.findByOrderTableEntity(orderTableEntity);
-        log.info("ProductService-findAllProductsByCategoryEntity successful: " + productByOrderList);
+        log.info("ProductService-findAllProductsByCategoryEntity successful");
         return productByOrderList;
     }
     public Optional<ProductByOrderEntity> findByProductEntityAndAndOrderTableEntity(ProductEntity productEntity, OrderTableEntity orderTableEntity) {
@@ -40,7 +40,7 @@ public class ProductByOrderService {
         return productByOrderList;
     }
     public void delete(ProductByOrderEntity productByOrder) {
-        log.info("ProductService- delete: " + productByOrder);
+        log.info("ProductService- delete: " + productByOrder.getId());
         productByOrderRepository.delete(productByOrder);
         log.info("ProductService-delete successful");
     }

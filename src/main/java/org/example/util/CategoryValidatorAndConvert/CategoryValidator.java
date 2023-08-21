@@ -1,5 +1,6 @@
 package org.example.util.CategoryValidatorAndConvert;
 
+import lombok.extern.log4j.Log4j2;
 import org.example.dto.CategoryDTO;
 import org.example.dto.ClassificationDTO;
 import org.example.entity.CategoryEntity;
@@ -16,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
-
+@Log4j2
 public class CategoryValidator implements Validator {
     private final
     CategoryService categoryService;
@@ -62,8 +63,11 @@ public class CategoryValidator implements Validator {
                 errors.rejectValue("file", "image.size.invalid", "Файл не должен превышать 5 МБ.");
             }
         }
+        log.info(categoryDTO.getName());
+        log.info(name);
+        log.info(categoryDTO.getName().equals(name));
         if (!categoryDTO.getName().equals(name)) {
-            Optional<CategoryEntity> categoryEntity = categoryService.findByName(name);
+            Optional<CategoryEntity> categoryEntity = categoryService.findByName(categoryDTO.getName());
             if (categoryEntity.isPresent()) {
                 errors.rejectValue("name", "", "Категория с таким именем уже существует");
             }

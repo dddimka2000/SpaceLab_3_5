@@ -2,9 +2,12 @@ package org.example.controller.publicController;
 
 import lombok.extern.log4j.Log4j2;
 import org.example.entity.ProductEntity;
+import org.example.security.UserDetailsImpl;
+import org.example.service.FavoriteProductService;
 import org.example.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,14 +24,23 @@ public class MainPageController {
     final
     ProductService productService;
 
-    public MainPageController(ProductService productService) {
+
+    private final
+    FavoriteProductService favoriteProductService;
+
+    public MainPageController(ProductService productService, FavoriteProductService favoriteProductService) {
         this.productService = productService;
+        this.favoriteProductService = favoriteProductService;
     }
 
     @GetMapping("/")
     public String showMainPage(@RequestParam(defaultValue = "0", name = "page") Integer page,
                                 @RequestParam(defaultValue = "", name = "productName") String productName,
-                                Model model) {
+                                Model model ,  @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        if (userDetails != null) {
+            model.addAttribute("favoriteProduct",favoriteProductService.findAllFavoriteProductsByUserEntity(userDetails.getUserEntity())
+                    .stream().map(s->s.getProductEntity().getId()).toList());
+        }
         Page<ProductEntity> productsPage = productService.findByNameContainingIgnoreCaseWithStatus(productName, page, size, true);
         List<ProductEntity> products = productsPage.getContent();
         log.info(products);

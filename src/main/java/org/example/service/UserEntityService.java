@@ -1,21 +1,18 @@
 package org.example.service;
 
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.transaction.Transactional;
 import lombok.extern.log4j.Log4j2;
 import org.example.entity.UserEntity;
 import org.example.repository.UserRepository;
-import org.hibernate.Hibernate;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+
 
 @Log4j2
 @Service
@@ -56,10 +53,11 @@ public class UserEntityService {
         return user;
     }
 
+    @Transactional
     public void save(UserEntity userEntity) {
 //        try (Session session = sessionFactory.openSession()) {
 
-//            log.info("UserEntity-saveByLogin start: " + userEntity);
+            log.info("UserEntity-saveByLogin start: " + userEntity.getId());
             userRepository.save(userEntity);
             log.info("UserEntity-findByLogin successful");
 //        } catch (Exception e) {
@@ -69,7 +67,7 @@ public class UserEntityService {
     }
 
     public void delete(UserEntity userEntity) {
-        log.info("UserEntity-delete start: " + userEntity);
+        log.info("UserEntity-delete start: " + userEntity.getId());
         userRepository.delete(userEntity);
         log.info("UserEntity-delete successful");
 
@@ -87,7 +85,8 @@ public class UserEntityService {
         return page;
     }
 
-    public Page<UserEntity> findPageAllUsersBySearchName(String searchName, String sortName, Integer pageNumber, Integer pageSize) {
+    public Page<UserEntity> findPageAllUsersBySearchName(String searchName, String sortName
+            , Integer pageNumber, Integer pageSize) {
         log.info("UserEntity-findPageAllUsersBySearchName start");
         Page<UserEntity> page = null;
         Pageable pageable = null;

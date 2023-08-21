@@ -99,8 +99,6 @@ public class CategoryAdminController {
         log.info("wwwwwwwwwwwwwwwwwww"+contextPath);
         nameCategoryOld=nameCategory;
         model.addAttribute("contextPath",contextPath);
-        model.addAttribute("nameClassification", nameClassification);
-        model.addAttribute("nameCategory", nameCategoryOld);
         Optional<CategoryEntity> categoryEntity = categoryService.findByName(nameCategoryOld);
         model.addAttribute("listProducts", productService.findAllProductsByCategoryEntity(categoryEntity.get()));
         categoryDTO.setName(categoryEntity.get().getName());
@@ -116,8 +114,8 @@ public class CategoryAdminController {
                                             Model model, @ModelAttribute("categoryDTO") @Valid CategoryDTO categoryDTO, BindingResult bindingResult) {
         model.addAttribute("contextPath",contextPath);
         model.addAttribute("nameClassification", nameClassification);
-        model.addAttribute("nameCategory", nameCategoryOld);
         Optional<CategoryEntity> categoryEntityOld = categoryService.findByName(nameCategoryOld);
+        log.info(nameCategoryOld);
         categoryValidator.validate(categoryDTO, bindingResult, nameCategoryOld);
         if (bindingResult.hasErrors()) {
             model.addAttribute("listProducts", productService.findAllProductsByCategoryEntity(categoryEntityOld.get()));

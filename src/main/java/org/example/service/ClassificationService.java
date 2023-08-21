@@ -32,7 +32,7 @@ public class ClassificationService {
     }
 
     public void save(ClassificationEntity classificationEntity) {
-        log.info("ClassificationEntity-save start: " + classificationEntity);
+        log.info("ClassificationEntity-save start: " + classificationEntity.getId());
         classificationRepository.save(classificationEntity);
         log.info("ClassificationEntity-save successful");
     }
@@ -40,11 +40,11 @@ public class ClassificationService {
     public List<ClassificationEntity> findAllClassificationEntities() {
         log.info("ClassificationService-findAllClassificationEntities");
         List<ClassificationEntity> classificationEntities = classificationRepository.findAll();
-        log.info("ClassificationService-findAllClassificationEntities successful: " + classificationEntities);
+        log.info("ClassificationService-findAllClassificationEntities successful");
         return classificationEntities;
     }
     public void delete(ClassificationEntity classificationEntity) {
-        log.info("ClassificationEntity-delete start: " + classificationEntity);
+        log.info("ClassificationEntity-delete start: " + classificationEntity.getId());
         classificationRepository.delete(classificationEntity);
         log.info("ClassificationEntity-delete successful");
     }

@@ -11,17 +11,17 @@
                         </svg>
                     </i>
                 </div>
-                <div class="input-group search-input">
-              <span class="input-group-text" id="search-input">
-                <svg class="icon-18" width="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="11.7669" cy="11.7666" r="8.98856" stroke="currentColor" stroke-width="1.5"
-                            stroke-linecap="round" stroke-linejoin="round"></circle>
-                    <path d="M18.0186 18.4851L21.5426 22" stroke="currentColor" stroke-width="1.5"
-                          stroke-linecap="round" stroke-linejoin="round"></path>
-                </svg>
-              </span>
-                    <input type="search" class="form-control" placeholder="Search...">
-                </div>
+<!--                <div class="input-group search-input">-->
+<!--              <span class="input-group-text" id="search-input">-->
+<!--                <svg class="icon-18" width="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">-->
+<!--                    <circle cx="11.7669" cy="11.7666" r="8.98856" stroke="currentColor" stroke-width="1.5"-->
+<!--                            stroke-linecap="round" stroke-linejoin="round"></circle>-->
+<!--                    <path d="M18.0186 18.4851L21.5426 22" stroke="currentColor" stroke-width="1.5"-->
+<!--                          stroke-linecap="round" stroke-linejoin="round"></path>-->
+<!--                </svg>-->
+<!--              </span>-->
+<!--                    <input type="search" class="form-control" placeholder="Search...">-->
+<!--                </div>-->
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                         data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
@@ -36,7 +36,8 @@
                         <li class="nav-item dropdown">
                             <a href="#" class="search-toggle nav-link" id="dropdownMenuButton2"
                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <img th:src="@{/static/assets/images/Flag/flag001.png}" class="img-fluid rounded-circle" alt="user"
+                                <img th:src="@{/static/assets/images/Flag/flag001.png}" class="img-fluid rounded-circle"
+                                     alt="user"
                                      style="height: 30px; min-width: 30px; width: 30px;">
                                 <span class="bg-primary"></span>
                             </a>
@@ -82,7 +83,9 @@
                                     <div th:if="${loggedInUser.isPresent()==true}">
                                         <h6 class="mb-0 caption-title"
                                             th:text="${loggedInUser.get().getUserEntity().getLogin()}"></h6>
-                                        <p class="mb-0 caption-sub-title" th:text="${loggedInUser.get().getUserEntity().getRoles().iterator().next()}">Marketing Administrator</p>
+                                        <p class="mb-0 caption-sub-title"
+                                           th:text="${loggedInUser.get().getUserEntity().getRoles().iterator().next()}">
+                                            Marketing Administrator</p>
                                     </div>
                                 </div>
                             </a>

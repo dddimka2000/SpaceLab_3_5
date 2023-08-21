@@ -116,7 +116,7 @@ public class ClassificationAdminController {
         ClassificationEntity classificationEntity = classificationService.findByName(OldName).get();
         classificationEntity = classificationDTOConvert.convertToEntity(classificationDTO, regex, path, classificationEntity);
         classificationService.save(classificationEntity);
-        return "redirect:/admin/classifications/";
+        return "redirect:/admin/classifications";
     }
 
     @DeleteMapping("/{nameClassification}/delete/{nameCategory}")

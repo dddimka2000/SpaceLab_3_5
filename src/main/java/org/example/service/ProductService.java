@@ -36,19 +36,19 @@ public class ProductService {
     }
 
     public void save(ProductEntity productEntity) {
-        log.info("ProductEntity-save start: " + productEntity);
+        log.info("ProductEntity-save start: " + productEntity.getId());
         productRepository.save(productEntity);
         log.info("ProductEntity-save successful");
     }
 
     public List<ProductEntity> findAllProductsByCategoryEntity(CategoryEntity categoryEntity) {
-        log.info("ProductService-findAllProductsByCategoryEntity");
+        log.info("ProductService-findAllProductsByCategoryEntity by "+categoryEntity.getId());
         List<ProductEntity> productEntityList = productRepository.findByCategoryEntity(categoryEntity);
-        log.info("ProductService-findAllProductsByCategoryEntity successful: " + productEntityList);
+        log.info("ProductService-findAllProductsByCategoryEntity successful ");
         return productEntityList;
     }
     public void delete(ProductEntity productEntity) {
-        log.info("ProductService- delete: " + productEntity);
+        log.info("ProductService- delete: " + productEntity.getId());
         productRepository.delete(productEntity);
         log.info("ProductService-delete successful");
     }
@@ -87,7 +87,7 @@ public class ProductService {
         log.info("ProductService-findById start: " + integer);
         Optional<ProductEntity> productEntity=productRepository.findById(integer);
         if (productEntity.isPresent()) {
-            log.info("ProductService-findById successful: " + productEntity);
+            log.info("ProductService-findById successful: " + productEntity.get().getId());
         } else {
             log.info("productEntity empty");
         }

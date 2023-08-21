@@ -28,10 +28,12 @@ public interface OrderTableRepository extends JpaRepository< OrderTableEntity, I
 
 
     Page<OrderTableEntity> findAll(Pageable pageable);
-    List<OrderTableEntity> findAllByUserEntity(UserEntity user);
+    Page<OrderTableEntity> findAllByUserEntity(Pageable pageable,UserEntity userEntity);
+    Page<OrderTableEntity> findByIdAndUserEntity(Integer integer, Pageable pageable,UserEntity userEntity);
 
 
     Page<OrderTableEntity> findById(Integer integer, Pageable pageable);
+    long countByUserEntity(UserEntity user);
 
     long countBy();
 }

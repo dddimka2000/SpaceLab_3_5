@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en" dir="ltr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" type="image/x-icon" th:href="@{/static/assets/images/favicon.ico}">
+    <link rel="stylesheet" th:href="@{/static/assets/css/core/libs.min.css}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/vendor/aos/dist/aos.css}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/hope-ui.min.css?v=2.0}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/custom.min.css?v=2.0}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/dark.min.css}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/customizer.min.css}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/rtl.min.css}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/myCss/modal.css}"/>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .disabled-block {
+            pointer-events: none;
+            opacity: 0.5;
+        }
+
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            text-align: center;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .notification.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+
+    </style>
+</head>
+<body style="background-image:url('https://hips.hearstapps.com/hmg-prod/images/assortment-of-colorful-ripe-tropical-fruits-top-royalty-free-image-995518546-1564092355.jpg'); height: 100%;
+background-repeat: repeat; height: 100%"><div id="loading">
+    <div class="loader simple-loader">
+        <div class="loader-body"></div>
+    </div>
+</div>
+<aside class="sidebar sidebar-default sidebar-white sidebar-base navs-rounded-all ">
+    <div th:insert="~{public/blocks/sidebar::sidebarMenu}"></div>
+</aside>
+<main class="main-content">
+    <div th:insert="~{public/blocks/topPanel::topPanel}"></div>
+    <div class="container-fluid content-inner mt-n5 py-0">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card" style="margin-top: 70px;">
+                    <div class="card-header">
+                        <div class="header-title" style="text-align: center">
+                            <span><img src="https://cdn-icons-png.flaticon.com/512/926/926122.png"
+                                       style="width: 30%;height: auto;"></span>
+                            <h2 class="card-title" th:text="'Заказ #'+${orderId}"></h2>
+                        </div>
+                    </div>
+                    <div class="card-body" th:object="${orderTableDTO}" id="productWithChoiceDtoId">
+                        <p>Данные заказа</p>
+                        <br>
+
+                        <div class="form-group">
+                            <h4>Список товаров</h4>
+                            <div id="notification" class="notification alert alert-dismissible fade show hidden"
+                                 role="alert">
+                                <span id="notification-message"></span>
+                            </div>
+                            <table class="table table-bordered custom-table">
+                                <thead>
+                                <tr>
+                                    <th class="text-center">Имя</th>
+                                    <th class="text-center">Кол-во</th>
+                                </tr>
+                                <tbody id="myTable">
+                                <tr th:each="product, iter : *{products}" th:data-product-name="${product}"
+                                    th:id="'tr'+${product}">
+                                    <td class="text-center" th:text="${product}"/>
+                                    <td class="text-center" th:text="*{quantity.get(__${iter.index}__)}">
+                                    </td>
+                                </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <br>
+                        <div class="form-group" id="nameComment">
+                            <label class="form-label">Комментарий</label>
+                            <textarea class="form-control disabled-block"
+                                      th:field="*{comment}"></textarea>
+                        </div>
+                        <div id="statusForm">
+                            <span><text>Статус:</text></span>
+                            <div th:if="*{status==true}"><span class="text-success">Выполнен</span></div>
+                            <div th:if="*{status==null}"><span class="text-warning">В обработке</span></div>
+                            <div th:if="*{status==false}"><span class="text-warning">Отменен</span></div>
+                        </div>
+                        <div id="hiddenStatus" hidden>
+                            <span><text>Статус:</text></span>
+                            <span class="text-warning">Отменен</span>
+                        </div>
+
+                        <br>
+                        <div class="form-group" th:if="*{status==null}">
+                            <button id="buttonOrder" class="btn btn-outline-dark" style="text-align: center"
+                                    type="submit" onclick="openModal(this)">Отменить заказ
+                            </button>
+                        </div>
+                        <div id="showModal" class="modal">
+                            <div class="modal-content" style="text-align: center">
+                                <!--                                                        <p th:text="${category.name}"></p>-->
+                                <p>Вы хотите отменить заказ ?</p>
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="btn btn-primary" id="okBtn">
+                                            Да
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="btn btn-warning" id="cancelBtn">Отмена
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</main>
+<script th:inline="javascript">
+    function openModal(button) {
+        var modal = document.getElementById('showModal');
+        modal.style.display = 'block';
+    }
+
+    $("#cancelBtn").click(function () {
+        $("#showModal").hide();
+    });
+
+    $("#okBtn").click(function () {
+        $("#showModal").hide();
+        let path =/*[[@{/}]]*/'';
+        let id = /*[[${orderId}]]*/'';
+        let url = path + 'order/' + id + '/return'
+        $.ajax({
+            url: url,
+            method: "PUT",
+            success: function () {
+                $("#buttonOrder").remove()
+                $("#statusForm").remove()
+                $("#hiddenStatus").removeAttr("hidden")
+            },
+            error: function (error) {
+            }
+        })
+    });
+
+</SCRIPT>
+<script th:src="@{/assets/js/myJs/script.js}"></script>
+<script th:src="@{/assets/js/core/libs.min.js}"></script>
+<script th:src="@{/assets/js/core/external.min.js}"></script>
+<script th:src="@{/assets/js/charts/widgetcharts.js}"></script>
+<script th:src="@{/assets/js/charts/vectore-chart.js}"></script>
+<script th:src="@{/assets/js/charts/dashboard.js}"></script>
+<script th:src="@{/assets/js/plugins/fslightbox.js}"></script>
+<script th:src="@{/assets/js/plugins/setting.js}"></script>
+<script th:src="@{/assets/js/plugins/slider-tabs.js}"></script>
+<script th:src="@{/assets/js/plugins/form-wizard.js}"></script>
+<script th:src="@{/assets/vendor/aos/dist/aos.js}"></script>
+<script th:src="@{/assets/js/hope-ui.js}" defer></script>
+
+</body>
+</html>

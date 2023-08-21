@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" th:href="@{/assets/images/favicon.ico}"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="shortcut icon" th:href="@{/assets/images/favicon.ico}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/core/libs.min.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/vendor/aos/dist/aos.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/hope-ui.min.css?v=2.0}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/custom.min.css?v=2.0}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/dark.min.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/customizer.min.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/rtl.min.css}"/>
+    <link rel="shortcut icon" th:href="@{/assets/images/favicon.ico}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/myCss/modal.css}"/>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .text-white {
+            font-size: 40px; /* Увеличьте размер шрифта по вашему усмотрению */
+        }
+
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: center;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .notification.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body style="background-image:url('https://hips.hearstapps.com/hmg-prod/images/assortment-of-colorful-ripe-tropical-fruits-top-royalty-free-image-995518546-1564092355.jpg'); height: 100%;
+background-repeat: repeat; height: 100%">
+<div id="loading">
+    <div class="loader simple-loader">
+        <div class="loader-body"></div>
+    </div>
+</div>
+<aside class="sidebar sidebar-default sidebar-white sidebar-base navs-rounded-all ">
+    <div th:insert="~{public/blocks/sidebar::sidebarMenu}"></div>
+</aside>
+<main class="main-content">
+    <div th:insert="~{public/blocks/topPanel::topPanel}"></div>
+
+    <div class="container-fluid content-inner mt-n5 py-0">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card" style="margin-top: 70px;">
+                    <div class="card-header" th:object="${productDTO}">
+                        <div class="alert alert-warning notification  d-flex align-items-center hidden" role="alert"
+                             id="notification">
+                            <svg width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M5.94118 10.7474V20.7444C5.94118 21.0758 5.81103 21.3936 5.57937 21.628C5.3477 21.8623 5.0335 21.994 4.70588 21.994H2.23529C1.90767 21.994 1.59347 21.8623 1.36181 21.628C1.13015 21.3936 1 21.0758 1 20.7444V11.997C1 11.6656 1.13015 11.3477 1.36181 11.1134C1.59347 10.879 1.90767 10.7474 2.23529 10.7474H5.94118ZM5.94118 10.7474C7.25166 10.7474 8.50847 10.2207 9.43512 9.28334C10.3618 8.34594 10.8824 7.07456 10.8824 5.74887V4.49925C10.8824 3.83641 11.1426 3.20071 11.606 2.73201C12.0693 2.26331 12.6977 2 13.3529 2C14.0082 2 14.6366 2.26331 15.0999 2.73201C15.5632 3.20071 15.8235 3.83641 15.8235 4.49925V10.7474H19.5294C20.1847 10.7474 20.8131 11.0107 21.2764 11.4794C21.7397 11.9481 22 12.5838 22 13.2466L20.7647 19.4947C20.5871 20.2613 20.25 20.9196 19.8045 21.3704C19.3589 21.8211 18.8288 22.04 18.2941 21.994H9.64706C8.6642 21.994 7.72159 21.599 7.0266 20.896C6.33162 20.1929 5.94118 19.2394 5.94118 18.2451"
+                                      stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                      stroke-linejoin="round"/>
+                            </svg>
+                            <strong>Warning!</strong>
+                            <div>
+                                <span id="notification-message"></span>
+                            </div>
+                        </div>
+                        <div class="header-title" style="text-align: center">
+                            <span><img src="https://cdn-icons-png.flaticon.com/512/926/926122.png"
+                                       style="width: 30%;height: auto;"></span>
+
+                            <h1 style="color: #0a4021" th:text="*{name}"></h1>
+                            <br>
+                            <div class="row" style="border: 1px solid #2C3E50; border-radius: 10px">
+                                <div class="col-5">
+                                    <img th:src="@{*{path}}" style="border-radius: 20px" width="70%" height="300px">
+
+                                </div>
+                                <div class="col-6" style="text-align: left">
+                                    <h3 class="text-muted" style="text-align: left"
+                                        th:text="'Цена: '+ *{price}+' ₴'">
+
+                                    </h3>
+                                    <br>
+                                    <button class="alert alert-warning" id="buyProduct">Купить</button>
+                                    <div class="numeric-input" style="display: flex; align-items: center;" hidden
+                                         id="showButtons">
+                                        <!--                                        <span style="font-size: 34px; color: orangered; margin-right: 10px;">-</span>-->
+                                        <input name="quantity" class="numeric-input-field"
+                                               style="font-size: 24px; text-align: center;" type="number" step="1"
+                                               min="0" value="1">
+                                        <!--                                        <span style="font-size: 34px; color: orangered; margin-left: 10px;">+</span>-->
+                                        <br>
+                                        <button class="alert alert-warning" id="sendItems" th:data-id="${idProduct}">
+                                            <svg class="icon-20" width="20" viewBox="0 0 24 24" fill="none"
+                                                 xmlns="http://www.w3.org/2000/svg">
+                                                <path opacity="0.4" fill-rule="evenodd" clip-rule="evenodd"
+                                                      d="M5.91064 20.5886C5.91064 19.7486 6.59064 19.0686 7.43064 19.0686C8.26064 19.0686 8.94064 19.7486 8.94064 20.5886C8.94064 21.4186 8.26064 22.0986 7.43064 22.0986C6.59064 22.0986 5.91064 21.4186 5.91064 20.5886ZM17.1606 20.5886C17.1606 19.7486 17.8406 19.0686 18.6806 19.0686C19.5106 19.0686 20.1906 19.7486 20.1906 20.5886C20.1906 21.4186 19.5106 22.0986 18.6806 22.0986C17.8406 22.0986 17.1606 21.4186 17.1606 20.5886Z"
+                                                      fill="currentColor"></path>
+                                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                                      d="M20.1907 6.34909C20.8007 6.34909 21.2007 6.55909 21.6007 7.01909C22.0007 7.47909 22.0707 8.13909 21.9807 8.73809L21.0307 15.2981C20.8507 16.5591 19.7707 17.4881 18.5007 17.4881H7.59074C6.26074 17.4881 5.16074 16.4681 5.05074 15.1491L4.13074 4.24809L2.62074 3.98809C2.22074 3.91809 1.94074 3.52809 2.01074 3.12809C2.08074 2.71809 2.47074 2.44809 2.88074 2.50809L5.26574 2.86809C5.60574 2.92909 5.85574 3.20809 5.88574 3.54809L6.07574 5.78809C6.10574 6.10909 6.36574 6.34909 6.68574 6.34909H20.1907ZM14.1307 11.5481H16.9007C17.3207 11.5481 17.6507 11.2081 17.6507 10.7981C17.6507 10.3781 17.3207 10.0481 16.9007 10.0481H14.1307C13.7107 10.0481 13.3807 10.3781 13.3807 10.7981C13.3807 11.2081 13.7107 11.5481 14.1307 11.5481Z"
+                                                      fill="currentColor"></path>
+                                            </svg>
+                                        </button>
+
+
+                                    </div>
+                                    <h3 class="text-warning" style="text-align: left">Описание: </h3>
+                                    <p class="text-warning" style="text-align: left"
+                                       th:text="*{description}"></p>
+
+                                </div>
+                                <br>
+                                <br>
+                                <div class="col-1" style="text-align: right">
+                                    <div th:if="${favoriteProduct != null and favoriteProduct.contains(productDTO.getId())}">
+                                        <button class="btn btn-icon btn-primary" data-product="true"
+                                                th:data-id="${productDTO.getId()}">
+                                            <!--ПУСТОЙ-->
+                                            <svg class="icon-30" width="32" viewBox="0 0 24 24" fill="none"
+                                                 xmlns="http://www.w3.org/2000/svg">
+                                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                                      d="M15.85 2.50065C16.481 2.50065 17.111 2.58965 17.71 2.79065C21.401 3.99065 22.731 8.04065 21.62 11.5806C20.99 13.3896 19.96 15.0406 18.611 16.3896C16.68 18.2596 14.561 19.9196 12.28 21.3496L12.03 21.5006L11.77 21.3396C9.48102 19.9196 7.35002 18.2596 5.40102 16.3796C4.06102 15.0306 3.03002 13.3896 2.39002 11.5806C1.26002 8.04065 2.59002 3.99065 6.32102 2.76965C6.61102 2.66965 6.91002 2.59965 7.21002 2.56065H7.33002C7.61102 2.51965 7.89002 2.50065 8.17002 2.50065H8.28002C8.91002 2.51965 9.52002 2.62965 10.111 2.83065H10.17C10.21 2.84965 10.24 2.87065 10.26 2.88965C10.481 2.96065 10.69 3.04065 10.89 3.15065L11.27 3.32065C11.3618 3.36962 11.4649 3.44445 11.554 3.50912C11.6104 3.55009 11.6612 3.58699 11.7 3.61065C11.7163 3.62028 11.7329 3.62996 11.7496 3.63972C11.8354 3.68977 11.9247 3.74191 12 3.79965C13.111 2.95065 14.46 2.49065 15.85 2.50065ZM18.51 9.70065C18.92 9.68965 19.27 9.36065 19.3 8.93965V8.82065C19.33 7.41965 18.481 6.15065 17.19 5.66065C16.78 5.51965 16.33 5.74065 16.18 6.16065C16.04 6.58065 16.26 7.04065 16.68 7.18965C17.321 7.42965 17.75 8.06065 17.75 8.75965V8.79065C17.731 9.01965 17.8 9.24065 17.94 9.41065C18.08 9.58065 18.29 9.67965 18.51 9.70065Z"
+                                                      fill="currentColor"></path>
+                                            </svg>
+
+                                        </button>
+                                    </div>
+                                    <div th:unless="${favoriteProduct != null and favoriteProduct.contains(productDTO.getId())}">
+                                        <button class="btn btn-icon btn-primary" data-product="false"
+                                                th:data-id="${productDTO.getId()}">
+                                            <!--Полный-->
+                                            <svg class="icon-30" width="32"
+                                                 viewBox="0 0 24 24" fill="none"
+                                                 xmlns="http://www.w3.org/2000/svg">
+                                                <path
+                                                        fill-rule="evenodd"
+                                                        clip-rule="evenodd"
+                                                        d="M2.87187 11.5983C1.79887 8.24832 3.05287 4.41932 6.56987 3.28632C8.41987 2.68932 10.4619 3.04132 11.9999 4.19832C13.4549 3.07332 15.5719 2.69332 17.4199 3.28632C20.9369 4.41932 22.1989 8.24832 21.1269 11.5983C19.4569 16.9083 11.9999 20.9983 11.9999 20.9983C11.9999 20.9983 4.59787 16.9703 2.87187 11.5983Z"
+                                                        stroke="currentColor"
+                                                        stroke-width="1.5"
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"></path>
+                                                <path
+                                                        d="M16 6.69995C17.07 7.04595 17.826 8.00095 17.917 9.12195"
+                                                        stroke="currentColor"
+                                                        stroke-width="1.5"
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <h1>Другие товары:</h1>
+                        <br>
+                        <div class="row">
+                            <div th:each="ob:${otherProducts}" class="col-3"
+                                 style="text-align: center; border: 1px solid #ccc; border-top: 0px;">
+                                <div style="text-align: right">
+
+
+                                    <div th:if="${favoriteProduct != null and favoriteProduct.contains(ob.getId())}">
+                                        <button class="btn btn-icon btn-primary" data-product="true"
+                                                th:data-id="${ob.getId()}">
+                                            <!--ПУСТОЙ-->
+                                            <svg class="icon-30" width="32" viewBox="0 0 24 24" fill="none"
+                                                 xmlns="http://www.w3.org/2000/svg">
+                                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                                      d="M15.85 2.50065C16.481 2.50065 17.111 2.58965 17.71 2.79065C21.401 3.99065 22.731 8.04065 21.62 11.5806C20.99 13.3896 19.96 15.0406 18.611 16.3896C16.68 18.2596 14.561 19.9196 12.28 21.3496L12.03 21.5006L11.77 21.3396C9.48102 19.9196 7.35002 18.2596 5.40102 16.3796C4.06102 15.0306 3.03002 13.3896 2.39002 11.5806C1.26002 8.04065 2.59002 3.99065 6.32102 2.76965C6.61102 2.66965 6.91002 2.59965 7.21002 2.56065H7.33002C7.61102 2.51965 7.89002 2.50065 8.17002 2.50065H8.28002C8.91002 2.51965 9.52002 2.62965 10.111 2.83065H10.17C10.21 2.84965 10.24 2.87065 10.26 2.88965C10.481 2.96065 10.69 3.04065 10.89 3.15065L11.27 3.32065C11.3618 3.36962 11.4649 3.44445 11.554 3.50912C11.6104 3.55009 11.6612 3.58699 11.7 3.61065C11.7163 3.62028 11.7329 3.62996 11.7496 3.63972C11.8354 3.68977 11.9247 3.74191 12 3.79965C13.111 2.95065 14.46 2.49065 15.85 2.50065ZM18.51 9.70065C18.92 9.68965 19.27 9.36065 19.3 8.93965V8.82065C19.33 7.41965 18.481 6.15065 17.19 5.66065C16.78 5.51965 16.33 5.74065 16.18 6.16065C16.04 6.58065 16.26 7.04065 16.68 7.18965C17.321 7.42965 17.75 8.06065 17.75 8.75965V8.79065C17.731 9.01965 17.8 9.24065 17.94 9.41065C18.08 9.58065 18.29 9.67965 18.51 9.70065Z"
+                                                      fill="currentColor"></path>
+                                            </svg>
+
+                                        </button>
+                                    </div>
+                                    <div th:unless="${favoriteProduct != null and favoriteProduct.contains(ob.getId())}">
+                                        <button class="btn btn-icon btn-primary" data-product="false"
+                                                th:data-id="${ob.getId()}">
+                                            <!--Полный-->
+                                            <svg class="icon-30" width="32"
+                                                 viewBox="0 0 24 24" fill="none"
+                                                 xmlns="http://www.w3.org/2000/svg">
+                                                <path
+                                                        fill-rule="evenodd"
+                                                        clip-rule="evenodd"
+                                                        d="M2.87187 11.5983C1.79887 8.24832 3.05287 4.41932 6.56987 3.28632C8.41987 2.68932 10.4619 3.04132 11.9999 4.19832C13.4549 3.07332 15.5719 2.69332 17.4199 3.28632C20.9369 4.41932 22.1989 8.24832 21.1269 11.5983C19.4569 16.9083 11.9999 20.9983 11.9999 20.9983C11.9999 20.9983 4.59787 16.9703 2.87187 11.5983Z"
+                                                        stroke="currentColor"
+                                                        stroke-width="1.5"
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"></path>
+                                                <path
+                                                        d="M16 6.69995C17.07 7.04595 17.826 8.00095 17.917 9.12195"
+                                                        stroke="currentColor"
+                                                        stroke-width="1.5"
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                                <br>
+                                <a th:href="@{/productInfo/{id}(id=${ob.id})}">
+                                    <img th:src="@{${ob.path}}" width="75%" height="170px"
+                                         style="border-radius: 8px">
+                                    <h5 th:text="${ob.name}"></h5>
+                                    <br>
+                                    <h3 th:text="${ob.price}+'₴'" style="text-align: left"></h3>
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<script th:inline="javascript">
+
+    $("#sendItems").click(function () {
+        let contextPath = /*[[@{/}]]*/ '';
+        let count = parseInt($(".numeric-input-field").val());
+
+        console.log(count)
+        let idProduct = $(this).data("id");
+        console.log(idProduct)
+        console.log(contextPath + 'product/' + idProduct + '/basketItem/add')
+        $.ajax({
+            url: contextPath + 'product/' + idProduct + '/basketItem/add',
+            method: "POST",
+            data: { count: count},
+            dataType: 'json',
+            success: function (data) {
+                let fields = data.message;
+                showNotification(fields, true);
+                $("#showButtons").hide();
+                $("#buyProduct").show();
+            },
+            error: function (xhr, status, error) {
+                console.log(error)
+                let response = xhr.responseJSON;
+                let fields = response.message;
+                showNotification(fields, false);
+
+            }
+        })
+
+    })
+
+
+    $("#buyProduct").click(function () {
+        console.log($(this))
+        $(this).hide();
+        $("#showButtons").removeAttr("hidden").show();
+
+    })
+
+    function showNotification(message, isSuccess) {
+        const notification = document.getElementById("notification");
+        const notificationMessage = document.getElementById("notification-message");
+
+        notificationMessage.textContent = message;
+        notification.classList.remove("hidden");
+        notification.classList.toggle("alert-success", isSuccess);
+        notification.classList.toggle("alert-warning", !isSuccess);
+
+        setTimeout(() => {
+            notification.classList.add("hidden");
+        }, 5000);
+    }
+
+    $(document).on("click", ".btn.btn-icon.btn-primary",
+        function (event) {
+            let contextPath = /*[[@{/}]]*/ '';
+
+            event.preventDefault();
+            console.log($(this).data("product"))
+            let idProduct = $(this).data("id");
+            console.log(idProduct)
+            let changeItem = $(this);
+            console.log(contextPath + 'products/' + idProduct + '/deleteLike')
+            if ($(this).data("product") == true) {
+                $.ajax({
+                    url: contextPath + 'products/' + idProduct + '/deleteLike',
+                    method: "DELETE",
+                    success: function (data) {
+                        changeItem.data("product", false);
+                        changeItem.empty().append('                                        <svg class="icon-30" width="32"\n' +
+                            '                                             viewBox="0 0 24 24" fill="none"\n' +
+                            '                                             xmlns="http://www.w3.org/2000/svg">\n' +
+                            '                                            <path\n' +
+                            '                                                    fill-rule="evenodd"\n' +
+                            '                                                    clip-rule="evenodd"\n' +
+                            '                                                    d="M2.87187 11.5983C1.79887 8.24832 3.05287 4.41932 6.56987 3.28632C8.41987 2.68932 10.4619 3.04132 11.9999 4.19832C13.4549 3.07332 15.5719 2.69332 17.4199 3.28632C20.9369 4.41932 22.1989 8.24832 21.1269 11.5983C19.4569 16.9083 11.9999 20.9983 11.9999 20.9983C11.9999 20.9983 4.59787 16.9703 2.87187 11.5983Z"\n' +
+                            '                                                    stroke="currentColor"\n' +
+                            '                                                    stroke-width="1.5"\n' +
+                            '                                                    stroke-linecap="round"\n' +
+                            '                                                    stroke-linejoin="round"></path>\n' +
+                            '                                            <path\n' +
+                            '                                                    d="M16 6.69995C17.07 7.04595 17.826 8.00095 17.917 9.12195"\n' +
+                            '                                                    stroke="currentColor"\n' +
+                            '                                                    stroke-width="1.5"\n' +
+                            '                                                    stroke-linecap="round"\n' +
+                            '                                                    stroke-linejoin="round"></path>\n' +
+                            '                                        </svg>\n')
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(error)
+                        let response = xhr.responseJSON;
+                        let fields = response.message;
+                        showNotification(fields, false);
+                    }
+                })
+            } else {
+                $.ajax({
+                    url: contextPath + 'products/' + idProduct + '/like',
+                    method: "POST",
+                    success: function (data) {
+                        changeItem.data("product", true);
+                        changeItem.empty().append('<svg class="icon-30" width="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">                            <path fill-rule="evenodd" clip-rule="evenodd" d="M15.85 2.50065C16.481 2.50065 17.111 2.58965 17.71 2.79065C21.401 3.99065 22.731 8.04065 21.62 11.5806C20.99 13.3896 19.96 15.0406 18.611 16.3896C16.68 18.2596 14.561 19.9196 12.28 21.3496L12.03 21.5006L11.77 21.3396C9.48102 19.9196 7.35002 18.2596 5.40102 16.3796C4.06102 15.0306 3.03002 13.3896 2.39002 11.5806C1.26002 8.04065 2.59002 3.99065 6.32102 2.76965C6.61102 2.66965 6.91002 2.59965 7.21002 2.56065H7.33002C7.61102 2.51965 7.89002 2.50065 8.17002 2.50065H8.28002C8.91002 2.51965 9.52002 2.62965 10.111 2.83065H10.17C10.21 2.84965 10.24 2.87065 10.26 2.88965C10.481 2.96065 10.69 3.04065 10.89 3.15065L11.27 3.32065C11.3618 3.36962 11.4649 3.44445 11.554 3.50912C11.6104 3.55009 11.6612 3.58699 11.7 3.61065C11.7163 3.62028 11.7329 3.62996 11.7496 3.63972C11.8354 3.68977 11.9247 3.74191 12 3.79965C13.111 2.95065 14.46 2.49065 15.85 2.50065ZM18.51 9.70065C18.92 9.68965 19.27 9.36065 19.3 8.93965V8.82065C19.33 7.41965 18.481 6.15065 17.19 5.66065C16.78 5.51965 16.33 5.74065 16.18 6.16065C16.04 6.58065 16.26 7.04065 16.68 7.18965C17.321 7.42965 17.75 8.06065 17.75 8.75965V8.79065C17.731 9.01965 17.8 9.24065 17.94 9.41065C18.08 9.58065 18.29 9.67965 18.51 9.70065Z" fill="currentColor"></path></svg>')
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(error)
+                        let response = xhr.responseJSON;
+                        let fields = response.message;
+                        showNotification(fields, false);
+                    }
+                })
+
+            }
+        })
+</script>
+
+<!-- Library Bundle Script -->
+<script th:src="@{/static/assets/js/core/libs.min.js}"></script>
+
+<!-- External Library Bundle Script -->
+<script th:src="@{/static/assets/js/core/external.min.js}"></script>
+
+<!-- Widgetchart Script -->
+<script th:src="@{/static/assets/js/charts/widgetcharts.js}"></script>
+
+<!-- mapchart Script -->
+<script th:src="@{/static/assets/js/charts/vectore-chart.js}"></script>
+<script th:src="@{/static/assets/js/charts/dashboard.js}"></script>
+
+<!-- fslightbox Script -->
+<script th:src="@{/static/assets/js/plugins/fslightbox.js}"></script>
+
+<!-- Settings Script -->
+<script th:src="@{/static/assets/js/plugins/setting.js}"></script>
+
+<!-- Slider-tab Script -->
+<script th:src="@{/static/assets/js/plugins/slider-tabs.js}"></script>
+
+<!-- Form Wizard Script -->
+<script th:src="@{/static/assets/js/plugins/form-wizard.js}"></script>
+
+<!-- AOS Animation Plugin-->
+<script th:src="@{/static/assets/vendor/aos/dist/aos.js}"></script>
+
+<!-- App Script -->
+
+<script th:src="@{/static/assets/js/hope-ui.js}" defer></script>
+
+<script th:src="@{/static/assets/js/myJs/script.js}"></script>
+
+</body>
+</html>

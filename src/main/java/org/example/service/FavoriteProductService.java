@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Log4j2
@@ -17,6 +19,16 @@ public class FavoriteProductService {
 
     public FavoriteProductService(FavoriteProductRepository favoriteProductRepository) {
         this.favoriteProductRepository = favoriteProductRepository;
+    }
+
+    public Map<String, Long> findBestSeven() {
+        List<FavoriteProductEntity> favoriteProducts = favoriteProductRepository.findAll();
+
+        Map<String, Long> productCounts = favoriteProducts.stream()
+                .collect(Collectors.groupingBy(favoriteProductEntity -> favoriteProductEntity.getProductEntity().getName(), Collectors.counting()));
+
+
+        return productCounts;
     }
 
     public Optional<FavoriteProductEntity> findById(Integer id) {
@@ -51,7 +63,7 @@ public class FavoriteProductService {
 
     public Optional<FavoriteProductEntity> findByUserEntityAndProductEntity(UserEntity user, ProductEntity productEntity) {
         log.info("FavoriteProductEntity-findAllCategoriesByClassificationEntity");
-        Optional<FavoriteProductEntity> favoriteProductEntity = favoriteProductRepository.findByUserEntityAndProductEntity(user,productEntity);
+        Optional<FavoriteProductEntity> favoriteProductEntity = favoriteProductRepository.findByUserEntityAndProductEntity(user, productEntity);
         log.info("FavoriteProductEntity-findAllCategoriesByClassificationEntity successful: " + user.getId());
         return favoriteProductEntity;
     }

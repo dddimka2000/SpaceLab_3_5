@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -19,10 +20,12 @@ import java.util.Optional;
 public class UserEntityService {
     final
     UserRepository userRepository;
+
     @Autowired
     public UserEntityService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
+
     public Optional<UserEntity> findByEmail(String email) {
         log.info("UserEntity-findByEmail start: " + email);
         Optional<UserEntity> user;
@@ -31,6 +34,7 @@ public class UserEntityService {
 
         return user;
     }
+
     public Optional<UserEntity> findByTelephone(String telephone) {
         log.info("UserEntity-findByTelephone start: " + telephone);
         Optional<UserEntity> user;
@@ -39,6 +43,7 @@ public class UserEntityService {
 
         return user;
     }
+
     public Optional<UserEntity> findByLogin(String login) {
         log.info("UserEntity-findByLogin start: " + login);
         Optional<UserEntity> user = userRepository.findByLogin(login);
@@ -46,6 +51,7 @@ public class UserEntityService {
 
         return user;
     }
+
     public Optional<UserEntity> findById(Integer id) {
         log.info("UserEntity-findById start: " + id);
         Optional<UserEntity> user = userRepository.findById(id);
@@ -57,9 +63,9 @@ public class UserEntityService {
     public void save(UserEntity userEntity) {
 //        try (Session session = sessionFactory.openSession()) {
 
-            log.info("UserEntity-saveByLogin start: " + userEntity.getId());
-            userRepository.save(userEntity);
-            log.info("UserEntity-findByLogin successful");
+        log.info("UserEntity-saveByLogin start: " + userEntity.getId());
+        userRepository.save(userEntity);
+        log.info("UserEntity-findByLogin successful");
 //        } catch (Exception e) {
 //            log.error(e);
 //        }
@@ -73,7 +79,16 @@ public class UserEntityService {
 
     }
 
-
+    public List<UserEntity> findAllUsers() {
+        log.info("UserEntity-findAllUsers start");
+        List<UserEntity> list = userRepository.findAll();
+        if (list.isEmpty()) {
+            log.info("UserEntity-findAllUsersPage empty list");
+        } else {
+            log.info("UserEntity-findAllUsersPage successfully");
+        }
+        return list;
+    }
 
     public Page<UserEntity> findAllUsersPage(Integer pageNumber, Integer pageSize) {
         log.info("UserEntity-findAllUsersPage start");

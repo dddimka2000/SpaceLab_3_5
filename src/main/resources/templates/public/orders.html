@@ -64,11 +64,9 @@ background-repeat: repeat; height: 100%">
                                         </th>
                                         <th class="text-center">Id
                                         </th>
-                                        <th class="text-center">Логин пользователя
-                                        </th>
                                         <th class="text-center">Статус
                                         </th>
-                                        <th class="text-center">Edit</th>
+                                        <th class="text-center">Информация</th>
                                     </tr>
                                     </thead>
                                     <div th:if="${orderTableEntityList.size()>0}">
@@ -79,9 +77,6 @@ background-repeat: repeat; height: 100%">
                                             </td>
                                             <td class="text-center" style="word-wrap: break-word">
                                                 <div th:text="${order.id}"></div>
-                                            </td>
-                                            <td class="text-center">
-                                                <div th:text="${order.userEntity.login}"></div>
                                             </td>
                                             <td class="text-center">
                                                 <div th:if="${order.status==true}" >Выполнен</div>

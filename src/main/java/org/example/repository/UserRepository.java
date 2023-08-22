@@ -1,6 +1,7 @@
 package org.example.repository;
 
 import org.example.entity.UserEntity;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,6 +16,9 @@ public interface UserRepository extends JpaRepository<UserEntity,Integer> {
 
     Optional<UserEntity> findByEmail(String email);
     Optional<UserEntity> findByTelephone(String telephone);
+
+    @Override
+    <S extends UserEntity> List<S> findAll(Example<S> example);
 
     @Override
     <S extends UserEntity> S save(S entity);

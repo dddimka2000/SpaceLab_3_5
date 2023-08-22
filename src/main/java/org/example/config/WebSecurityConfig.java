@@ -26,10 +26,12 @@ public class WebSecurityConfig {
     public WebSecurityConfig(UserDetailsServiceImpl userDetailsServiceImpl) {
         this.userDetailsServiceImpl = userDetailsServiceImpl;
     }
+
     @Bean
     public PasswordEncoder getPasswordEncoder() {
         return NoOpPasswordEncoder.getInstance();
     }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.
@@ -42,9 +44,9 @@ public class WebSecurityConfig {
                                 .anyRequest().permitAll())
                 .formLogin(form ->
                         form.loginPage("/auth/login")
-                        .loginProcessingUrl("/auth/process_login")
-                        .successHandler(new CustomAuthenticationSuccessHandler())
-                        .failureUrl("/auth/login?error"))
+                                .loginProcessingUrl("/auth/process_login")
+                                .successHandler(new CustomAuthenticationSuccessHandler())
+                                .failureUrl("/auth/login?error"))
                 .httpBasic()
         ;
         return http.build();

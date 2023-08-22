@@ -7,6 +7,7 @@ import org.example.repository.OrderTableRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,7 +42,8 @@ public class OrderTableService {
 
     public Page<OrderTableEntity> findAllOrderTableEntitiesByUserEntity(String idOrder, Integer pageNumber, Integer pageSize, UserEntity userEntity) {
         Page<OrderTableEntity> page = null;
-        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Sort sort = Sort.by(Sort.Direction.DESC, "id");
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
         try {
             int id = Integer.parseInt(idOrder);
             log.info("OrderTableEntity with " + pageNumber + " and " + id);

@@ -1,0 +1,105 @@
+<meta charset="UTF-8">
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" th:href="@{/assets/images/favicon.ico}"/>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="shortcut icon" th:href="@{/assets/images/favicon.ico}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/core/libs.min.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/vendor/aos/dist/aos.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/hope-ui.min.css?v=2.0}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/custom.min.css?v=2.0}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/dark.min.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/customizer.min.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/rtl.min.css}"/>
+    <link rel="shortcut icon" th:href="@{/assets/images/favicon.ico}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/myCss/modal.css}"/>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>Page Error</title>
+</head>
+<body style="background-image:url('https://hips.hearstapps.com/hmg-prod/images/assortment-of-colorful-ripe-tropical-fruits-top-royalty-free-image-995518546-1564092355.jpg'); height: 100%;
+background-repeat: repeat; height: 100%">
+<div id="loading">
+    <div class="loader simple-loader">
+        <div class="loader-body"></div>
+    </div>
+</div>
+<aside class="sidebar sidebar-default sidebar-white sidebar-base navs-rounded-all ">
+    <div th:insert="~{public/blocks/sidebar::sidebarMenu}"></div>
+</aside>
+<main class="main-content">
+    <div th:insert="~{public/blocks/topPanel::topPanel}"></div>
+    <div class="container-fluid content-inner mt-n5 py-0">
+        <br>
+        <br>
+        <div style="text-align: center">
+            <h1 class="card-title text-white"
+                style="color: black;     text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black;" th:text="'Error '+${errorCode}">
+                </h1>
+            <div class="card">
+            <span><img src="https://cdn-icons-png.flaticon.com/512/926/926122.png"
+                       style="width: 10%;height: auto;"
+                       title="main"></span>
+                <h1 class="text-warning" th:text="${error}"></h1>
+                <a th:href="@{/}">
+                    <button class="btn btn-soft-success" style="width: 100%">
+                        <svg class="icon-32" width="32"
+                             viewBox="0 0 24 24" fill="none"
+                             xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                    opacity="0.4"
+                                    d="M16.0756 2H19.4616C20.8639 2 22.0001 3.14585 22.0001 4.55996V7.97452C22.0001 9.38864 20.8639 10.5345 19.4616 10.5345H16.0756C14.6734 10.5345 13.5371 9.38864 13.5371 7.97452V4.55996C13.5371 3.14585 14.6734 2 16.0756 2Z"
+                                    fill="currentColor">
+                            </path>
+                            <path
+                                    fill-rule="evenodd" clip-rule="evenodd"
+                                    d="M4.53852 2H7.92449C9.32676 2 10.463 3.14585 10.463 4.55996V7.97452C10.463 9.38864 9.32676 10.5345 7.92449 10.5345H4.53852C3.13626 10.5345 2 9.38864 2 7.97452V4.55996C2 3.14585 3.13626 2 4.53852 2ZM4.53852 13.4655H7.92449C9.32676 13.4655 10.463 14.6114 10.463 16.0255V19.44C10.463 20.8532 9.32676 22 7.92449 22H4.53852C3.13626 22 2 20.8532 2 19.44V16.0255C2 14.6114 3.13626 13.4655 4.53852 13.4655ZM19.4615 13.4655H16.0755C14.6732 13.4655 13.537 14.6114 13.537 16.0255V19.44C13.537 20.8532 14.6732 22 16.0755 22H19.4615C20.8637 22 22 20.8532 22 19.44V16.0255C22 14.6114 20.8637 13.4655 19.4615 13.4655Z"
+                                    fill="currentColor">
+                            </path>
+                        </svg>
+                        <span>
+                                    <h3 style="color: #0a4021">Вернуться на главную</h3>
+                                </span>
+                    </button>
+                </a>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+<script th:src="@{/static/assets/js/core/libs.min.js}"></script>
+
+<!-- External Library Bundle Script -->
+<script th:src="@{/static/assets/js/core/external.min.js}"></script>
+
+<!-- Widgetchart Script -->
+<script th:src="@{/static/assets/js/charts/widgetcharts.js}"></script>
+
+<!-- mapchart Script -->
+<script th:src="@{/static/assets/js/charts/vectore-chart.js}"></script>
+<script th:src="@{/static/assets/js/charts/dashboard.js}"></script>
+
+<!-- fslightbox Script -->
+<script th:src="@{/static/assets/js/plugins/fslightbox.js}"></script>
+
+<!-- Settings Script -->
+<script th:src="@{/static/assets/js/plugins/setting.js}"></script>
+
+<!-- Slider-tab Script -->
+<script th:src="@{/static/assets/js/plugins/slider-tabs.js}"></script>
+
+<!-- Form Wizard Script -->
+<script th:src="@{/static/assets/js/plugins/form-wizard.js}"></script>
+
+<!-- AOS Animation Plugin-->
+<script th:src="@{/static/assets/vendor/aos/dist/aos.js}"></script>
+
+<!-- App Script -->
+<script th:src="@{/static/assets/js/hope-ui.js}" defer></script>
+
+<script th:src="@{/static/assets/js/myJs/script.js}"></script>
+
+</body>
+</html>

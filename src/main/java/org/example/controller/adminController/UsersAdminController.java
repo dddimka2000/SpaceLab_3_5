@@ -100,19 +100,28 @@ public class UsersAdminController {
         return "admin/users/editUser";
     }
 
-    int size = 2;
+    Integer size = 2;
 
+    @ResponseBody
     @GetMapping("/admin/users/getPage")
     public ResponseEntity<Map<String, Object>> getUsers(
-            @RequestParam(name = "page", defaultValue = "0") int page,
-            @RequestParam(name = "sort", defaultValue = "id,asc") String sort,
-            @RequestParam(name = "search", required = false) String search) {
-        log.info("getPage " + search);
+            @RequestParam(name = "page", defaultValue = "0") Integer page,
+            @RequestParam(name = "search", defaultValue = "") String search) {
+        String sort="id,asc";
+        log.info("search " + search);
+        log.info("page " + page);
         Page<UserEntity> resultPage = userEntityService.findPageAllUsersBySearchName(search, sort, page, size);
         long count = userEntityService.countByLogin(search);
         Map<String, Object> response = new HashMap<>();
         response.put("resultPage", resultPage);
         response.put("count", count);
+//        List<UserEntity> users = resultPage.getContent();
+//        model.addAttribute("users", users);
+//        model.addAttribute("currentPage", page);
+//        model.addAttribute("totalPages", resultPage.getTotalPages());
+//        String panelCount = "Показано " + (size * page + 1) + "-" + (size + (size * page)) + " из " + count;
+//        model.addAttribute("panelCount", panelCount);
+//        model.addAttribute("sizeItems", size);
         return ResponseEntity.ok(response);
     }
 

@@ -1,5 +1,6 @@
 package org.example.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -45,9 +46,11 @@ public class UserEntity {
     @Enumerated(EnumType.STRING)
     private Set<UserRole> roles;
 
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "userEntity")
     List<OrderTableEntity> orderTableEntities;
 
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "userEntity")
     List<BasketItemEntity> basketItemEntities;
 }

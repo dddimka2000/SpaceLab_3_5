@@ -14,6 +14,7 @@
     <link rel="shortcut icon" th:href="@{/assets/images/favicon.ico}"/>
     <link rel="stylesheet" th:href="@{/static/assets/css/myCss/modal.css}"/>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script th:src="@{/assets/js/myJs/showLinkActive.js}"></script>
     <style>
         .disabled-block {
             pointer-events: none;
@@ -122,14 +123,14 @@
                                 <nav aria-label="Page navigation example">
                                     <ul class="pagination justify-content-end" id="paginationItems">
                                         <li class="page-item">
-                                            <a class="page-link" href="#" aria-label="Previous"
+                                            <span class="page-link" href="#" aria-label="Previous"
                                                th:hidden="${currentPage == 0}">
                                                 <span aria-hidden="true">&#10094;</span>
-                                            </a>
+                                            </span>
                                         </li>
                                         <li class="page-item" th:if="${currentPage >= 2}">
-                                            <a class="page-link" href="#"
-                                               th:text="1"></a>
+                                            <span class="page-link" href="#"
+                                               th:text="1"></span>
                                         </li>
                                         <li class="page-item" th:if="${currentPage >= 3}">
                                             <span class="page-link">...</span>
@@ -138,26 +139,26 @@
                                             th:each="pageNumber : ${#numbers.sequence(currentPage - 1, currentPage + 1)}"
                                             th:classappend="${pageNumber == currentPage} ? 'active' : ''"
                                             th:if="${pageNumber >= 0 && pageNumber <= (totalPages - 1)}">
-                                            <a class="page-link" href="#"
+                                            <span class="page-link" href="#"
                                                th:text="${pageNumber + 1}">
-                                            </a>
+                                            </span>
                                         </li>
                                         <li class="page-item" th:if="${currentPage==0 && totalPages>5}">
-                                            <a class="page-link" href="#"
+                                            <span class="page-link" href="#"
                                                th:text="${2 + 1}">
-                                            </a>
+                                            </span>
                                         </li>
                                         <li class="page-item" th:if="${currentPage <= totalPages - 4}">
                                             <span class="page-link">...</span>
                                         </li>
                                         <li class="page-item" th:if="${currentPage <= totalPages - 3}">
-                                            <a class="page-link" href="#"
-                                               th:text="${totalPages}"></a>
+                                            <span class="page-link" href="#"
+                                               th:text="${totalPages}"></span>
                                         </li>
                                         <li class="page-item" th:data-page="${currentPage+2}">
-                                            <a class="page-link" href="#" aria-label="Next">
+                                            <span class="page-link" href="#" aria-label="Next">
                                                 <span aria-hidden="true">&#10095;</span>
-                                            </a>
+                                            </span>
                                         </li>
                                     </ul>
                                 </nav>
@@ -190,7 +191,8 @@
         $.ajax({
             method: "GET",
             url: url,
-            data: {search: searchName},
+            data: {search: searchName,
+            page: 0},
             dataType: "json",
             success: function (data) {
                 console.log(data);

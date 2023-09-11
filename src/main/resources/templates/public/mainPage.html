@@ -16,6 +16,8 @@
     <link rel="shortcut icon" th:href="@{/assets/images/favicon.ico}"/>
     <link rel="stylesheet" th:href="@{/assets/css/myCss/modal.css}"/>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script th:src="@{/assets/js/myJs/showLinkActivePublic.js}"></script>
+
     <style>
         .notification {
             position: fixed;
@@ -144,7 +146,7 @@ background-repeat: repeat; height: 100%">
                                         </div>
                                     </div>
                                     <br>
-                                    <a th:href="@{/products/{id}(id=${ob.id})}">
+                                    <a th:href="@{/productInfo/{id}(id=${ob.id})}">
                                         <img th:src="@{${ob.path}}" width="75%" height="320px"
                                              style="border-radius: 8px">
                                         <h5 th:text="${ob.name}"></h5>

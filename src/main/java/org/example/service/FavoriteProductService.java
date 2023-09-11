@@ -23,11 +23,8 @@ public class FavoriteProductService {
 
     public Map<String, Long> findBestSeven() {
         List<FavoriteProductEntity> favoriteProducts = favoriteProductRepository.findAll();
-
         Map<String, Long> productCounts = favoriteProducts.stream()
                 .collect(Collectors.groupingBy(favoriteProductEntity -> favoriteProductEntity.getProductEntity().getName(), Collectors.counting()));
-
-
         return productCounts;
     }
 

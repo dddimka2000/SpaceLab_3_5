@@ -1,6 +1,6 @@
-// Открытие модального окна при клике на ссылку
-document.querySelectorAll('[data-toggle="modal"]').forEach(function(element) {
-    element.addEventListener('click', function(event) {
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+document.querySelectorAll('[data-toggle="modal"]').forEach(function (element) {
+    element.addEventListener('click', function (event) {
         event.preventDefault();
         var modal = document.getElementById('myModal');
         modal.style.display = 'block';
@@ -11,16 +11,18 @@ document.querySelectorAll('[data-toggle="modal"]').forEach(function(element) {
     });
 });
 
-// Закрытие модального окна при нажатии на кнопку "Закрыть" (?)
-document.getElementById('btnCloseModalExit').addEventListener('click', function() {
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ "пїЅпїЅпїЅпїЅпїЅпїЅпїЅ" (?)
+document.getElementById('btnCloseModalExit').addEventListener('click', function () {
     var modal = document.getElementById('myModal');
     modal.style.display = 'none';
 });
 
-// Закрытие модального окна при клике за его пределами
-window.addEventListener('click', function(event) {
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+window.addEventListener('click', function (event) {
     var modal = document.getElementById('myModal');
     if (event.target == modal) {
         modal.style.display = 'none';
     }
 });
+
+

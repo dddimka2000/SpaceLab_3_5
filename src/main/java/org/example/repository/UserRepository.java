@@ -38,4 +38,5 @@ public interface UserRepository extends JpaRepository<UserEntity,Integer> {
 
     Long countByLoginContainingIgnoreCase(String login);
 
+
 }

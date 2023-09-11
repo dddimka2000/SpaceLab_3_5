@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class ProductController {
@@ -26,24 +27,28 @@ public class ProductController {
         this.productService = productService;
         this.favoriteProductService = favoriteProductService;
     }
+
     final
     FavoriteProductService favoriteProductService;
+
     @GetMapping("/productInfo/{idProduct}")
-    public String showInfoProduct(Model model, @PathVariable Integer idProduct, @ModelAttribute("productDTO")ProductDto productDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public String showInfoProduct(Model model, @PathVariable Integer idProduct, @ModelAttribute("productDTO") ProductDto productDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         if (userDetails != null) {
-            model.addAttribute("favoriteProduct",favoriteProductService.findAllFavoriteProductsByUserEntity(userDetails.getUserEntity())
-                    .stream().map(s->s.getProductEntity().getId()).toList());
+            model.addAttribute("favoriteProduct", favoriteProductService.findAllFavoriteProductsByUserEntity(userDetails.getUserEntity())
+                    .stream().map(s -> s.getProductEntity().getId()).toList());
         }
-        if(productService.findById(idProduct).get().getStatus()==false){
+        if (productService.findById(idProduct).get().getStatus() == false) {
             return "redirect:/";
         }
-        ProductEntity productEntity=productService.findById(idProduct).get();
+        ProductEntity productEntity = productService.findById(idProduct).get();
         productDto.setId(productEntity.getId());
         productDto.setName(productEntity.getName());
         productDto.setDescription(productEntity.getDescription());
         productDto.setPath(productEntity.getPath());
         productDto.setPrice(productEntity.getPrice());
-        List<ProductEntity> products = productService.findAllProductsByCategoryEntity(productEntity.getCategoryEntity());
+        List<ProductEntity> products = productService.findAllProductsByCategoryEntity(productEntity.getCategoryEntity())
+                .stream().filter(s -> s.getStatus() == true).collect(Collectors.toList());
+        //ToDO          List<ProductEntity> products = productService.findAllProductsByCategoryEntity(productEntity.getCategoryEntity()); статус!!
         Collections.shuffle(products);
         model.addAttribute("otherProducts", products.stream().limit(4));
         return "/public/productInfo";

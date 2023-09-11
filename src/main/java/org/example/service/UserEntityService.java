@@ -31,7 +31,6 @@ public class UserEntityService {
         Optional<UserEntity> user;
         user = userRepository.findByEmail(email);
         log.info("UserEntity-findByEmail successful");
-
         return user;
     }
 
@@ -40,7 +39,6 @@ public class UserEntityService {
         Optional<UserEntity> user;
         user = userRepository.findByTelephone(telephone);
         log.info("UserEntity-findByTelephone successful");
-
         return user;
     }
 
@@ -48,7 +46,6 @@ public class UserEntityService {
         log.info("UserEntity-findByLogin start: " + login);
         Optional<UserEntity> user = userRepository.findByLogin(login);
         log.info("UserEntity-findByLogin successful");
-
         return user;
     }
 
@@ -61,22 +58,15 @@ public class UserEntityService {
 
     @Transactional
     public void save(UserEntity userEntity) {
-//        try (Session session = sessionFactory.openSession()) {
-
         log.info("UserEntity-saveByLogin start: " + userEntity.getId());
         userRepository.save(userEntity);
         log.info("UserEntity-findByLogin successful");
-//        } catch (Exception e) {
-//            log.error(e);
-//        }
-
     }
 
     public void delete(UserEntity userEntity) {
         log.info("UserEntity-delete start: " + userEntity.getId());
         userRepository.delete(userEntity);
         log.info("UserEntity-delete successful");
-
     }
 
     public List<UserEntity> findAllUsers() {
@@ -90,6 +80,20 @@ public class UserEntityService {
         return list;
     }
 
+    public long countBy() {
+        log.info("UserEntity-countBy");
+        long count = userRepository.countBy();
+        log.info("UserEntity-countBy get: " + count);
+        return count;
+    }
+
+    public long countByLogin(String login) {
+        log.info("UserEntity-countByLogin " + login);
+        long count = userRepository.countByLoginContainingIgnoreCase(login);
+        log.info("UserEntity-countByLogin get: " + count);
+        return count;
+    }
+
     public Page<UserEntity> findAllUsersPage(Integer pageNumber, Integer pageSize) {
         log.info("UserEntity-findAllUsersPage start");
         Page<UserEntity> page = null;
@@ -100,17 +104,14 @@ public class UserEntityService {
         return page;
     }
 
-    public Page<UserEntity> findPageAllUsersBySearchName(String searchName, String sortName
-            , Integer pageNumber, Integer pageSize) {
+    public Page<UserEntity> findPageAllUsersBySearchName(String searchName, String sortName, Integer pageNumber, Integer pageSize) {
         log.info("UserEntity-findPageAllUsersBySearchName start");
         Page<UserEntity> page = null;
         Pageable pageable = null;
         if (sortName != null && !sortName.isEmpty()) {
             String[] sortParams = sortName.split(",");
             String sortBy = sortParams[0];
-            Sort.Direction direction = sortParams.length > 1 && sortParams[1].equalsIgnoreCase("desc")
-                    ? Sort.Direction.DESC : Sort.Direction.ASC;
-
+            Sort.Direction direction = sortParams.length > 1 && sortParams[1].equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
             switch (sortBy.toLowerCase()) {
                 case "id":
                     pageable = PageRequest.of(pageNumber, pageSize, direction, "id");
@@ -138,19 +139,5 @@ public class UserEntityService {
             resultPage = userRepository.findAll(pageable);
         }
         return resultPage;
-    }
-
-    public long countBy() {
-        log.info("UserEntity-countBy");
-        long count = userRepository.countBy();
-        log.info("UserEntity-countBy get: " + count);
-        return count;
-    }
-
-    public long countByLogin(String login) {
-        log.info("UserEntity-countByLogin " + login);
-        long count = userRepository.countByLoginContainingIgnoreCase(login);
-        log.info("UserEntity-countByLogin get: " + count);
-        return count;
     }
 }

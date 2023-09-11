@@ -43,7 +43,7 @@ public class CatalogController {
     public String showCatalog(Model model) {
         Map<String, List<CategoryEntity>> map = classificationService
                 .findAllClassificationEntities().stream().filter(s -> s.getStatus() == true).collect(Collectors.toMap(classificationEntity -> classificationEntity.getName(),
-                        classificationEntity -> categoryService.findAllCategoriesByClassificationEntity(classificationEntity)));
+                        classificationEntity -> categoryService.findAllCategoriesByClassificationEntity(classificationEntity).stream().filter(s->s.getStatus()==true).collect(Collectors.toList())));
         model.addAttribute("carouselItems", classificationService
                 .findAllClassificationEntities().stream().filter(s -> s.getStatus() == true).map(s -> s.getPath()).toList());
         model.addAttribute("categoryMap", map);
@@ -62,7 +62,7 @@ public class CatalogController {
         categoryDTO.setDescription(categoryEntity.getDescription());
         categoryDTO.setName(categoryEntity.getName());
         categoryDTO.setPath(categoryEntity.getPath());
-        model.addAttribute("products", productService.findAllProductsByCategoryEntity(categoryEntity));
+        model.addAttribute("products", productService.findAllProductsByCategoryEntity(categoryEntity).stream().filter(s->s.getStatus()==true));
         return "/public/productsByCatalog";
     }
 

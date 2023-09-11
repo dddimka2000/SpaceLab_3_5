@@ -45,7 +45,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             log.info("Try entry by login");
             user = userRepository.findByLogin(username);
         }
-
         if (!user.isPresent()) {
             throw new UsernameNotFoundException("User hasn't been found!");
         } else {
@@ -53,9 +52,4 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             log.info(username + " have roles " + user.get().getRoles());
         }
         log.info("UserDetailsServiceImpl-loadUserByUsername end");
-//        Hibernate.initialize(user.get().getBasketItemEntities());
-//        Hibernate.initialize(user.get().getOrderTableEntities());
-        return new UserDetailsImpl(user.get());
-    }
-
-}
+        return new UserDetailsImpl(user.get());}}

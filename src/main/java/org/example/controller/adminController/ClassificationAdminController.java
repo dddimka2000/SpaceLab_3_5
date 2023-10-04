@@ -5,17 +5,20 @@ import lombok.extern.log4j.Log4j2;
 import org.example.dto.ClassificationDTO;
 import org.example.entity.CategoryEntity;
 import org.example.entity.ClassificationEntity;
+import org.example.entity.OrderTableEntity;
 import org.example.service.CategoryService;
 import org.example.service.ClassificationService;
 import org.example.util.ClassificationValidatorAndConvert.ClassificationDTOConvert;
 import org.example.util.ClassificationValidatorAndConvert.ClassificationValidator;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +28,7 @@ import java.util.Optional;
 public class ClassificationAdminController {
     String OldName = null;
 
+    int pageSize = 10;
     @Value("${server.servlet.context-path}")
     private String contextPath;
     private final
@@ -47,8 +51,39 @@ public class ClassificationAdminController {
     }
 
     @GetMapping
-    public String showClassificationsAdminPage(Model model) {
-        model.addAttribute("objects", classificationService.findAllClassificationEntities());
+    public String showClassificationsAdminPage(Model model,
+                                               @RequestParam(defaultValue = "0", name = "page") Integer page,
+                                               @RequestParam(defaultValue = "", name = "id") String id) {
+//        model.addAttribute("objects", classificationService.findAllClassificationEntities());
+        log.info("id  " + id);
+        Page<ClassificationEntity> orderTablePage = classificationService.findByNameContainingIgnoreCase(id, page, pageSize);
+        List<ClassificationEntity> orderTableEntityList = new ArrayList<>();
+        int totalPage = 0;
+        if (orderTablePage != null) {
+            totalPage = orderTablePage.getTotalPages();
+            orderTableEntityList = orderTablePage.getContent();
+        }
+        model.addAttribute("objects", orderTableEntityList);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPage);
+        long count = classificationService.countBy();
+        if (!id.isBlank()&&orderTableEntityList.size()<=1&&pageSize * page<1) {
+            count = 1;
+        }
+        String panelCount;
+        if (orderTableEntityList.size() == 0) {
+            count = 0;
+            panelCount= "Нету данных";
+        } else {
+            panelCount = "Показано " + (pageSize * page + 1) + "-" + (orderTableEntityList.size() + (pageSize * page)) + " из " + count;
+        }
+        Integer lastPageSize=page*pageSize;
+        model.addAttribute("lastPageSize", lastPageSize);
+        log.info(lastPageSize);
+        log.info(panelCount);
+        model.addAttribute("panelCount", panelCount);
+        model.addAttribute("id", id);
+
         return "/admin/classifications/classificationsAdmin";
     }
 

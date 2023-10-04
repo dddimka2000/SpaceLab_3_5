@@ -53,8 +53,8 @@ public class OrderAdminController {
         this.productByOrderService = productByOrderService;
         this.userEntityService = userEntityService;
     }
-    int pageSize = 3;
 
+    int pageSize = 10;
 
 
     @GetMapping("/admin/orders")
@@ -72,9 +72,21 @@ public class OrderAdminController {
         model.addAttribute("orderTableEntityList", orderTableEntityList);
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPage);
-
         long count = orderTableService.countBy();
-        String panelCount = "Показано " + (pageSize * page + 1) + "-" + (orderTableEntityList.size() + (pageSize * page)) + " из " + count;
+        if (!orderId.isBlank()&&orderTableEntityList.size()<=1&&pageSize * page<1) {
+            count = 1;
+        }
+        String panelCount;
+        if (orderTableEntityList.size() == 0) {
+            count = 0;
+            panelCount= "Нету данных";
+
+        } else {
+            panelCount = "Показано " + (pageSize * page + 1) + "-" + (orderTableEntityList.size() + (pageSize * page)) + " из " + count;
+        }
+        Integer lastPageSize=page*pageSize;
+        model.addAttribute("lastPageSize", lastPageSize);
+        log.info(lastPageSize);
         log.info(panelCount);
         model.addAttribute("panelCount", panelCount);
         model.addAttribute("orderId", orderId);
@@ -102,14 +114,14 @@ public class OrderAdminController {
 
     @GetMapping("/admin/orders/{id}")
     public String editOrderAdmin(@ModelAttribute("orderTableDTO") OrderTableDTO orderTableDTO, Model model, @PathVariable Integer id) {
-        OrderTableEntity orderTableEntity=orderTableService.findById(id).get();
+        OrderTableEntity orderTableEntity = orderTableService.findById(id).get();
 
 
         orderTableDTO.setProducts(productByOrderService.findAllByOrderTableEntity(orderTableEntity).stream()
-                .map(s->s.getProductEntity().getName()).toList());
+                .map(s -> s.getProductEntity().getName()).toList());
         log.info(orderTableDTO.getProducts());
         orderTableDTO.setQuantity(productByOrderService.findAllByOrderTableEntity(orderTableEntity).stream()
-                .map(s->String.valueOf(s.getCountProducts())).toList());
+                .map(s -> String.valueOf(s.getCountProducts())).toList());
         log.info(orderTableDTO.getQuantity());
 
 
@@ -118,7 +130,7 @@ public class OrderAdminController {
         orderTableDTO.setComment(orderTableEntity.getComment());
         orderTableDTO.setStatus(orderTableEntity.getStatus());
         model.addAttribute("classifications", classificationService.
-        findAllClassificationEntities().stream().map(classificationEntity -> classificationEntity.getName()).collect(Collectors.toList()));
+                findAllClassificationEntities().stream().map(classificationEntity -> classificationEntity.getName()).collect(Collectors.toList()));
         return "/admin/orders/editOrder";
     }
 
@@ -155,10 +167,10 @@ public class OrderAdminController {
         orderTableEntity.setComment(orderTableDTO.getComment());
         orderTableEntity.setUserEntity(userEntityService.findByLogin(orderTableDTO.getLogin()).get());
         orderTableService.save(orderTableEntity);
-        productByOrderService.findAllByOrderTableEntity(orderTableEntity).forEach(s->productByOrderService.delete(s));
-        AtomicInteger num=new AtomicInteger(0);
+        productByOrderService.findAllByOrderTableEntity(orderTableEntity).forEach(s -> productByOrderService.delete(s));
+        AtomicInteger num = new AtomicInteger(0);
         orderTableDTO.getQuantity().stream().forEach(s -> {
-            ProductByOrderEntity productByOrderEntity= new ProductByOrderEntity();
+            ProductByOrderEntity productByOrderEntity = new ProductByOrderEntity();
             productByOrderEntity.setOrderTableEntity(orderTableEntity);
             productByOrderEntity.setCountProducts(Integer.parseInt(s));
             productByOrderEntity.setProductEntity(productService.findByName(orderTableDTO.getProducts().get(num.get())).get());
@@ -204,9 +216,9 @@ public class OrderAdminController {
         orderTableEntity.setUserEntity(userEntityService.findByLogin(orderTableDTO.getLogin()).get());
         orderTableEntity.setDateTime(LocalDateTime.now());
         orderTableService.save(orderTableEntity);
-        AtomicInteger num=new AtomicInteger(0);
+        AtomicInteger num = new AtomicInteger(0);
         orderTableDTO.getQuantity().stream().forEach(s -> {
-            ProductByOrderEntity productByOrderEntity= new ProductByOrderEntity();
+            ProductByOrderEntity productByOrderEntity = new ProductByOrderEntity();
             productByOrderEntity.setOrderTableEntity(orderTableEntity);
             productByOrderEntity.setCountProducts(Integer.parseInt(s));
             productByOrderEntity.setProductEntity(productService.findByName(orderTableDTO.getProducts().get(num.get())).get());

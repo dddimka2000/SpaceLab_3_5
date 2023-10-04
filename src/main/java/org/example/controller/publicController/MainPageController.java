@@ -65,7 +65,7 @@ public class MainPageController {
         return "/public/mainPage";
     }
 
-    int size=6;
+    int size=10;
 
     @PostMapping("/")
     public String nextPageUsers(@RequestParam(defaultValue = "0", name = "page") int page, @RequestParam(name = "productName") List<String> productName) {

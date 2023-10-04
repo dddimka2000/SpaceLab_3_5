@@ -74,7 +74,7 @@ background-repeat: repeat; height: 100%">
                                         <tbody id="tableBody">
                                         <tr class="text-center" th:each="order,i:${orderTableEntityList}">
                                             <td class="short-col">
-                                                <div th:text="${(i.index+1)+(orderTableEntityList.size()*currentPage)}"></div>
+                                                <div th:text="${lastPageSize}+${(i.index+1)}"></div>
                                             </td>
                                             <td class="text-center" style="word-wrap: break-word">
                                                 <div th:text="${order.id}"></div>
@@ -114,7 +114,7 @@ background-repeat: repeat; height: 100%">
                                                    th:href="@{/orders(page=${0}, orderId=${orderId})}"
                                                    th:text="1"></a>
                                             </li>
-                                            <li class="page-item" th:if="${currentPage >= 3}">
+                                            <li class="page-item disabled" th:if="${currentPage >= 3}">
                                                 <span class="page-link">...</span>
                                             </li>
                                             <li class="page-item"
@@ -132,7 +132,7 @@ background-repeat: repeat; height: 100%">
                                                    th:text="${2 + 1}">
                                                 </a>
                                             </li>
-                                            <li class="page-item" th:if="${currentPage <= totalPages - 4}">
+                                            <li class="page-item disabled" th:if="${currentPage <= totalPages - 4}">
                                                 <span class="page-link">...</span>
                                             </li>
                                             <li class="page-item" th:if="${currentPage <= totalPages - 3}">
@@ -164,7 +164,7 @@ background-repeat: repeat; height: 100%">
     $(document).ready(function () {
         $(".carousel-item").click(function () {
             let searchId = '#nav' + $(this).data('index')
-            console.log(searchId);
+            // console.log(searchId);
 
             $(window).scrollTop($(searchId).offset().top);
             $(searchId).click();

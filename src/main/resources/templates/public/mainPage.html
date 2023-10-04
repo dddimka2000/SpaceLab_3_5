@@ -178,8 +178,8 @@ background-repeat: repeat; height: 100%">
                                                        th:href="@{/(page=0, productName=${productName})}"
                                                        th:text="1"></a>
                                                 </li>
-                                                <li class="page-item" th:if="${currentPage >= 3}">
-                                                    <span class="page-link">...</span>
+                                                <li class="page-item disabled" th:if="${currentPage >= 3}">
+                                                    <span class="page-link disabled">...</span>
                                                 </li>
                                                 <li class="page-item"
                                                     th:each="pageNumber : ${#numbers.sequence(currentPage - 1, currentPage + 1)}"
@@ -196,8 +196,8 @@ background-repeat: repeat; height: 100%">
                                                        th:text="${2 + 1}">
                                                     </a>
                                                 </li>
-                                                <li class="page-item" th:if="${currentPage <= totalPages - 4}">
-                                                    <span class="page-link">...</span>
+                                                <li class="page-item disabled" th:if="${currentPage <= totalPages - 4}">
+                                                    <span class="page-link disabled">...</span>
                                                 </li>
                                                 <li class="page-item" th:if="${currentPage <= totalPages - 3}">
                                                     <a class="page-link" href="#"

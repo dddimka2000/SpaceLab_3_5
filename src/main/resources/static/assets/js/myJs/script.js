@@ -26,3 +26,8 @@ window.addEventListener('click', function (event) {
 });
 
 
+const fileInputs = document.querySelectorAll('input[type="file"]');
+fileInputs.forEach(function (input) {
+    input.setAttribute('multiple', true);
+    input.setAttribute('accept', 'image/jpeg, image/png');
+});

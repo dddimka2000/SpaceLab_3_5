@@ -1,6 +1,9 @@
 package org.example.repository;
 
 import org.example.entity.ClassificationEntity;
+import org.example.entity.ProductEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -16,4 +19,9 @@ public interface ClassificationRepository extends JpaRepository<ClassificationEn
 
     @Override
     List<ClassificationEntity> findAll();
+
+    Page<ClassificationEntity> findByNameContainingIgnoreCase(String name, Pageable pageable);
+
+    @Override
+    long count();
 }

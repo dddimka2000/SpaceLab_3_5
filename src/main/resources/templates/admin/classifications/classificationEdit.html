@@ -83,12 +83,12 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="header-title">
-                                    <h4 class="card-title">Редактировать классификацию</h4>
+                            <h4 class="card-title">Редактировать классификацию</h4>
                         </div>
                     </div>
                     <div class="card-body">
                         <p>Заполните данные для создания новой классификации</p>
-                        <form th:action="@{/admin/classifications/{name}(name=*{name})}" class="was-validated"
+                        <form th:action="@{/admin/classifications/{name}(name=*{name})}"
                               method="post" th:object="${classificationDTO}" enctype="multipart/form-data"
                               id="classificationForm">
 
@@ -113,7 +113,7 @@
                             <div class="form-group">
                                 <div class="position-relative">
                                     <label for="validationTextarea" class="form-label">Описание</label>
-                                    <textarea class="form-control is-invalid" id="validationTextarea"
+                                    <textarea class="form-control" id="validationTextarea"
                                               required="" th:field="*{description}"></textarea>
                                     <div class="valid-tooltip">
                                         Отлично, данное поле заполнено.
@@ -202,8 +202,9 @@
                                 </div>
                             </div>
                             <div class="form-group mb-0">
-                                <img th:src="@{${path}}" height="100px" width="150px">
-                                <input type="file" class="form-control" th:field="*{file}">
+                                <img th:src="@{${path}}" height="100px" width="150px" id="previewImage">
+                                <input type="file" class="form-control" th:field="*{file}"
+                                       onchange="updatePreviewImage(this)" style="margin-top: 7px">
                                 <div th:if="${#fields.hasErrors('file')}">
                                     <div class="alert alert-danger" th:errors="*{file}">
                                     </div>
@@ -221,7 +222,26 @@
         </div>
     </div>
 </main>
+<script>
+    function updatePreviewImage(input) {
+        if (input.files && input.files[0]) {
+            var file = input.files[0];
+            if (file.type.startsWith('image/')) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#previewImage').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+            else {
+                alert('Выбранный файл не является изображением.');
+                input.value = '';
+            }
+        }
+    }
+</script>
 <script th:inline="javascript">
+
     var categoryName;
 
     function openModal(button) {

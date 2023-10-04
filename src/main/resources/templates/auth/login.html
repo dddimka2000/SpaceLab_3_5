@@ -25,23 +25,23 @@ background-repeat: repeat; height: 100%">
     </div>
     <form class="d-flex flex-column align-items-center" method="post" th:action="@{/auth/process_login}">
         <div class="mb-2 me-2 bd-mode-toggle">
-            <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+            <h1 class="h3 mb-3 fw-normal">Пожалуйста, войдите в аккаунт</h1>
             <div class="form-floating">
                 <input type="hidden" th:value="${_csrf}" name="_csrf">
                 <input type="text" class="form-control" id="username" placeholder="username"
                        name="username">
-                <label for="username">E-mail,Login or Telephone</label>
+                <label for="username">E-mail, логин или телефон</label>
             </div>
             <div class="form-floating">
                 <input type="password" class="form-control" id="password" placeholder="password"
                        name="password">
-                <label for="password">Password</label>
+                <label for="password">Пароль</label>
             </div>
 
             <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
         </div>
         <a th:href="@{/auth/registration}" style="color: white;">
-            <h3 class="mt-5 mb-3" >Registration</h3>
+            <h3 class="mt-5 mb-3" >Регистрация</h3>
         </a>
         <div th:if="${param.error}" style="color: red">Некорректно указаны данные для входа</div>
     </form>

@@ -50,7 +50,7 @@ public class OrderController {
         this.basketItemService = basketItemService;
     }
 
-    int pageSize = 3;
+    int pageSize = 10;
 
     private final
     BasketItemService basketItemService;
@@ -95,6 +95,9 @@ public class OrderController {
         long count = orderTableService.countByUserEntity(userDetails.getUserEntity());
         String panelCount = "Показано " + (pageSize * page + 1) + "-" + (orderTableEntityList.size() + (pageSize * page)) + " из " + count;
         log.info(panelCount);
+        Integer lastPageSize=page*pageSize;
+        model.addAttribute("lastPageSize", lastPageSize);
+        log.info(lastPageSize);
         model.addAttribute("panelCount", panelCount);
         model.addAttribute("orderId", orderId);
         return "/public/orders";

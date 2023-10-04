@@ -41,6 +41,7 @@ public class UserEntity {
     @Column(name = "path")
     private String path;
 
+    
     @ElementCollection(targetClass = UserRole.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)

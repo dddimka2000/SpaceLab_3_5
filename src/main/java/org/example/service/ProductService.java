@@ -102,9 +102,16 @@ public class ProductService {
     }
 
     public long countByStatusAndNameContainingIgnoreCase(Boolean bool,String name){
-        log.info("ProductService-countBy");
+        log.info("ProductService-countByStatusAndNameContainingIgnoreCase");
         long count=productRepository.countByStatusAndNameContainingIgnoreCase(bool,name);
-        log.info("ProductService-countBy get: "+count);
+        log.info("ProductService-countByStatusAndNameContainingIgnoreCase get: "+count);
+        return count;
+    }
+
+    public long countByNameContainingIgnoreCase(String name){
+        log.info("ProductService-countByNameContainingIgnoreCase");
+        long count=productRepository.countByNameContainingIgnoreCase(name);
+        log.info("ProductService-countByNameContainingIgnoreCase get: "+count);
         return count;
     }
 }

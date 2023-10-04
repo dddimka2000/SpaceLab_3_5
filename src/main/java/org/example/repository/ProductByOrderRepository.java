@@ -19,4 +19,5 @@ public interface ProductByOrderRepository extends JpaRepository<ProductByOrderEn
 
     @Override
     void delete(ProductByOrderEntity entity);
+
 }

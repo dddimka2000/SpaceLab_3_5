@@ -38,7 +38,7 @@
                     <div class="card-body">
                         <p>Заполните данные для создания нового продукта</p>
                         <form th:action="@{/admin/classifications/{nameClassification}/edit/{nameCategory}/edit/{nameProduct}(nameClassification=${nameClassification},nameCategory=${nameCategory},nameProduct=*{name})}"
-                              class="was-validated" method="POST"  th:object="${productDTO}" enctype="multipart/form-data">
+                               method="POST"  th:object="${productDTO}" enctype="multipart/form-data">
                             <div class="form-group">
                                 <div class="position-relative">
                                     <label for="validationTooltip01" class="form-label">Название</label>
@@ -61,8 +61,8 @@
                                 <div class="position-relative">
                                     <label for="validationTextarea" class="form-label">Цена</label>
                                     <input type="number" step="0.01" min="0.01" pattern="\d+(\.\d{2})?" title="Введите цену в формате XX.XX"
-                                           сlass="form-control is-invalid"
-                                           required="" th:field="*{price}"> грн
+                                           class="form-control"
+                                           required="" th:field="*{price}">
                                     <div class="valid-tooltip">
                                         Отлично, данное поле заполнено.
                                     </div>
@@ -76,7 +76,7 @@
                             <div class="form-group">
                                 <div class="position-relative">
                                     <label for="validationTextarea" class="form-label">Описание</label>
-                                    <textarea class="form-control is-invalid" id="validationTextarea"
+                                    <textarea class="form-control " id="validationTextarea"
                                               required="" th:field="*{description}"></textarea>
                                     <div class="valid-tooltip">
                                         Отлично, данное поле заполнено.
@@ -104,10 +104,10 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <img th:src="@{*{path}}" height="100px" width="150px">
+                                <img th:src="@{*{path}}" height="100px" width="150px"  id="previewImage">
                             </div>
                             <div class="form-group mb-0">
-                                <input type="file" class="form-control" th:field="*{file}" >
+                                <input type="file" class="form-control" th:field="*{file}"  onchange="updatePreviewImage(this)" style="margin-top: 7px" >
                                 <div th:if="${#fields.hasErrors('file')}">
                                     <div class="alert alert-danger" th:errors="*{file}">
                                     </div>
@@ -127,6 +127,24 @@
         </div>
     </div>
 </main>
+<script>
+    function updatePreviewImage(input) {
+        if (input.files && input.files[0]) {
+            var file = input.files[0];
+            if (file.type.startsWith('image/')) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#previewImage').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+            else {
+                alert('Выбранный файл не является изображением.');
+                input.value = '';
+            }
+        }
+    }
+</script>
 <script th:src="@{/assets/js/myJs/script.js}"></script>
 <script th:src="@{/assets/js/core/libs.min.js}"></script>
 <script th:src="@{/assets/js/core/external.min.js}"></script>

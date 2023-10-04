@@ -18,6 +18,9 @@
     <link rel="stylesheet" th:href="@{/static/assets/css/myCss/modal.css}"/>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script th:src="@{/assets/js/myJs/showLinkActive.js}"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery.maskedinput@1.4.1/src/jquery.maskedinput.min.js" type="text/javascript"></script>
 </head>
 <body style="background-image:url('https://hips.hearstapps.com/hmg-prod/images/assortment-of-colorful-ripe-tropical-fruits-top-royalty-free-image-995518546-1564092355.jpg'); height: 100%;
 background-repeat: repeat; height: 100%">
@@ -59,17 +62,17 @@ background-repeat: repeat; height: 100%">
                                       th:object="${uploadFile}" enctype="multipart/form-data">
                                     <div class="profile-img-edit position-relative" id="fileButtonUserImg">
                                         <img th:src="@{${userEntity.getPath()}}" alt="profile-pic"
-                                             class="theme-color-default-img profile-pic rounded avatar-100">
+                                             class="theme-color-default-img profile-pic rounded avatar-100"  id="previewImage">
                                         <div class="upload-icone bg-primary">
                                             <svg class="upload-button icon-14" width="14" viewBox="0 0 24 24">
                                                 <path fill="#ffffff"
                                                       d="M14.06,9L15,9.94L5.92,19H5V18.08L14.06,9M17.66,3C17.41,3 17.15,3.1 16.96,3.29L15.13,5.12L18.88,8.87L20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18.17,3.09 17.92,3 17.66,3M14.06,6.19L3,17.25V21H6.75L17.81,9.94L14.06,6.19Z"></path>
                                             </svg>
                                             <button class="file-upload"></button>
-                                            <input id="fileUserImg" name="file" type="file" hidden="true">
+                                            <input id="fileUserImg" name="file" type="file" hidden="true"  onchange="updatePreviewImage(this)">
                                         </div>
                                     </div>
-                                    <div th:if="${#fields.hasErrors('file')}">
+                                    <div th:if="${#fields.hasErrors('file')}" style="margin-top: 7px">
                                         <div class="alert alert-danger" th:errors="*{file}">
                                         </div>
                                     </div>
@@ -105,8 +108,7 @@ background-repeat: repeat; height: 100%">
                                             </div>
                                             <div class="form-group col-md-6">
                                                 <label for="floatingTelephone">Номер телефона</label>
-                                                <input type="text" class="form-control" id="floatingTelephone"
-                                                       placeholder="Номер телефона"
+                                                <input type="tel" class="form-control" id="floatingTelephone"
                                                        th:field="*{telephone}">
                                                 <div th:if="${#fields.hasErrors('telephone')}"
                                                      class="alert alert-danger"
@@ -135,9 +137,9 @@ background-repeat: repeat; height: 100%">
                                                 <br>
                                             </div>
                                             <div class="form-group col-md-12">
-                                                <label for="floatingName">name</label>
+                                                <label for="floatingName">Имя</label>
                                                 <input type="text" class="form-control" id="floatingName"
-                                                       placeholder="name"
+                                                       placeholder="Имя"
                                                        th:field="*{name}">
                                                 <div th:if="${#fields.hasErrors('name')}" class="alert alert-danger"
                                                      th:errors="*{name}">
@@ -145,28 +147,28 @@ background-repeat: repeat; height: 100%">
                                                 <br>
                                             </div>
                                             <div class="form-group col-md-12">
-                                                <label for="floatingSurName">Surname</label>
+                                                <label for="floatingSurName">Фамилия</label>
                                                 <input type="text" class="form-control" id="floatingSurName"
-                                                       placeholder="surname"
+                                                       placeholder="Фамилия"
                                                        th:field="*{surname}">
                                                 <div th:if="${#fields.hasErrors('surname')}" class="alert alert-danger"
                                                      th:errors="*{surname}">
                                                 </div>
                                                 <br>
                                             </div>
-                                            <div class="form-group col-sm-12">
-                                                <label class="form-label">Город:</label>
-                                                <select name="type" class="selectpicker form-control" data-style="py-0">
-                                                    <option>Днепр</option>
-                                                    <option>Киев</option>
-                                                    <option>Львов</option>
-                                                    <option>Одесса</option>
-                                                    <option>Харьков</option>
-                                                    <option>Ивано-Франковск</option>
-                                                </select>
-                                            </div>
+<!--                                            <div class="form-group col-sm-12">-->
+<!--                                                <label class="form-label">Город:</label>-->
+<!--                                                <select name="type" class="selectpicker form-control" data-style="py-0">-->
+<!--                                                    <option>Днепр</option>-->
+<!--                                                    <option>Киев</option>-->
+<!--                                                    <option>Львов</option>-->
+<!--                                                    <option>Одесса</option>-->
+<!--                                                    <option>Харьков</option>-->
+<!--                                                    <option>Ивано-Франковск</option>-->
+<!--                                                </select>-->
+<!--                                            </div>-->
                                             <div class="form-group col-md-6">
-                                                <label for="floatingEmail">Email address</label>
+                                                <label for="floatingEmail">E-mail</label>
                                                 <input type="text" class="form-control" id="floatingEmail"
                                                        placeholder="E-mail"
                                                        th:field="*{email}">
@@ -188,12 +190,55 @@ background-repeat: repeat; height: 100%">
         </div>
     </div>
 </main>
+<script>
+    function updatePreviewImage(input) {
+        if (input.files && input.files[0]) {
+            var file = input.files[0];
+            if (file.type.startsWith('image/')) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#previewImage').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+            else {
+                alert('Выбранный файл не является изображением.');
+                input.value = '';
+            }
+        }
+    }
+</script>
+<script>
 
+    document.addEventListener('DOMContentLoaded', function() {
+        var nameField = document.getElementById('floatingName');
+        var surNameField = document.getElementById('floatingSurName');
+
+        function capitalizeFirstLetter(inputField) {
+            var inputValue = inputField.value;
+            var correctedValue = inputValue.charAt(0).toUpperCase() + inputValue.slice(1);
+            inputField.value = correctedValue;
+        }
+
+        nameField.addEventListener('input', function() {
+            capitalizeFirstLetter(nameField);
+        });
+
+        surNameField.addEventListener('input', function() {
+            capitalizeFirstLetter(surNameField);
+        });
+    });
+</script>
 <script th:inline="javascript">
+    $('#floatingTelephone').mask('+380999999999');
+
     $("#fileButtonUserImg").on("click", function () {
         let file = $("#fileUserImg");
         file.click();
     })
+
+    $('#floatingTelephone').mask('+380999999999');
+
 </script>
 
 

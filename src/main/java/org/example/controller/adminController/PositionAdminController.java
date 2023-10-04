@@ -28,7 +28,7 @@ public class PositionAdminController {
         this.userEntityService = userEntityService;
     }
 
-int size=3;
+int size=10;
     @GetMapping("/admin/positions")
     public String adminPositionShow(Model model, @RequestParam(defaultValue = "0") int page) {
         Page<UserEntity> userPage = userEntityService.findAllUsersPage(page, size);
@@ -63,8 +63,7 @@ int size=3;
 
     @PostMapping("/admin/positions/update")
     public String changeRolesAdminPanel(@RequestParam Map<String, String> roles,
-                                        @AuthenticationPrincipal UserDetailsImpl userEntity,
-                                        Model model) {
+                                        @AuthenticationPrincipal UserDetailsImpl userEntity) {
         log.info(roles);
         UserEntity user = null;
         for (Map.Entry<String, String> entry : roles.entrySet()) {
@@ -96,7 +95,6 @@ int size=3;
                 }
             }
         }
-
-        return "redirect:/admin/positions";
+        return "redirect:/admin/positions?page="+getPage;
     }
 }

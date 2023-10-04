@@ -190,7 +190,7 @@ background-repeat: repeat; height: 100%">
                         <div id="hiddenButtonOrder" hidden>
                             <br>
                             <textarea class="form-control" id="commentArea"
-                                      style="width: 100%; height: 80px"></textarea>
+                                      style="width: 100%; height: 80px" placeholder="Комментарий"></textarea>
                             <br>
                             <button id="createOrderButton" class="btn btn-outline-success"
                                     style="text-align: center; width: 100%; height: 80px">
@@ -244,9 +244,6 @@ background-repeat: repeat; height: 100%">
             dateArrayCount.push(dataCountValue)
         });
         let comment = $("#commentArea").val()
-        console.log(dateArrayId);
-        console.log(dateArrayCount);
-        console.log(comment);
 
         if (dateArrayId.length > 0) {
             let formData = new FormData();
@@ -262,7 +259,6 @@ background-repeat: repeat; height: 100%">
                 processData: false,
                 data: formData,
                 success: function (response) {
-                    console.log("УСПЕШНО СОЗДАН");
                     showNotification("Заказ создан", true);
                     window.location.href = /*[[@{/orders}]]*/ '';
                 },
@@ -270,29 +266,24 @@ background-repeat: repeat; height: 100%">
                     console.error("Ошибка валидации:", error);
                     let response = xhr.responseJSON;
                     let fields = response.fields;
-                    console.log("НЕ ПРОШЕЛ ВАЛИДАЦИЮ");
                     $(".alert.alert-success").remove();
                     $(".alert.alert-danger").remove();
 
                     if (fields.login) {
-                        console.log("НЕ ПРОШЕЛ ВАЛИДАЦИЮ name");
                         showNotification(response.fields.login, false);
 
                     }
 
                     if (fields.comment) {
-                        console.log("НЕ ПРОШЕЛ ВАЛИДАЦИЮ price");
 
                         showNotification(response.fields.comment, false);
 
                     }
                     if (fields.products) {
-                        console.log("НЕ ПРОШЕЛ ВАЛИДАЦИЮ products");
                         showNotification(response.fields.products, false);
 
                     }
                     if (fields.quantity) {
-                        console.log("НЕ ПРОШЕЛ ВАЛИДАЦИЮ quantity");
                         showNotification(response.fields.quantity, false);
                     }
                 }
@@ -308,7 +299,7 @@ background-repeat: repeat; height: 100%">
 
     function openModal(button) {
         productName = button.getAttribute('data-product-name');
-        console.log(productName);
+        // console.log(productName);
         var modal = document.getElementById('deleteModal');
         modal.style.display = 'block';
         $("#cancelBtn").click(function () {
@@ -335,12 +326,12 @@ background-repeat: repeat; height: 100%">
     }
 
     $(document).on("change", ".numeric-input-field", function () {
-        console.log("change input");
+        // console.log("change input");
         let contextPath = /*[[@{/}]]*/ '';
         let idProduct = $(this).data("id");
         let count = parseInt($(this).val());
-        console.log(count);
-        console.log(contextPath + 'product/' + idProduct + '/basketItem/put')
+        // console.log(count);
+        // console.log(contextPath + 'product/' + idProduct + '/basketItem/put')
         $.ajax({
             url: contextPath + 'product/' + idProduct + '/basketItem/put',
             method: "PUT",
@@ -351,7 +342,7 @@ background-repeat: repeat; height: 100%">
 
             },
             error: function (xhr, status, error) {
-                console.log(error)
+                // console.log(error)
                 let response = xhr.responseJSON;
                 let fields = response.message;
                 showNotification(fields, false);
@@ -364,7 +355,7 @@ background-repeat: repeat; height: 100%">
         function () {
             let contextPath = /*[[@{/}]]*/ '';
             let idProduct = $(this).data("id");
-            console.log(contextPath + 'product/' + idProduct + '/basketItem/delete')
+            // console.log(contextPath + 'product/' + idProduct + '/basketItem/delete')
             $.ajax({
                 url: contextPath + 'product/' + idProduct + '/basketItem/delete',
                 method: "DELETE",
@@ -375,7 +366,7 @@ background-repeat: repeat; height: 100%">
                     $(deleteItem).remove();
                 },
                 error: function (xhr, status, error) {
-                    console.log(error)
+                    // console.log(error)
                     let response = xhr.responseJSON;
                     let fields = response.message;
                     showNotification(fields, false);
@@ -391,9 +382,9 @@ background-repeat: repeat; height: 100%">
             let contextPath = /*[[@{/}]]*/ '';
 
             event.preventDefault();
-            console.log($(this).data("product"))
+            // console.log($(this).data("product"))
             let idProduct = $(this).data("id");
-            console.log(idProduct)
+            // console.log(idProduct)
             let changeItem = $(this);
             if ($(this).data("product") == true) {
                 $.ajax({

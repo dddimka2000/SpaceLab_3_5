@@ -50,6 +50,11 @@
                         </div>
                     </div>
                     <div class="card-body">
+                        <input type="text" name="productName" id="productName" th:value="${id}"
+                               placeholder="Введите имя классификации">
+                        <a>
+                            <button type="submit" class="btn btn-primary" id="searchButton">Поиск</button>
+                        </a>
                         <div class="row">
                             <div class="col-6" th:each="ob : ${objects}" style="text-align: center; padding-top: 20px">
                                 <a th:href="@{/admin/classifications/{name}(name=${ob.name})}">
@@ -60,12 +65,79 @@
                             </div>
                         </div>
                         <br>
+                        <div class="row">
+                            <div class="col-sm-6" id="rowPanelCount">
+                                <p th:text="${panelCount}"></p>
+                            </div>
+                            <div class="col-sm-6">
+                                <nav aria-label="Page navigation example">
+                                    <ul class="pagination justify-content-end" id="paginationItems">
+                                        <li class="page-item">
+                                            <a class="page-link" href="#" aria-label="Previous"
+                                               th:hidden="${currentPage == 0}"
+                                               th:href="@{/admin/classifications(page=${currentPage - 1 }, id=${id})}">
+                                                <span aria-hidden="true">&#10094;</span>
+                                            </a>
+                                        </li>
+                                        <li class="page-item" th:if="${currentPage >= 2}">
+                                            <a class="page-link"
+                                               th:href="@{/admin/classifications(page=${0}, id=${id})}"
+                                               th:text="1"></a>
+                                        </li>
+                                        <li class="page-item" th:if="${currentPage >= 3}">
+                                            <span class="page-link disabled">...</span>
+                                        </li>
+                                        <li class="page-item"
+                                            th:each="pageNumber : ${#numbers.sequence(currentPage - 1, currentPage + 1)}"
+                                            th:classappend="${pageNumber == currentPage} ? 'active' : ''"
+                                            th:if="${pageNumber >= 0 && pageNumber <= (totalPages - 1)}">
+                                            <a class="page-link"
+                                               th:href="@{/admin/classifications(page=${pageNumber}, id=${id})}"
+                                               th:text="${pageNumber + 1}">
+                                            </a>
+                                        </li>
+                                        <li class="page-item" th:if="${currentPage==0 && totalPages>5}">
+                                            <a class="page-link"
+                                               th:href="@{/admin/classifications(page=${2 }, id=${id})}"
+                                               th:text="${2 + 1}">
+                                            </a>
+                                        </li>
+                                        <li class="page-item" th:if="${currentPage <= totalPages - 4}">
+                                            <span class="page-link disabled">...</span>
+                                        </li>
+                                        <li class="page-item" th:if="${currentPage <= totalPages - 3}">
+                                            <a class="page-link"
+                                               th:href="@{/admin/classifications(page=${totalPages -1 }, id=${id})}"
+                                               th:text="${totalPages}"></a>
+                                        </li>
+                                        <li class="page-item" th:data-page="${currentPage+2}"
+                                            th:if="${1 < totalPages&& totalPages -1>currentPage}">
+                                            <a class="page-link"
+                                               th:href="@{/admin/classifications(page=${currentPage + 1 }, id=${id})}"
+                                               aria-label="Next">
+                                                <span aria-hidden="true">&#10095;</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </main>
+<script th:inline="javascript">
+    $("#searchButton").click(function () {
+        var productNameInput = document.getElementById('productName');
+        var id = productNameInput.value; // Получаем значение из поля ввода
+        let context =/*[[@{/}]]*/ '';
+        var url = context + 'admin/classifications?page=0&id=' + id; //
+        window.location.href = url; // Переходим по URL
+    });
+
+</script>
 <script th:src="@{/assets/js/myJs/showLinkActive.js}"></script>
 <script th:src="@{/assets/js/myJs/script.js}"></script>
 <script th:src="@{/assets/js/core/libs.min.js}"></script>

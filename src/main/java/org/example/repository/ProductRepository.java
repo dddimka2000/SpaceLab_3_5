@@ -34,4 +34,7 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Integer>
     Long countBy();
     Long countByStatusAndNameContainingIgnoreCase(Boolean status,String productName);
 
+    Long countByNameContainingIgnoreCase(String productName);
+
+
 }

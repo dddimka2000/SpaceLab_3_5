@@ -19,11 +19,11 @@ background-repeat: repeat; height: 100%">
     <form class="d-flex flex-column align-items-center" th:action="@{/auth/registration}" method="post"
           th:object="${userEntity}">
         <div  style="position: center; width: 33%">
-            <h1 class="h3 mb-3 fw-normal">Registration</h1>
+            <h1 class="h3 mb-3 fw-normal">Регистрация</h1>
             <div class="form-floating">
-                <input type="text" class="form-control" id="floatingLogin" placeholder="login"
+                <input type="text" class="form-control" id="floatingLogin" placeholder="Логин"
                        th:field="*{login}">
-                <label for="floatingLogin">Login</label>
+                <label for="floatingLogin">Логин</label>
                 <div th:if="${#fields.hasErrors('login')}">
                     <div class="alert alert-danger" th:errors="*{login}">
                     </div>
@@ -31,36 +31,36 @@ background-repeat: repeat; height: 100%">
                 <br>
             </div>
             <div class="form-floating">
-                <input type="password" class="form-control" id="floatingPassword" placeholder="Password"
+                <input type="password" class="form-control" id="floatingPassword" placeholder="Пароль"
                        th:field="*{pass}">
-                <label for="floatingPassword">Password</label>
+                <label for="floatingPassword">Пароль</label>
                 <div th:if="${#fields.hasErrors('pass')}" class="alert alert-danger"
                      th:errors="*{pass}">
                 </div>
                 <br>
             </div>
             <div class="form-floating">
-                <input type="text" class="form-control" id="floatingName" placeholder="name"
+                <input type="text" class="form-control" id="floatingName" placeholder="Имя"
                        th:field="*{name}">
-                <label for="floatingName">Name</label>
+                <label for="floatingName">Имя</label>
                 <div th:if="${#fields.hasErrors('name')}" class="alert alert-danger"
                      th:errors="*{name}">
                 </div>
                 <br>
             </div>
             <div class="form-floating">
-                <input type="text" class="form-control" id="floatingSurName" placeholder="surname"
+                <input type="text" class="form-control" id="floatingSurName" placeholder="Фамилия"
                        th:field="*{surname}">
-                <label for="floatingSurName">Surname</label>
+                <label for="floatingSurName">Фамилия</label>
                 <div th:if="${#fields.hasErrors('surname')}" class="alert alert-danger"
                      th:errors="*{surname}">
                 </div>
                 <br>
             </div>
             <div class="form-floating">
-                <input type="text" class="form-control" id="floatingTelephone" placeholder="telephone"
+                <input type="text" class="form-control" id="floatingTelephone" placeholder="Номер телефона"
                        th:field="*{telephone}">
-                <label for="floatingTelephone">Telephone</label>
+                <label for="floatingTelephone">Номер телефона</label>
                 <div th:if="${#fields.hasErrors('telephone')}" class="alert alert-danger"
                      th:errors="*{telephone}">
                 </div>
@@ -69,15 +69,15 @@ background-repeat: repeat; height: 100%">
             <div class="form-floating">
                 <input type="text" class="form-control" id="floatingEmail" placeholder="E-mail"
                        th:field="*{email}">
-                <label for="floatingEmail">Email address</label>
+                <label for="floatingEmail">Email</label>
                 <div th:if="${#fields.hasErrors('email')}" class="alert alert-danger"
                      th:errors="*{email}">
                 </div>
                 <br>
             </div>
-            <button class="w-100 btn btn-lg btn-primary" type="submit" style="margin-top: 20px">Create</button>
+            <button class="w-100 btn btn-lg btn-primary" type="submit" style="margin-top: 20px">Создать</button>
             <a th:href="@{/auth/login}" style="color: white;">
-                <h3 class="mt-5 mb-3">Sign in</h3>
+                <h3 class="mt-5 mb-3">Войти в уже существующий</h3>
             </a>
         </div>
 

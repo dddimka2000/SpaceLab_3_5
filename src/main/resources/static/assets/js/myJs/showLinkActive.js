@@ -5,8 +5,7 @@ $(document).ready(function () {
     links.each(function () {
         const href = $(this).attr("href");
         const currentPathPrefix = getFirstTwoSegments(currentPath); // Получаем первые два сегмента из текущего пути
-        console.log(href)
-        console.log(currentPathPrefix)
+
 
         if (href === currentPathPrefix) {
             $(this).addClass("active");
@@ -16,7 +15,6 @@ $(document).ready(function () {
 
 function getFirstTwoSegments(url) {
     const parts = url.split("/").filter(Boolean); // Разбиваем URL на сегменты и фильтруем пустые элементы
-    console.log(parts)
     if (parts.length >= 4) {
         return `/${parts[0]}/${parts[1]}/${parts[2]}`;
     }

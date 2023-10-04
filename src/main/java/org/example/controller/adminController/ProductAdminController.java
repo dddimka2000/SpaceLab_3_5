@@ -52,7 +52,7 @@ public class ProductAdminController {
         this.productValidator = productValidator;
     }
 
-    int size=2;
+    int size=12;
     @GetMapping("/admin/products")
     public String adminProducts(@RequestParam(defaultValue = "0", name = "page") Integer page,
                                 @RequestParam(defaultValue = "", name = "productName") String productName,
@@ -63,8 +63,18 @@ public class ProductAdminController {
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", productsPage.getTotalPages());
 
-        long count = productService.countBy();
-        String panelCount = "Показано " + (size * page + 1) + "-" + (products.size() + (size * page)) + " из " + count;
+        long count = productService.countByNameContainingIgnoreCase(productName);
+        String panelCount;
+        if (!productName.isBlank()&&products.size()<=1&&size * page<1) {
+            count = 1;
+        }
+        if (products.size() == 0) {
+            count = 0;
+            page=0;
+            panelCount= "Нету данных";
+        } else {
+            panelCount = "Показано " + (size * page + 1) + "-" + (products.size() + (size * page)) + " из " + count;
+        }
         log.info(panelCount);
         model.addAttribute("panelCount", panelCount);
 

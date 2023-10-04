@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.validation.Valid;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -73,7 +74,7 @@ public class UsersAdminController {
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", userPage.getTotalPages());
         long count = userEntityService.countBy();
-        String panelCount = "Показано " + (size * page + 1) + "-" + (size + (size * page)) + " из " + count;
+        String panelCount = "Показано " + (size * page + 1) + "-" + (users.size() + (size * page)) + " из " + count;
         log.info(panelCount);
         model.addAttribute("panelCount", panelCount);
         model.addAttribute("sizeItems", size);
@@ -83,7 +84,7 @@ public class UsersAdminController {
     @GetMapping("/admin/users/{id}")
     public String showUserAdminEditPanel(@PathVariable Integer id, Authentication authentication, RedirectAttributes redirectAttributes,
                                          @ModelAttribute("userEntity") UserDTO userDTO, @ModelAttribute("uploadFile") UploadImg img, Model model) {
-        model.addAttribute("userId",id);
+        model.addAttribute("userId", id);
         log.info(authentication.getAuthorities());
         if (userEntityService.findById(id).get().getRoles().contains(UserRole.ADMIN)) {
             redirectAttributes.addFlashAttribute("errorRedirect", "Вы не имеете доступа к редакции пользователя с ролью \"Admin\"");
@@ -100,14 +101,14 @@ public class UsersAdminController {
         return "admin/users/editUser";
     }
 
-    Integer size = 2;
+    Integer size = 10;
 
     @ResponseBody
     @GetMapping("/admin/users/getPage")
     public ResponseEntity<Map<String, Object>> getUsers(
             @RequestParam(name = "page", defaultValue = "0") Integer page,
             @RequestParam(name = "search", defaultValue = "") String search) {
-        String sort="id,asc";
+        String sort = "id,asc";
         log.info("search " + search);
         log.info("page " + page);
         Page<UserEntity> resultPage = userEntityService.findPageAllUsersBySearchName(search, sort, page, size);
@@ -146,8 +147,8 @@ public class UsersAdminController {
     @ResponseBody
     @PutMapping("/admin/users/{id}/uploadInfo")
     public ResponseEntity<Map<String, Object>> adminUsersEditInfoPut(@ModelAttribute("userEntity")
-                                                                 @Valid UserDTO userDTO,
-                                                                 BindingResult bindingResult,
+                                                                     @Valid UserDTO userDTO,
+                                                                     BindingResult bindingResult,
                                                                      @RequestParam("passRepeat") Optional<String> passwordRepeat,
                                                                      @RequestParam("pass") Optional<String> password,
                                                                      @PathVariable Integer id) {
@@ -155,10 +156,10 @@ public class UsersAdminController {
         Map<String, Object> response = new HashMap<>();
         log.info(bindingResult.getFieldErrors());
         log.info("adminProductsEditPost+start");
-        UserEntity userDetails=userEntityService.findById(id).get();
-        log.info("length pass "+passwordRepeat.get().length());
-
-        if (passwordRepeat.get().length()>=1 || password.get().length()>=1) {
+        UserEntity userDetails = userEntityService.findById(id).get();
+        log.info("length pass " + passwordRepeat.get().length());
+        log.info("userDTO phone_" + userDTO.getTelephone() + "_");
+        if (passwordRepeat.get().length() >= 1 || password.get().length() >= 1) {
             userDTO.setPass(password.get());
             passwordValidator.validate(userDTO, bindingResult);
             log.info("passwordRepeat.isPresent()||password.isPresent()");
@@ -202,13 +203,13 @@ public class UsersAdminController {
 
     @PutMapping("/admin/users/{id}/uploadImg")
     public ResponseEntity<Map<String, Object>> adminUsersEditPut(@ModelAttribute("uploadFile")
-                                                                     @Valid UploadImg uploadImg,
-                                                                     BindingResult bindingResult, @PathVariable Integer id) {
+                                                                 @Valid UploadImg uploadImg,
+                                                                 BindingResult bindingResult, @PathVariable Integer id) {
         Map<String, Object> response = new HashMap<>();
         log.info(bindingResult.getFieldErrors());
         log.info("adminProductsEditPost+start");
 
-        photoValidator.validate(uploadImg,bindingResult);
+        photoValidator.validate(uploadImg, bindingResult);
         if (bindingResult.hasErrors()) {
             Map<String, String> fieldErrors = new HashMap<>();
             for (FieldError error : bindingResult.getFieldErrors()) {
@@ -219,8 +220,8 @@ public class UsersAdminController {
             return ResponseEntity.badRequest().body(response);
         }
 
-        UserEntity userEntity=userEntityService.findById(id).get();
-        String mainImaginePath=userEntity.getPath();
+        UserEntity userEntity = userEntityService.findById(id).get();
+        String mainImaginePath = userEntity.getPath();
         if (uploadImg.getFile() != null && !uploadImg.getFile().isEmpty()) {
             String uuidFile = UUID.randomUUID().toString();
             String resultFilename = uuidFile + "." + uploadImg.getFile().getOriginalFilename();

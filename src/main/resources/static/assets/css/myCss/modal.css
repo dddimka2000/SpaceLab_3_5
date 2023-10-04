@@ -1,10 +1,11 @@
+
+
 .countdown-timer {
      font-size: 18px;
      color: #333;
      margin-top: 10px;
  }
 
-/* Стили для модального окна */
 .modal {
     display: none;
     position: fixed;
@@ -26,7 +27,7 @@
     padding: 20px;
     border: 1px solid #888;
     width: 50%;
-    max-width: 500px; /* Максимальная ширина модального окна */
+    max-width: 500px; /* пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ */
 }
 
 .close {
@@ -36,13 +37,13 @@
     font-weight: bold;
 }
 
-/* Стиль кнопок */
+/* пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ */
 button {
     padding: 5px 10px;
     margin: 5px;
 }
 
-/* Стили для сайдбара */
+/* пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ */
 .sidebar {
     position: center;
 }

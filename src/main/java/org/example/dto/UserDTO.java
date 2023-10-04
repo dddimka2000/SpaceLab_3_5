@@ -14,17 +14,20 @@ public class UserDTO {
 //    @Size(min = 8, max = 30, message = "Пароль должен быть от 8 до 30 символов")
     private String pass;
 
-    @Size(min = 2, max = 30, message = "Имя должен быть от 2 до 30 символов")
+    @Size(min = 2, max = 30, message = "Имя должно быть от 2 до 30 символов")
+    @Pattern(regexp = "^[a-яA-Я]+$", message = "Имя должно содержать буквы а-я А-я")
     private String name;
 
     @Size(min = 2, max = 30, message = "Фамилия должна быть от 2 до 30 символов")
+    @Pattern(regexp = "^[a-яA-Я]+$", message = "Фамилия должна содержать только буквы а-я А-я")
     private String surname;
 
-    @Size(min = 10, max = 15, message ="Номер должен быть от 10 до 15 символов.")
+    @Size(min = 11, max = 15, message ="Номер должен быть от 12 до 15 символов.")
     @Pattern(regexp = "\\+?[0-9]+", message = "Номер телефона должен начинаться с '+' и содержать только цифры.")
     private String telephone;
 
     @Email(message = "E-mail не валиден. Пример почты \"example@pre.com\".")
+    @Pattern(regexp = "^[A-Za-z0-9+_.-]+@([A-Za-z0-9.-]+\\.[A-Za-z]{2,})$", message = "Некорректный адрес электронной почты. Пример почты \"example@pre.com\".")
     @Size(min = 5, max = 30,message = "E-mail  должен быть 5-30 символов")
     private String email;
 

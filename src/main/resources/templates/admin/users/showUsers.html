@@ -124,15 +124,15 @@
                                     <ul class="pagination justify-content-end" id="paginationItems">
                                         <li class="page-item">
                                             <span class="page-link" href="#" aria-label="Previous"
-                                               th:hidden="${currentPage == 0}">
+                                                  th:hidden="${currentPage == 0}">
                                                 <span aria-hidden="true">&#10094;</span>
                                             </span>
                                         </li>
                                         <li class="page-item" th:if="${currentPage >= 2}">
                                             <span class="page-link" href="#"
-                                               th:text="1"></span>
+                                                  th:text="1"></span>
                                         </li>
-                                        <li class="page-item" th:if="${currentPage >= 3}">
+                                        <li class="page-item disabled" th:if="${currentPage >= 3}">
                                             <span class="page-link">...</span>
                                         </li>
                                         <li class="page-item"
@@ -140,23 +140,24 @@
                                             th:classappend="${pageNumber == currentPage} ? 'active' : ''"
                                             th:if="${pageNumber >= 0 && pageNumber <= (totalPages - 1)}">
                                             <span class="page-link" href="#"
-                                               th:text="${pageNumber + 1}">
+                                                  th:text="${pageNumber + 1}">
                                             </span>
                                         </li>
                                         <li class="page-item" th:if="${currentPage==0 && totalPages>5}">
                                             <span class="page-link" href="#"
-                                               th:text="${2 + 1}">
+                                                  th:text="${2 + 1}">
                                             </span>
                                         </li>
-                                        <li class="page-item" th:if="${currentPage <= totalPages - 4}">
+                                        <li class="page-item disabled" th:if="${currentPage <= totalPages - 4}">
                                             <span class="page-link">...</span>
                                         </li>
                                         <li class="page-item" th:if="${currentPage <= totalPages - 3}">
                                             <span class="page-link" href="#"
-                                               th:text="${totalPages}"></span>
+                                                  th:text="${totalPages}"></span>
                                         </li>
                                         <li class="page-item" th:data-page="${currentPage+2}">
-                                            <span class="page-link" href="#" aria-label="Next">
+                                            <span class="page-link" href="#" aria-label="Next"
+                                                  th:hidden="${currentPage == 0&&totalPages==1}">
                                                 <span aria-hidden="true">&#10095;</span>
                                             </span>
                                         </li>
@@ -191,8 +192,10 @@
         $.ajax({
             method: "GET",
             url: url,
-            data: {search: searchName,
-            page: 0},
+            data: {
+                search: searchName,
+                page: 0
+            },
             dataType: "json",
             success: function (data) {
                 console.log(data);
@@ -235,18 +238,21 @@
                 });
                 let panelCount = $("#rowPanelCount");
                 panelCount.empty();
+                var resultPagesCount = Math.round(ElementsCount / (userPanelArray.length));
+                let newPanelCount;
+                console.log("userPanelArray.length " + userPanelArray.length);
+                newPanelCount = "<p>" + "Показано " + userPanelArray[0] + "-" + userPanelArray[userPanelArray.length - 1] + " из " + ElementsCount + "</p>";
                 if (userPanelArray.length < 1) {
                     userPanelArray.push(0);
                     userPanelArray.push(0);
+                    newPanelCount = "<p> Нету данных </p>";
                 }
-                var resultPagesCount = Math.round(ElementsCount / (userPanelArray.length));
-                let newPanelCount = "<p>" + "Показано " + userPanelArray[0] + "-" + userPanelArray[userPanelArray.length - 1] + " из " + ElementsCount + "</p>";
                 panelCount.append(newPanelCount);
                 let paginationItems = $("#paginationItems").empty();
                 let paginationNewItems = "";
-                console.log("ElementsCount "+ElementsCount)
-                console.log("currentPage "+currentPage)
-                console.log("resultPagesCount"+ resultPagesCount)
+                console.log("ElementsCount " + ElementsCount)
+                console.log("currentPage " + currentPage)
+                console.log("resultPagesCount" + resultPagesCount)
                 if (ElementsCount > 0) {
                     if (currentPage != 0) {
                         paginationNewItems +=
@@ -259,7 +265,7 @@
                             "                                            <li class=\"page-item\">    <a class=\"page-link\"> \n" + 1 + "</a>\n" +
                             "                                            </li>\n";
                     }
-                    if (currentPage <= 3 && (resultPagesCount+1) > 5) {
+                    if (currentPage <= 3 && (resultPagesCount + 1) > 5) {
                         for (let pageNumber = 0; pageNumber <= currentPage + 1; pageNumber++) {
                             console.log(pageNumber)
                             paginationNewItems +=
@@ -276,7 +282,7 @@
                     }
                     if (currentPage >= 3) {
                         paginationNewItems +=
-                            "                                            <li class=\"page-item\">\n" +
+                            "                                            <li class=\"page-item disabled\" >\n" +
                             "                                             <span class=\"page-link\">...</span>\n" +
                             "                                            </li>";
                     }
@@ -295,7 +301,7 @@
                                 "                                         </a>   </li>\n";
                         }
                     }
-                    if (currentPage >= 3 && (resultPagesCount+1) > 5) {
+                    if (currentPage >= 3 && (resultPagesCount + 1) > 5) {
                         for (let pageNumber = currentPage - 1; pageNumber <= currentPage + 1; pageNumber++) {
                             console.log(pageNumber)
                             paginationNewItems +=
@@ -310,19 +316,19 @@
                                 "                                         </a>   </li>\n";
                         }
                     }
-                    if (currentPage == 0 && (resultPagesCount+1) > 5) {
+                    if (currentPage == 0 && (resultPagesCount + 1) > 5) {
                         paginationNewItems +=
                             "                                            <li class=\"page-item\">\n   <a class=\"page-link\">" +
                             3 +
                             "                                          </a>  </li>\n"
                     }
-                    if (currentPage <= (resultPagesCount - 4) && (resultPagesCount+1) > 5) {
+                    if (currentPage <= (resultPagesCount - 4) && (resultPagesCount + 1) > 5) {
                         paginationNewItems +=
                             "                                            <li class=\"page-item\">  \n" +
                             "                                                <span class=\"page-link\">...</span>\n" +
                             "                                          </li>\n";
                     }
-                    if (currentPage <= (resultPagesCount - 3) && (resultPagesCount+1) > 5) {
+                    if (currentPage <= (resultPagesCount - 3) && (resultPagesCount + 1) > 5) {
                         paginationNewItems +=
                             "                                            <li class=\"page-item\">   <a class=\"page-link\">\n" + resultPagesCount +
                             "                                        </a>    </li>\n";
@@ -353,7 +359,6 @@
         if (isNaN(pageNumber)) {
             var inputValue = $(this).parent().data("page");
             var numericValue = parseInt(inputValue);
-            console.log("TESTTT " + numericValue);
             if (!isNaN(numericValue)) {
                 pageNumber = numericValue;
             } else {
@@ -411,18 +416,20 @@
                 });
                 let panelCount = $("#rowPanelCount");
                 panelCount.empty();
+                var resultPagesCount = Math.round(ElementsCount / sizeItems);
+                let newPanelCount = "<p>" + "Показано " + userPanelArray[0] + "-" + userPanelArray[userPanelArray.length - 1] + " из " + ElementsCount + "</p>";
                 if (userPanelArray.length < 1) {
                     userPanelArray.push(0);
                     userPanelArray.push(0);
+                    newPanelCount = "<p> Нету данных </p>";
                 }
-                var resultPagesCount = Math.round(ElementsCount / sizeItems);
-                let newPanelCount = "<p>" + "Показано " + userPanelArray[0] + "-" + userPanelArray[userPanelArray.length - 1] + " из " + ElementsCount + "</p>";
+
                 panelCount.append(newPanelCount);
                 let paginationItems = $("#paginationItems").empty();
                 let paginationNewItems = "";
-                console.log("ElementsCount "+ElementsCount)
-                console.log("currentPage "+currentPage)
-                console.log("resultPagesCount"+ resultPagesCount)
+                console.log("ElementsCount " + ElementsCount)
+                console.log("currentPage " + currentPage)
+                console.log("resultPagesCount" + resultPagesCount)
                 if (ElementsCount > 0) {
                     if (currentPage != 0) {
                         paginationNewItems +=
@@ -430,12 +437,12 @@
                             "        <a class=\"page-link\">                                     <span >&#10094;</span>\n </a>    " +
                             "                                            </li>\n";
                     }
-                    if (currentPage > 2 && resultPagesCount>4) {
+                    if (currentPage > 2 && resultPagesCount > 4) {
                         paginationNewItems +=
                             "                                            <li class=\"page-item\">    <a class=\"page-link\"> \n" + 1 + "</a>\n" +
                             "                                            </li>\n";
                     }
-                    if (currentPage < 3 && (resultPagesCount+1) > 5) {
+                    if (currentPage < 3 && (resultPagesCount + 1) > 5) {
                         for (let pageNumber = 0; pageNumber <= currentPage + 1; pageNumber++) {
                             console.log(pageNumber)
                             paginationNewItems +=
@@ -450,9 +457,9 @@
                                 "                                         </a>   </li>\n";
                         }
                     }
-                    if (currentPage >= 3 && resultPagesCount>4) {
+                    if (currentPage >= 3 && resultPagesCount > 4) {
                         paginationNewItems +=
-                            "                                            <li class=\"page-item\">\n" +
+                            "                                            <li class=\"page-item disabled\" >\n" +
                             "                                             <span class=\"page-link\">...</span>\n" +
                             "                                            </li>";
                     }
@@ -471,8 +478,8 @@
                                 "                                         </a>   </li>\n";
                         }
                     }
-                    if (currentPage >= 3 && (resultPagesCount+1) > 5) {
-                        for (let pageNumber = currentPage - 1; (pageNumber <= currentPage + 1)&&(pageNumber!=resultPagesCount); pageNumber++) {
+                    if (currentPage >= 3 && (resultPagesCount + 1) > 5) {
+                        for (let pageNumber = currentPage - 1; (pageNumber <= currentPage + 1) && (pageNumber != resultPagesCount); pageNumber++) {
                             console.log(pageNumber)
                             paginationNewItems +=
                                 "                                            <li class=\"page-item\">   <a class=\"page-link ";
@@ -486,19 +493,19 @@
                                 "                                         </a>   </li>\n";
                         }
                     }
-                    if (currentPage == 0 && (resultPagesCount+1) > 5) {
+                    if (currentPage == 0 && (resultPagesCount + 1) > 5) {
                         paginationNewItems +=
                             "                                            <li class=\"page-item\">\n   <a class=\"page-link\">" +
                             3 +
                             "                                          </a>  </li>\n"
                     }
-                    if (currentPage <= (resultPagesCount - 3) && (resultPagesCount+1) > 5) {
+                    if (currentPage <= (resultPagesCount - 3) && (resultPagesCount + 1) > 5) {
                         paginationNewItems +=
-                            "                                            <li class=\"page-item\">  \n" +
+                            "                                            <li class=\"page-item disabled\" >  \n" +
                             "                                                <span class=\"page-link\">...</span>\n" +
                             "                                          </li>\n";
                     }
-                    if (currentPage <= (resultPagesCount - 3) && (resultPagesCount+1) > 5) {
+                    if (currentPage <= (resultPagesCount - 3) && (resultPagesCount + 1) > 5) {
                         paginationNewItems +=
                             "                                            <li class=\"page-item\">   <a class=\"page-link\">\n" + resultPagesCount +
                             "                                        </a>    </li>\n";
@@ -509,7 +516,8 @@
                             "                                                    <span >&#10095;</span>\n" +
                             "                                </a>            </li>";
                     }
-                }                paginationItems.append(paginationNewItems);
+                }
+                paginationItems.append(paginationNewItems);
             },
             error: function (error) {
                 console.log("Error:", error);
@@ -518,12 +526,14 @@
     });
 
     let userId = 0;
+
     function openModal(button) {
         userId = button.getAttribute('data-user-id');
         console.log(userId);
         let modal = document.getElementById('deleteModal');
         modal.style.display = 'block';
     }
+
     $(document).on("click", "#cancelBtn", function () {
         $("#deleteModal").hide();
     });
